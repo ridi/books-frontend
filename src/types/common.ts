@@ -5,6 +5,7 @@ import { Request } from 'express';
 export interface ConnectedInitializeProps extends NextPageContext {
   store: Store;
   req?: Request;
+  isServer: boolean;
 }
 
 export interface PublicRuntimeConfig {

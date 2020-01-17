@@ -9,6 +9,14 @@ import { timeAgo } from 'src/utils/common';
 import ArrowLeft from 'src/svgs/ChevronRight.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 
+import * as Cookies from 'js-cookie';
+import pRetry from 'p-retry';
+import axios, { OAuthRequestType } from 'src/utils/axios';
+import sentry from 'src/utils/sentry';
+
+const { captureException } = sentry();
+const RIDI_NOTIFICATION_TOKEN = 'ridi_notification_token';
+
 const sectionCSS = css`
   padding: 31px 50px 0 50px;
   max-width: 1000px;
@@ -106,11 +114,17 @@ const arrow = css`
 `;
 
 interface NotificationItemScheme {
-  id: number;
-  url: string;
+  landingUrl: string;
+  expireAt: number;
   imageUrl: string;
-  title: string;
+  imageType: string;
   createdAt: number;
+  userIdx: number;
+  message: string;
+  id: string;
+  tag: string;
+  itemId: string;
+  strCreatedAt: string;
 }
 
 interface NotificationItemProps {
@@ -118,50 +132,75 @@ interface NotificationItemProps {
   createdAtTimeAgo: string;
 }
 
-const NotificationItem: React.FunctionComponent<NotificationItemProps> = React.memo(
-  props => {
-    const { item, createdAtTimeAgo } = props;
-    return (
-      <li css={notiListItemCSS}>
-        <a css={wrapperCSS} href={item.url}>
-          <div css={imageWrapperCSS}>
-            <img
-              alt={item.title}
-              css={css`
-                box-shadow: 0 0 3px 0.5px rgba(0, 0, 0, 0.3);
-              `}
-              width={'56px'}
-              src={item.imageUrl}
-            />
-          </div>
-          <div
+const NotificationItem: React.FunctionComponent<NotificationItemProps> = props => {
+  const { item, createdAtTimeAgo } = props;
+  return (
+    <li css={notiListItemCSS}>
+      <a css={wrapperCSS} href={item.landingUrl}>
+        <div css={imageWrapperCSS}>
+          <img
+            alt={item.message}
             css={css`
-              ${flexColumnStart};
-            `}>
-            <h3
-              css={notificationTitleCSS}
-              dangerouslySetInnerHTML={{ __html: item.title }}
-            />
-            <span>{createdAtTimeAgo}</span>
-          </div>
-          <div
-            css={css`
-              padding: 0 15px;
-              margin-left: auto;
-              ${orBelow(
-                BreakPoint.LG + 1,
-                css`
-                  display: none;
-                `,
-              )};
-            `}>
-            <ArrowLeft css={arrow} />
-          </div>
-        </a>
-      </li>
-    );
-  },
-);
+              box-shadow: 0 0 3px 0.5px rgba(0, 0, 0, 0.3);
+            `}
+            width={'56px'}
+            src={item.imageUrl}
+          />
+        </div>
+        <div
+          css={css`
+            ${flexColumnStart};
+          `}>
+          <h3
+            css={notificationTitleCSS}
+            dangerouslySetInnerHTML={{ __html: item.message }}
+          />
+          <span>{createdAtTimeAgo}</span>
+        </div>
+        <div
+          css={css`
+            padding: 0 15px;
+            margin-left: auto;
+            ${orBelow(
+              BreakPoint.LG + 1,
+              css`
+                display: none;
+              `,
+            )};
+          `}>
+          <ArrowLeft css={arrow} />
+        </div>
+      </a>
+    </li>
+  );
+};
+
+const fetchNotifications = async () => {
+  const token = Cookies.get(RIDI_NOTIFICATION_TOKEN) || '';
+  if (token.length > 0) {
+    console.log(token);
+    try {
+      const notificationUrl = new URL('/notification', publicRuntimeConfig.STORE_API);
+      const notificationResult = await pRetry(
+        () =>
+          axios.get(notificationUrl.toString(), {
+            custom: { authorizationRequestType: OAuthRequestType.CHECK },
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        { retries: 2 },
+      );
+      return notificationResult;
+    } catch (error) {
+      captureException(error);
+      return [];
+    }
+  } else {
+    // Token 갱신 필요
+    return [];
+  }
+};
 
 interface NotificationPageProps {
   q?: string;
@@ -169,16 +208,17 @@ interface NotificationPageProps {
 }
 
 const NotificationPage: React.FC<NotificationPageProps> & NextComponentType = props => {
-  const [notifications] = useState(props.notifications || []);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      // Todo ReFetch
-    }, 60000);
+  const [notifications, setNotifications] = useState([]);
 
-    return () => {
-      clearInterval(timer);
+  useEffect(() => {
+    const requestNotification = async () => {
+      const fetchData: any = await fetchNotifications();
+      setNotifications(fetchData?.data.notifications);
     };
-  });
+
+    requestNotification();
+  }, []);
+
   return (
     <>
       <Head>
@@ -201,9 +241,9 @@ const NotificationPage: React.FC<NotificationPageProps> & NextComponentType = pr
 };
 
 // Todo Initial Fetch
-NotificationPage.getInitialProps = async (props: ConnectedInitializeProps) => ({
-  q: props.query.q,
-  notifications: mockList,
-});
+// NotificationPage.getInitialProps = async (props: ConnectedInitializeProps) => ({
+//   q: props.query.q,
+//   notifications: mockList,
+// });
 
 export default NotificationPage;

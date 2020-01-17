@@ -3,6 +3,7 @@ import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { a11y } from 'src/styles';
 import { BrowserLocationContext } from 'src/components/Context';
+import { Link } from 'server/routes';
 import * as labels from 'src/labels/menus.json';
 import * as Cookies from 'js-cookie';
 import Home from 'src/svgs/Home.svg';
@@ -169,6 +170,7 @@ interface TabItemProps {
   label: string;
   pathRegexp: RegExp;
   addOn?: React.ReactNode;
+  isSPA?: boolean;
 }
 
 // Todo
@@ -185,6 +187,7 @@ const TabItem: React.FC<TabItemProps> = props => {
     activeIcon,
     normalIcon,
     addOn,
+    isSPA = false,
   } = props;
   const isActiveTab = currentPath.match(pathRegexp);
   return (
@@ -201,14 +204,27 @@ const TabItem: React.FC<TabItemProps> = props => {
             `
           : ''
       }>
-      <StyledAnchor href={path} aria-label={label}>
-        <TabButton>
-          {isActiveTab ? activeIcon : normalIcon}
-          {addOn}
-          <span css={labelStyle}>{label}</span>
-        </TabButton>
-        <BottomLine css={isActiveTab ? currentTab : css``} />
-      </StyledAnchor>
+      {isSPA ? (
+        <Link to={path}>
+          <StyledAnchor aria-label={label}>
+            <TabButton>
+              {isActiveTab ? activeIcon : normalIcon}
+              {addOn}
+              <span css={labelStyle}>{label}</span>
+            </TabButton>
+            <BottomLine css={isActiveTab ? currentTab : css``} />
+          </StyledAnchor>
+        </Link>
+      ) : (
+        <StyledAnchor href={path} aria-label={label}>
+          <TabButton>
+            {isActiveTab ? activeIcon : normalIcon}
+            {addOn}
+            <span css={labelStyle}>{label}</span>
+          </TabButton>
+          <BottomLine css={isActiveTab ? currentTab : css``} />
+        </StyledAnchor>
+      )}
     </TabItemWrapper>
   );
 };
@@ -403,6 +419,7 @@ export const MainTab: React.FC<MainTabProps> = props => {
               />
             )
           }
+          isSPA={true}
         />
         <TabItem
           isPartials={isPartials}
