@@ -14,4 +14,8 @@ export const initialState: RootState = {
     isFetching: false,
     items: {},
   },
+  notifications: {
+    unreadCount: 0,
+    items: [],
+  },
 };
