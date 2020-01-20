@@ -4,6 +4,7 @@ module.exports = {
     es6: true,
     node: true,
     'jest/globals': true,
+    'cypress/globals': true,
   },
   extends: [
     '@ridi/eslint-config/react',
@@ -11,12 +12,17 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:import/errors',
     'plugin:import/typescript',
+    'plugin:cypress/recommended',
   ],
   globals: {
     Atomics: 'readonly',
     SharedArrayBuffer: 'readonly',
   },
-  plugins: ['jest'],
+
+  plugins: [
+    'jest',
+    'cypress',
+  ],
   rules: {
     camelcase: 0,
     'class-methods-use-this': 0,

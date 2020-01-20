@@ -13,7 +13,7 @@ module.exports = {
     '\\.(jpg|png|webp|ico|ttf|otf|woff|woff2)$': '<rootDir>/src/tests/__mocks__/fileMock.ts',
     '\\.svg': '<rootDir>/src/tests/__mocks__/svgrMock.tsx',
   },
-  coveragePathIgnorePatterns: ['/node_modules/'],
-  testPathIgnorePatterns: ['/node_modules/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/cypress/'],
+  testPathIgnorePatterns: ['/node_modules/', '/cypress/'],
   moduleDirectories: ['node_modules'],
 };
