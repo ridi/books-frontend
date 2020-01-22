@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { ConnectedInitializeProps } from 'src/types/common';
-import { NextComponentType } from 'next';
 import PageTitle from 'src/components/PageTitle/PageTitle';
 import { css } from '@emotion/core';
 import { flexColumnStart, RIDITheme } from 'src/styles';
 import { timeAgo } from 'src/utils/common';
 import ArrowLeft from 'src/svgs/ChevronRight.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
-
-import * as Cookies from 'js-cookie';
-import pRetry from 'p-retry';
-import axios, { OAuthRequestType } from 'src/utils/axios';
-import sentry from 'src/utils/sentry';
-
-const { captureException } = sentry();
-const RIDI_NOTIFICATION_TOKEN = 'ridi_notification_token';
+import { useDispatch, useSelector } from 'react-redux';
+import { notificationActions } from 'src/services/notification';
+import { RootState } from 'src/store/config';
 
 const sectionCSS = css`
   padding: 31px 50px 0 50px;
@@ -175,49 +168,19 @@ const NotificationItem: React.FunctionComponent<NotificationItemProps> = props =
   );
 };
 
-const fetchNotifications = async () => {
-  const token = Cookies.get(RIDI_NOTIFICATION_TOKEN) || '';
-  if (token.length > 0) {
-    console.log(token);
-    try {
-      const notificationUrl = new URL('/notification', publicRuntimeConfig.STORE_API);
-      const notificationResult = await pRetry(
-        () =>
-          axios.get(notificationUrl.toString(), {
-            custom: { authorizationRequestType: OAuthRequestType.CHECK },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-        { retries: 2 },
-      );
-      return notificationResult;
-    } catch (error) {
-      captureException(error);
-      return [];
-    }
-  } else {
-    // Token 갱신 필요
-    return [];
-  }
-};
-
-interface NotificationPageProps {
-  q?: string;
-  notifications: NotificationItemScheme[];
-}
-
-const NotificationPage: React.FC<NotificationPageProps> & NextComponentType = props => {
-  const [notifications, setNotifications] = useState([]);
+const NotificationPage: React.FC = () => {
+  const { items, isFetching } = useSelector((store: RootState) => store.notifications);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const requestNotification = async () => {
-      const fetchData: any = await fetchNotifications();
-      setNotifications(fetchData?.data.notifications);
-    };
+    if (!isFetching) {
+      dispatch(notificationActions.loadNotifications({ limit: 100 }));
+    }
 
-    requestNotification();
-  }, []);
+    return () => {
+      dispatch(notificationActions.setFetching(false));
+    };
+  }, [dispatch, isFetching]);
 
   return (
     <>
@@ -227,7 +190,7 @@ const NotificationPage: React.FC<NotificationPageProps> & NextComponentType = pr
       <section css={sectionCSS}>
         <PageTitle title={'알림'} mobileHidden={true} />
         <ul css={notiListCSS}>
-          {notifications.map((item, index) => (
+          {items.map((item, index) => (
             <NotificationItem
               key={index}
               createdAtTimeAgo={timeAgo(item.createdAt)}
@@ -239,11 +202,5 @@ const NotificationPage: React.FC<NotificationPageProps> & NextComponentType = pr
     </>
   );
 };
-
-// Todo Initial Fetch
-// NotificationPage.getInitialProps = async (props: ConnectedInitializeProps) => ({
-//   q: props.query.q,
-//   notifications: mockList,
-// });
 
 export default NotificationPage;

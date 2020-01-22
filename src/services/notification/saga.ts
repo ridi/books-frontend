@@ -8,30 +8,16 @@ import {
 } from 'src/services/notification/reducer';
 import {
   requestNotification,
+  NotificationResponse,
   requestNotificationAuth,
+  NotificationAuthResponse,
 } from 'src/services/notification/request';
 import jwt_decode from 'jwt-decode';
 import * as Cookies from 'js-cookie';
-import originalAxios, { CancelTokenSource } from 'axios';
+import originalAxios from 'axios';
 
 const RIDI_NOTIFICATION_TOKEN = 'ridi_notification_token';
 const { captureException } = sentry();
-
-function* fetchNotification(limit: number, token: any, cancelToken: CancelTokenSource) {
-  const data = yield call(pRetry, () => requestNotification(limit, token, cancelToken), {
-    retries: 2,
-  });
-  yield put({ type: notificationActions.setNotifications.type, payload: data });
-  return data;
-}
-
-function* fetchNotificationAuth(cancelToken: CancelTokenSource) {
-  const data = yield call(pRetry, () => requestNotificationAuth(cancelToken), {
-    retries: 2,
-  });
-  Cookies.set(RIDI_NOTIFICATION_TOKEN, data.token);
-  return data.token;
-}
 
 function* watchNotificationRequest(action: Actions<typeof NotificationReducer>) {
   try {
@@ -58,17 +44,42 @@ function* watchNotificationRequest(action: Actions<typeof NotificationReducer>) 
       tokenResult = savedTokenValue;
 
       if (isExpired) {
-        const token = fetchNotificationAuth(tokenRequestSource);
-        tokenResult = token;
+        const data: NotificationAuthResponse = yield call(
+          pRetry,
+          () => requestNotificationAuth(tokenRequestSource),
+          {
+            retries: 2,
+          },
+        );
+        Cookies.set(RIDI_NOTIFICATION_TOKEN, data.token);
+        tokenResult = data.token;
       }
 
       if (tokenResult) {
-        const data = fetchNotification(limit, tokenResult, notificationRequestSource);
-        yield put({ type: notificationActions.setUnreadCount.type, payload: 0 });
+        const data: NotificationResponse = yield call(
+          pRetry,
+          () => requestNotification(limit, tokenResult, notificationRequestSource),
+          {
+            retries: 2,
+          },
+        );
+
+        yield put({
+          type: notificationActions.setNotifications.type,
+          payload: data.notifications,
+        });
+        yield put({
+          type: notificationActions.setUnreadCount.type,
+          payload: data.unreadCount,
+        });
       }
     }
   } catch (error) {
-    yield put({ type: notificationActions.setUnreadCount.type, payload: 0 });
+    if (error.response && error.response.status === 401) {
+      Cookies.remove(RIDI_NOTIFICATION_TOKEN);
+    }
+
+    yield put({ type: notificationActions.setFetching.type, payload: false });
     captureException(error);
   }
 }

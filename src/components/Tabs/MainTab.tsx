@@ -21,10 +21,11 @@ import pRetry from 'p-retry';
 import axios, { OAuthRequestType, wrapCatchCancel } from 'src/utils/axios';
 import originalAxios from 'axios';
 import sentry from 'src/utils/sentry';
-import jwt_decode from 'jwt-decode';
-const { captureException } = sentry();
+import { useDispatch, useSelector } from 'react-redux';
+import { notificationActions } from 'src/services/notification';
+import { RootState } from 'src/store/config';
 
-const RIDI_NOTIFICATION_TOKEN = 'ridi_notification_token';
+const { captureException } = sentry();
 
 const StyledAnchor = styled.a`
   height: 100%;
@@ -240,35 +241,15 @@ const genreValueReplace = (visitedGenre: string) => {
   return visitedGenre;
 };
 
-const requestNotificationToken = async cancelToken => {
-  try {
-    const tokenUrl = new URL(
-      '/users/me/notification-token/',
-      publicRuntimeConfig.STORE_API,
-    );
-
-    const result = await pRetry(
-      () =>
-        wrapCatchCancel(axios.get)(tokenUrl.toString(), {
-          withCredentials: true,
-          cancelToken: cancelToken.token,
-        }),
-      { retries: 2 },
-    );
-    return result.data.token;
-  } catch (error) {
-    captureException(error);
-  }
-  return null;
-};
-
 export const MainTab: React.FC<MainTabProps> = props => {
   const { isPartials, loggedUserInfo } = props;
+  const { unreadCount, isFetching } = useSelector(
+    (store: RootState) => store.notifications,
+  );
   const currentPath = useContext(BrowserLocationContext);
   const [, setHomeURL] = useState('/');
   const [cartCount, setCartCount] = useState<number>(0);
-  const [hasNotification, setNotification] = useState(0);
-  const [isTokenExpired, setTokenExpired] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const visitedGenre = Cookies.get(`${cookieKeys.main_genre}`);
@@ -278,65 +259,14 @@ export const MainTab: React.FC<MainTabProps> = props => {
   }, [currentPath]);
 
   useEffect(() => {
-    const tokenRequestSource = originalAxios.CancelToken.source();
-    const notificationRequestSource = originalAxios.CancelToken.source();
-    const requestNotificationAuth = async () => {
-      let tokenResult = null;
-      let expired = null;
-
-      const savedTokenValue = Cookies.get(RIDI_NOTIFICATION_TOKEN) || '';
-      if (savedTokenValue.length > 0) {
-        try {
-          expired = jwt_decode(savedTokenValue).exp;
-        } catch (error) {
-          expired = null;
-        }
-      }
-
-      const expiredTime = expired ? parseInt(expired, 10) : null;
-      const isExpired = !expiredTime || expiredTime * 1000 < Date.now();
-      setTokenExpired(isExpired);
-      tokenResult = savedTokenValue;
-
-      if (isExpired) {
-        const token = await requestNotificationToken(tokenRequestSource);
-        Cookies.set(RIDI_NOTIFICATION_TOKEN, token, { sameSite: 'lax' });
-        tokenResult = token;
-      }
-      if (tokenResult) {
-        try {
-          const notificationUrl = new URL('/notification', publicRuntimeConfig.STORE_API);
-          const notificationResult = await pRetry(
-            () =>
-              wrapCatchCancel(axios.get)(notificationUrl.toString(), {
-                params: { limit: 5 },
-                cancelToken: notificationRequestSource.token,
-                custom: { authorizationRequestType: OAuthRequestType.CHECK },
-                headers: {
-                  Authorization: `Bearer ${tokenResult}`,
-                },
-              }),
-            { retries: 2 },
-          );
-          setNotification(notificationResult.data.unreadCount || 0);
-        } catch (error) {
-          if (error.response && error.response.status === 401 && loggedUserInfo) {
-            setTokenExpired(true);
-            Cookies.remove(RIDI_NOTIFICATION_TOKEN);
-          }
-          captureException(error);
-        }
-      }
-    };
-
-    if (loggedUserInfo) {
-      requestNotificationAuth();
+    if (loggedUserInfo && currentPath !== '/notification/') {
+      dispatch(notificationActions.loadNotifications({ limit: 5 }));
     }
+
     return () => {
-      tokenRequestSource.cancel();
-      notificationRequestSource.cancel();
+      dispatch(notificationActions.setFetching(false));
     };
-  }, [loggedUserInfo, isTokenExpired]);
+  }, [dispatch, loggedUserInfo, currentPath]);
 
   useEffect(() => {
     const cartRequestTokenSource = originalAxios.CancelToken.source();
@@ -398,7 +328,7 @@ export const MainTab: React.FC<MainTabProps> = props => {
           path={'/notification/'}
           pathRegexp={/^\/notification\/$/g}
           addOn={
-            hasNotification > 0 && (
+            unreadCount > 0 && (
               <div
                 css={css`
                   position: absolute;
