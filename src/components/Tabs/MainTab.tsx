@@ -243,9 +243,7 @@ const genreValueReplace = (visitedGenre: string) => {
 
 export const MainTab: React.FC<MainTabProps> = props => {
   const { isPartials, loggedUserInfo } = props;
-  const { unreadCount, isFetching } = useSelector(
-    (store: RootState) => store.notifications,
-  );
+  const { hasNotification } = useSelector((store: RootState) => store.notifications);
   const currentPath = useContext(BrowserLocationContext);
   const [, setHomeURL] = useState('/');
   const [cartCount, setCartCount] = useState<number>(0);
@@ -259,13 +257,10 @@ export const MainTab: React.FC<MainTabProps> = props => {
   }, [currentPath]);
 
   useEffect(() => {
+    // Notification Page에서는 호출 X
     if (loggedUserInfo && currentPath !== '/notification/') {
-      dispatch(notificationActions.loadNotifications({ limit: 5 }));
+      dispatch(notificationActions.loadNotificationUnreadCount());
     }
-
-    return () => {
-      dispatch(notificationActions.setFetching(false));
-    };
   }, [dispatch, loggedUserInfo, currentPath]);
 
   useEffect(() => {
@@ -328,7 +323,7 @@ export const MainTab: React.FC<MainTabProps> = props => {
           path={'/notification/'}
           pathRegexp={/^\/notification\/$/g}
           addOn={
-            unreadCount > 0 && (
+            hasNotification && (
               <div
                 css={css`
                   position: absolute;
