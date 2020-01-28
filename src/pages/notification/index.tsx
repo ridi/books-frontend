@@ -146,10 +146,6 @@ const NotificationPage: React.FC = () => {
     if (!isFetching) {
       dispatch(notificationActions.loadNotifications({ limit: 100 }));
     }
-
-    return () => {
-      dispatch(notificationActions.setFetching(false));
-    };
   }, [dispatch, isFetching]);
 
   return (
