@@ -22,36 +22,6 @@ const sectionCSS = css`
   )};
 `;
 
-const mockList = [
-  {
-    id: 1,
-    imageUrl: 'https://img.ridicdn.net/cover/1242000373/large',
-    title:
-      '<strong>[10%▼]</strong> 올여름 휴가 때는 완독 챌린지! <strong>&lt;죽음&gt;, &lt;핑거스미스&gt; 등 소설/인문 26종 할인!</strong> 할인할 때 쟁여놓고, 이번 휴가 때 완독 가즈아!',
-    createdAt: 1562906721836,
-    url:
-      '/notification/new-release/verify/852000573?utm_source=Ridibooks_DAR&utm_medium=noti&utm_content=not_set&utm_campaign=DAR_new_book&utm_term=general',
-  },
-  {
-    id: 2,
-    imageUrl: 'https://img.ridicdn.net/cover/852000573/',
-    title:
-      '신간알림 | <strong>에드워드 W. 사이드의 신간 &lt;경계의 음악&gt;</strong>이 출간되었습니다.',
-    createdAt: 1562906701836,
-    url:
-      '/notification/new-release/verify/852000573?utm_source=Ridibooks_DAR&utm_medium=noti&utm_content=not_set&utm_campaign=DAR_new_book&utm_term=general',
-  },
-  {
-    id: 3,
-    imageUrl: 'https://img.ridicdn.net/cover/2200027720/large',
-    title:
-      '<strong>[전원 500P!] 네 마음 속 공에 #빙의해 &lt;모노크롬 루머&gt;</strong> 상황에 맞는 공들의 반응 댓글로 남기면 전원 포인트!',
-    createdAt: 1562906621836,
-    url:
-      '/notification/new-release/verify/852000573?utm_source=Ridibooks_DAR&utm_medium=noti&utm_content=not_set&utm_campaign=DAR_new_book&utm_term=general',
-  },
-];
-
 const notiListCSS = css`
   margin-bottom: 70px;
   ${orBelow(
