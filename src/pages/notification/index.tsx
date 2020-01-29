@@ -11,10 +11,12 @@ import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import { useDispatch, useSelector } from 'react-redux';
 import { notificationActions } from 'src/services/notification';
 import { RootState } from 'src/store/config';
+import NotificationPlaceholder from 'src/components/Placeholder/NotificationItemPlaceholder';
 
 const sectionCSS = css`
   padding: 31px 50px 0 50px;
   max-width: 1000px;
+  min-height: 800px;
   margin: 0 auto;
   ${orBelow(
     BreakPoint.LG,
@@ -177,6 +179,20 @@ const NotificationPage: React.FC = () => {
       dispatch(notificationActions.loadNotifications({ limit: 100 }));
     }
   }, [dispatch, isFetching]);
+
+  if (!isFetching) {
+    return (
+      <>
+        <Head>
+          <title>리디북스 - 알림</title>
+        </Head>
+        <section css={sectionCSS}>
+          <PageTitle title={'알림'} mobileHidden={false} />
+          <NotificationPlaceholder num={5}></NotificationPlaceholder>
+        </section>
+      </>
+    );
+  }
 
   return (
     <>
