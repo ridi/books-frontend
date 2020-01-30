@@ -6,16 +6,17 @@ const pageTitleCSS = css`
   font-size: 18px;
   color: #333;
   font-weight: 700;
+  padding-bottom: 15px;
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      padding: 15px 24px;
+    `,
+  )};
   ${orBelow(
     BreakPoint.M,
     css`
       padding: 15px 16px;
-    `,
-  )};
-  ${orBelow(
-    BreakPoint.LG,
-    css`
-      padding: 15px 20px;
     `,
   )};
 `;

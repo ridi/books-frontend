@@ -65,7 +65,7 @@ const NotificationPlaceholder: React.FC<NotificationPlaceholderProps> = props =>
 
   return (
     <>
-      {[...Array(num)].map(i => (
+      {[...Array(num)].map((item, i) => (
         <NotificationItemPlaceholder key={i} />
       ))}
     </>

@@ -38,7 +38,27 @@ const notiListCSS = css`
 
 const notiListItemCSS = css`
   border-bottom: 1px solid #e5e5e5;
-  padding: 14px 0;
+  margin: 0px;
+  padding: 14px 0px;
+  &:last-child {
+    border-bottom: none;
+  }
+  :hover {
+    background: #f7fafc;
+  }
+
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      margin: 0px 24px;
+    `,
+  )};
+  ${orBelow(
+    BreakPoint.M,
+    css`
+      margin: 0px 16px;
+    `,
+  )};
 `;
 
 const wrapperCSS = (theme: RIDITheme) => css`
@@ -51,28 +71,33 @@ const wrapperCSS = (theme: RIDITheme) => css`
   }
   :hover {
     color: ${theme.primaryColor};
+    background: #f7fafc;
   }
   transition: color 0.1s;
 `;
 
 const imageWrapperCSS = css`
-  width: 100px;
   text-align: center;
   flex-shrink: 0;
+  position: relative;
 
-  ${orBelow(
-    BreakPoint.LG,
-    css`
-      width: 90px;
-    `,
-  )};
+  ${orBelow(BreakPoint.LG, css``)};
 `;
 
 const notificationTitleCSS = css`
   font-weight: normal;
   font-size: 15px;
+  color: #303538;
   word-break: keep-all;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  letter-spacing: -0.5px;
+`;
+
+const notificationTimeCSS = css`
+  font-weight: normal;
+  font-size: 14px;
+  color: #808991;
+  letter-spacing: -0.46px;
 `;
 
 const arrow = css`
@@ -125,10 +150,11 @@ interface NotificationItemScheme {
 interface NotificationItemProps {
   item: NotificationItemScheme;
   createdAtTimeAgo: string;
+  dot?: boolean;
 }
 
 const NotificationItem: React.FunctionComponent<NotificationItemProps> = props => {
-  const { item, createdAtTimeAgo } = props;
+  const { item, createdAtTimeAgo, dot = false } = props;
   return (
     <li css={notiListItemCSS}>
       <a css={wrapperCSS} href={item.landingUrl}>
@@ -141,27 +167,35 @@ const NotificationItem: React.FunctionComponent<NotificationItemProps> = props =
             width={'56px'}
             src={item.imageUrl}
           />
+          {dot && (
+            <div
+              css={css`
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                left: -9px;
+                top: ${item.imageType === 'book' ? '36px' : '24px'};
+                background: #1f8ce6;
+                border-radius: 999px;
+              `}
+            />
+          )}
         </div>
         <div
           css={css`
             ${flexColumnStart};
+            margin-left: 16px;
           `}>
           <h3
             css={notificationTitleCSS}
             dangerouslySetInnerHTML={{ __html: item.message }}
           />
-          <span>{createdAtTimeAgo}</span>
+          <span css={notificationTimeCSS}>{createdAtTimeAgo}</span>
         </div>
         <div
           css={css`
             padding: 0 15px;
             margin-left: auto;
-            ${orBelow(
-              BreakPoint.LG + 1,
-              css`
-                display: none;
-              `,
-            )};
           `}>
           <ArrowLeft css={arrow} />
         </div>
@@ -171,14 +205,18 @@ const NotificationItem: React.FunctionComponent<NotificationItemProps> = props =
 };
 
 const NotificationPage: React.FC = () => {
-  const { items, isFetching } = useSelector((store: RootState) => store.notifications);
+  const { items, isFetching, unreadCount } = useSelector(
+    (store: RootState) => store.notifications,
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!isFetching) {
       dispatch(notificationActions.loadNotifications({ limit: 100 }));
     }
-  }, [dispatch, isFetching]);
+
+    return () => dispatch(notificationActions.setFetching(false));
+  }, [dispatch]);
 
   if (!isFetching) {
     return (
@@ -213,6 +251,7 @@ const NotificationPage: React.FC = () => {
                 key={index}
                 createdAtTimeAgo={timeAgo(item.createdAt)}
                 item={item}
+                dot={index < unreadCount}
               />
             ))
           )}

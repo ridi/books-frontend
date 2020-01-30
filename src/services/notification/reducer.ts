@@ -13,7 +13,7 @@ export const notificationInitialState: NotificationState = {
   items: [],
   unreadCount: 0,
   isFetching: false,
-  hasNotification: true,
+  hasNotification: false,
 };
 
 export class NotificationReducer extends ImmerReducer<NotificationState> {
