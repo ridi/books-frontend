@@ -115,13 +115,13 @@ const arrow = css`
 
 const NoEmptyNotification = styled.p`
   text-align: center;
-  margin-top: 303px;
-  margin-bottom: 359px;
+  padding-top: 303px;
+  padding-bottom: 359px;
   ${orBelow(
     BreakPoint.M,
     css`
-      margin-top: 144px;
-      margin-bottom: 200px;
+      padding-top: 144px;
+      padding-bottom: 200px;
     `,
   )};
 `;
