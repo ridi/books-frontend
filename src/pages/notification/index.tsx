@@ -13,7 +13,8 @@ import { notificationActions } from 'src/services/notification';
 import { RootState } from 'src/store/config';
 import NotificationPlaceholder from 'src/components/Placeholder/NotificationItemPlaceholder';
 
-const sectionCSS = css`
+const sectionCSS = (theme: RIDITheme) => css`
+  background-color: ${theme.backgroundColor};
   padding: 31px 50px 0 50px;
   max-width: 1000px;
   min-height: 800px;
@@ -36,32 +37,33 @@ const notiListCSS = css`
   )};
 `;
 
-const notiListItemCSS = css`
-  border-bottom: 1px solid #e5e5e5;
+const notiListItemCSS = (theme: RIDITheme) => css`
   margin: 0px;
   padding: 14px 0px;
   &:last-child {
     border-bottom: none;
   }
+
   :hover {
-    background: #f7fafc;
+    background: ${theme.hoverBackground};
   }
 
   ${orBelow(
     BreakPoint.LG,
     css`
-      margin: 0px 24px;
+      padding: 14px 24px;
     `,
   )};
   ${orBelow(
     BreakPoint.M,
     css`
-      margin: 0px 16px;
+      padding: 14px 16px;
     `,
   )};
 `;
 
 const wrapperCSS = (theme: RIDITheme) => css`
+  position: relative;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -69,11 +71,17 @@ const wrapperCSS = (theme: RIDITheme) => css`
   :visited {
     color: black;
   }
-  :hover {
-    color: ${theme.primaryColor};
-    background: #f7fafc;
-  }
   transition: color 0.1s;
+
+  ::after {
+    content: '';
+    width: 100%;
+    position: absolute;
+    height: 1px;
+    background: ${theme.dividerColor};
+    opacity: ${theme.dividerOpacity};
+    bottom: -14px;
+  }
 `;
 
 const imageWrapperCSS = css`
@@ -84,10 +92,10 @@ const imageWrapperCSS = css`
   ${orBelow(BreakPoint.LG, css``)};
 `;
 
-const notificationTitleCSS = css`
+const notificationTitleCSS = (theme: RIDITheme) => css`
   font-weight: normal;
   font-size: 15px;
-  color: #303538;
+  color: ${theme.textColor};
   word-break: keep-all;
   margin-bottom: 4px;
   letter-spacing: -0.5px;
@@ -153,7 +161,11 @@ interface NotificationItemProps {
   dot?: boolean;
 }
 
-const NotificationItem: React.FunctionComponent<NotificationItemProps> = props => {
+interface NotificationPageProps {
+  isTitleHidden?: boolean;
+}
+
+export const NotificationItem: React.FunctionComponent<NotificationItemProps> = props => {
   const { item, createdAtTimeAgo, dot = false } = props;
   return (
     <li css={notiListItemCSS}>
@@ -204,7 +216,8 @@ const NotificationItem: React.FunctionComponent<NotificationItemProps> = props =
   );
 };
 
-const NotificationPage: React.FC = () => {
+const NotificationPage: React.FC<NotificationPageProps> = props => {
+  const { isTitleHidden = false } = props;
   const { items, isFetching, unreadCount } = useSelector(
     (store: RootState) => store.notifications,
   );
@@ -225,7 +238,7 @@ const NotificationPage: React.FC = () => {
           <title>리디북스 - 알림</title>
         </Head>
         <section css={sectionCSS}>
-          <PageTitle title={'알림'} mobileHidden={false} />
+          <PageTitle title={'알림'} mobileHidden={isTitleHidden} />
           <NotificationPlaceholder num={5}></NotificationPlaceholder>
         </section>
       </>
@@ -238,7 +251,7 @@ const NotificationPage: React.FC = () => {
         <title>리디북스 - 알림</title>
       </Head>
       <section css={sectionCSS}>
-        <PageTitle title={'알림'} mobileHidden={false} />
+        <PageTitle title={'알림'} mobileHidden={isTitleHidden} />
         <ul css={notiListCSS}>
           {items.length === 0 ? (
             <NoEmptyNotification>

@@ -1,6 +1,12 @@
 import * as colors from '@ridi/colors';
 
 export interface RIDITheme {
+  backgroundColor: string;
+  textColor: string;
+  hoverBackground: string;
+  dividerColor: string;
+  dividerOpacity: number;
+  placeholderColor: string;
   primaryColor: string;
   primaryHoverColor: string;
   secondaryColor: string;
@@ -54,6 +60,13 @@ export interface RIDITheme {
 }
 
 export const defaultTheme: RIDITheme = {
+  backgroundColor: '#ffffff',
+  textColor: '#303538',
+  hoverBackground: '#F7FAFC',
+  dividerColor: '#E6E8EB',
+  dividerOpacity: 1,
+  placeholderColor:
+    'linear-gradient(326.23deg, #F8F9FB 1.42%, #F1F1F3 49.17%, #F8F9FB 100%)',
   primaryColor: colors.dodgerBlue50,
   primaryHoverColor: colors.dodgerBlue10,
   secondaryColor: colors.slateGray90,
@@ -107,6 +120,12 @@ export const defaultTheme: RIDITheme = {
 };
 
 export const darkTheme: RIDITheme = {
+  backgroundColor: '#212B3B',
+  textColor: '#ffffff',
+  hoverBackground: '#2E3847',
+  dividerColor: '#ffffff',
+  dividerOpacity: 0.08,
+  placeholderColor: 'linear-gradient(90.3deg, #263041 0%, #242E3F 49.48%, #263041 100%)',
   primaryColor: colors.gray90,
   primaryHoverColor: colors.dodgerBlue10,
   secondaryColor: colors.slateGray90,

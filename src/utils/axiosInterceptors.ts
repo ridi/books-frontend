@@ -70,7 +70,10 @@ export const tokenInterceptor = (onRejected: AxiosError) => {
   }
 
   const tokenUrl = new URL('/ridi/token/', publicRuntimeConfig.ACCOUNT_API).toString();
-  if (response.status === 401 && response.config.url !== tokenUrl) {
+  if (
+    (response.status === 401 || response.status === 403) &&
+    response.config.url !== tokenUrl
+  ) {
     return refreshTokenFallback(onRejected);
   }
 

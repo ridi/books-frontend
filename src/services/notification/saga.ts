@@ -46,7 +46,7 @@ function* notificationAuth() {
         retries: 2,
       },
     );
-    Cookies.set(RIDI_NOTIFICATION_TOKEN, data.token);
+    Cookies.set(RIDI_NOTIFICATION_TOKEN, data.token, { SameSite: 'Lax' });
     tokenResult = data.token;
   }
   return tokenResult;

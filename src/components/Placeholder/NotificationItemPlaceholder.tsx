@@ -1,31 +1,41 @@
 import * as React from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import { RIDITheme } from 'src/styles';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 
-const NotificationPlaceholderWrap = styled.div`
+const NotificationPlaceholderWrap = (theme: RIDITheme) => css`
+  position: relative;
   display: flex;
-  margin: 14px 16px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #f8f9fb;
+  margin: 0px 16px;
+  padding: 14px 0px;
+  ::after {
+    content: '';
+    width: 100%;
+    position: absolute;
+    height: 1px;
+    background: ${theme.dividerColor};
+    opacity: ${theme.dividerOpacity};
+    bottom: 0px;
+  }
 `;
 
-const NotificationThumbnail = styled.div`
+const NotificationThumbnail = (theme: RIDITheme) => css`
   flex: none;
   width: 56px;
   height: 80px;
-  background: linear-gradient(326.23deg, #f8f9fb 1.42%, #f1f1f3 49.17%, #f8f9fb 100%);
+  background: ${theme.placeholderColor};
 `;
 
 const NotificationMeta = styled.div`
   margin-left: 16px;
 `;
 
-const NotificationTitle = styled.div`
+const NotificationTitle = (theme: RIDITheme) => css`
   width: 854px;
   height: 20px;
   margin-bottom: 7px;
-  background: linear-gradient(326.23deg, #f8f9fb 1.42%, #f1f1f3 49.17%, #f8f9fb 100%);
+  background: ${theme.placeholderColor};
   ${orBelow(
     BreakPoint.LG,
     css`
@@ -33,17 +43,17 @@ const NotificationTitle = styled.div`
     `,
   )};
   ${orBelow(
-    BreakPoint.M,
+    BreakPoint.MD,
     css`
       width: 245px;
     `,
   )};
 `;
 
-const NotificationDate = styled.div`
+const NotificationDate = (theme: RIDITheme) => css`
   width: 84px;
   height: 20px;
-  background: linear-gradient(326.23deg, #f8f9fb 1.42%, #f1f1f3 49.17%, #f8f9fb 100%);
+  background: ${theme.placeholderColor};
 `;
 
 interface NotificationPlaceholderProps {
@@ -51,13 +61,13 @@ interface NotificationPlaceholderProps {
 }
 
 const NotificationItemPlaceholder: React.FC = () => (
-  <NotificationPlaceholderWrap>
-    <NotificationThumbnail></NotificationThumbnail>
+  <div css={NotificationPlaceholderWrap}>
+    <div css={NotificationThumbnail}></div>
     <NotificationMeta>
-      <NotificationTitle></NotificationTitle>
-      <NotificationDate></NotificationDate>
+      <div css={NotificationTitle}></div>
+      <div css={NotificationDate}></div>
     </NotificationMeta>
-  </NotificationPlaceholderWrap>
+  </div>
 );
 
 const NotificationPlaceholder: React.FC<NotificationPlaceholderProps> = props => {

@@ -25,6 +25,7 @@ export const requestNotificationAuth = async () => {
   const tokenRequestSource = originalAxios.CancelToken.source();
 
   const { data } = await axios.get<NotificationAuthResponse>(tokenUrl.toString(), {
+    custom: { authorizationRequestType: OAuthRequestType.STRICT },
     withCredentials: true,
     cancelToken: tokenRequestSource.token,
   });
@@ -39,7 +40,7 @@ export const requestNotification = async (limit: number, token: string) => {
   const { data } = await axios.get<NotificationResponse>(notificationUrl.toString(), {
     params: { limit },
     cancelToken: notificationRequestSource.token,
-    custom: { authorizationRequestType: OAuthRequestType.CHECK },
+    custom: { authorizationRequestType: OAuthRequestType.STRICT },
     headers: {
       Authorization: `Bearer ${token}`,
     },
