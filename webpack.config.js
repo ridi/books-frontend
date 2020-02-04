@@ -79,6 +79,7 @@ module.exports = (env, argv) => ({
     port: 9000,
     public: process.env.SELECT_URL,
   },
+  devtool: 'inline-source-map',
   optimization: {
     minimizer: [
       new TerserPlugin({
