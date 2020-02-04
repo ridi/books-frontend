@@ -9,3 +9,4 @@ coverage/
 build/
 node_modules/
 out/
+dist/
