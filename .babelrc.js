@@ -10,6 +10,9 @@ const presets = [
     },
   ],
   ['@emotion/babel-preset-css-prop', { autoLabel: true, labelFormat: '[local]' }],
+  '@babel/env',
+  '@babel/preset-react',
+  '@babel/preset-typescript',
 ];
 
 const plugins = [
