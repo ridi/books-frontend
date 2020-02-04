@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@babel/polyfill": "^7.7.0",
+    "@babel/polyfill": "^7.8.3",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
     "@ridi/colors": "^0.7.1",
@@ -22,7 +22,7 @@
     "connected-next-router": "^1.0.1",
     "cookie-parser": "^1.4.4",
     "copy-webpack-plugin": "^5.0.5",
-    "dotenv": "^7.0.0",
+    "dotenv": "^8.2.0",
     "emotion": "^10.0.23",
     "emotion-server": "^10.0.17",
     "emotion-theming": "^10.0.19",
@@ -88,10 +88,13 @@
     "@typescript-eslint/eslint-plugin": "^2.16.0",
     "@typescript-eslint/parser": "^2.16.0",
     "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
     "babel-plugin-emotion": "^10.0.23",
     "babel-plugin-module-resolver": "^3.2.0",
+    "clean-webpack-plugin": "^3.0.0",
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
+    "dotenv-webpack": "^1.7.0",
     "eslint": "^6.7.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-import-resolver-babel-module": "^5.1.0",
@@ -100,6 +103,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.16.0",
     "eslint-plugin-react-hooks": "^2.3.0",
+    "file-loader": "^5.0.2",
+    "html-webpack-plugin": "^3.2.0",
     "husky": "^3.1.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24.9.0",
@@ -113,8 +118,14 @@
     "serverless-offline": "^5.8.0",
     "serverless-plugin-warmup": "^4.7.1-rc.1",
     "serverless-s3-sync": "^1.9.2",
+    "svgo": "^1.3.2",
+    "svgo-loader": "^2.2.1",
+    "terser-webpack-plugin": "^2.3.4",
     "typescript": "^3.7.4",
-    "url-loader": "^2.2.0"
+    "url-loader": "^2.2.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.2"
   },
   "scripts": {
     "format": "yarn prettier --write ",
@@ -128,7 +139,8 @@
     "clear": "rm -rf ./build",
     "clear-source-map": "find ./build -type f -name '*.js.map' -delete",
     "test": "jest --passWithNoTests --collectCoverage --colors",
-    "analyze": "BUNDLE_ANALYZE=both yarn build"
+    "analyze": "BUNDLE_ANALYZE=both yarn build",
+    "inapp": "webpack --mode production"
   },
   "husky": {
     "hooks": {
