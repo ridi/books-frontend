@@ -64,25 +64,25 @@ module.exports = (env, argv) => ({
       minify: {
         collapseWhitespace: true,
         processConditionalComments: true,
-        minifyJS: argv.mode === 'production',
+        // minifyJS: argv.mode === 'production',
       },
     }),
     new webpack.DefinePlugin(getDefinitions('')),
   ],
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-      }),
-    ],
-    splitChunks: {
-      cacheGroups: {
-        commons: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-        },
-      },
-    },
-  },
+  // optimization: {
+  //   minimizer: [
+  //     new TerserPlugin({
+  //       sourceMap: true,
+  //     }),
+  //   ],
+  //   splitChunks: {
+  //     cacheGroups: {
+  //       commons: {
+  //         test: /[\\/]node_modules[\\/]/,
+  //         name: 'vendors',
+  //         chunks: 'all',
+  //       },
+  //     },
+  //   },
+  // },
 });
