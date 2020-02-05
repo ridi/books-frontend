@@ -36,15 +36,10 @@ module.exports = (env, argv) => ({
       {
         test: /\.svg$/,
         use: [
-          { loader: 'file-loader' },
           {
-            loader: 'svgo-loader',
+            loader: '@svgr/webpack',
             options: {
-              plugins: [
-                { removeTitle: true },
-                { convertColors: { shorthex: false } },
-                { convertPathData: false },
-              ],
+              prettier: false,
             },
           },
         ],
