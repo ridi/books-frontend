@@ -96,7 +96,6 @@
     "clean-webpack-plugin": "^3.0.0",
     "codecov": "^3.6.1",
     "cross-env": "^6.0.3",
-    "dotenv-webpack": "^1.7.0",
     "eslint": "^6.7.0",
     "eslint-config-prettier": "^6.7.0",
     "eslint-import-resolver-babel-module": "^5.1.0",
@@ -121,8 +120,6 @@
     "serverless-offline": "^5.8.0",
     "serverless-plugin-warmup": "^4.7.1-rc.1",
     "serverless-s3-sync": "^1.9.2",
-    "svgo": "^1.3.2",
-    "svgo-loader": "^2.2.1",
     "terser-webpack-plugin": "^2.3.4",
     "typescript": "^3.7.4",
     "url-loader": "^2.2.0",
@@ -143,7 +140,7 @@
     "clear-source-map": "find ./build -type f -name '*.js.map' -delete",
     "test": "jest --passWithNoTests --collectCoverage --colors",
     "analyze": "BUNDLE_ANALYZE=both yarn build",
-    "inapp": "webpack --mode development",
+    "inapp-build": "webpack --mode production",
     "dev": "webpack-dev-server"
   },
   "husky": {
