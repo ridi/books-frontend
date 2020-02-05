@@ -81,11 +81,14 @@ module.exports = (env, argv) => ({
   },
   devtool: 'inline-source-map',
   optimization: {
-    minimizer: [
-      new TerserPlugin({
-        sourceMap: true,
-      }),
-    ],
+    minimizer:
+      env === 'production'
+        ? [
+            new TerserPlugin({
+              sourceMap: true,
+            }),
+          ]
+        : [],
     splitChunks: {
       cacheGroups: {
         commons: {

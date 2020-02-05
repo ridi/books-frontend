@@ -142,7 +142,7 @@
     "clear-source-map": "find ./build -type f -name '*.js.map' -delete",
     "test": "jest --passWithNoTests --collectCoverage --colors",
     "analyze": "BUNDLE_ANALYZE=both yarn build",
-    "inapp": "webpack --mode production",
+    "inapp": "webpack --mode development",
     "dev": "webpack-dev-server"
   },
   "husky": {
