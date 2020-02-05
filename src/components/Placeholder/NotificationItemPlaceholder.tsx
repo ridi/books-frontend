@@ -62,10 +62,10 @@ interface NotificationPlaceholderProps {
 
 const NotificationItemPlaceholder: React.FC = () => (
   <div css={NotificationPlaceholderWrap}>
-    <div css={NotificationThumbnail}></div>
+    <div css={NotificationThumbnail} />
     <NotificationMeta>
-      <div css={NotificationTitle}></div>
-      <div css={NotificationDate}></div>
+      <div css={NotificationTitle} />
+      <div css={NotificationDate} />
     </NotificationMeta>
   </div>
 );

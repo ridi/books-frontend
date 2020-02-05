@@ -77,7 +77,6 @@ module.exports = (env, argv) => ({
     hot: true,
     open: false,
     port: 9000,
-    public: process.env.SELECT_URL,
   },
   devtool: 'inline-source-map',
   optimization: {

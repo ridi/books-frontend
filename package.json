@@ -113,6 +113,7 @@
     "lint-staged": "^9.4.3",
     "pm2": "^4.1.2",
     "prettier": "^1.19.1",
+    "react-emotion": "^10.0.0",
     "serverless": "^1.60.5",
     "serverless-apigw-binary": "^0.4.4",
     "serverless-domain-manager": "^2.6.13",

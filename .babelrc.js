@@ -9,16 +9,11 @@ const presets = [
       },
     },
   ],
-  [
-    '@emotion/babel-preset-css-prop',
-    { inline: true, autoLabel: true, labelFormat: '[local]' },
-  ],
-  '@babel/env',
-  '@babel/preset-react',
-  '@babel/preset-typescript',
+  ['@emotion/babel-preset-css-prop', { autoLabel: true, labelFormat: '[local]' }],
 ];
 
 const plugins = [
+  ['emotion', { inline: true }],
   [
     /*
     tsconfig 의 paths 는 IDE & tsc 에서만 경로를 도와주고
