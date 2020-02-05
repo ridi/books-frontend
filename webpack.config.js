@@ -76,7 +76,7 @@ module.exports = (env, argv) => ({
   devtool: 'inline-source-map',
   optimization: {
     minimizer:
-      env === 'production'
+      argv.mode === 'production'
         ? [
             new TerserPlugin({
               sourceMap: true,
