@@ -1,5 +1,6 @@
 const path = require('path');
 
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -54,6 +55,7 @@ module.exports = (env, argv) => ({
     },
   },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
       minify: {
@@ -73,7 +75,7 @@ module.exports = (env, argv) => ({
     open: false,
     port: 9000,
   },
-  devtool: 'inline-source-map',
+  devtool: 'cheap-source-map',
   optimization: {
     minimizer:
       argv.mode === 'production'
