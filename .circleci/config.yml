@@ -123,6 +123,7 @@ workflows:
           filters: *master_only
           AWS_ACCESS_KEY_ID: DEV_AWS_ACCESS_KEY_ID
           AWS_SECRET_ACCESS_KEY: DEV_AWS_SECRET_ACCESS_KEY
+          S3_BUCKET: DEV_S3_BUCKET
       - notify:
           name: notify-dev
           requires:
