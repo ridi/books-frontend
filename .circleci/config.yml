@@ -1,0 +1,152 @@
+version: 2.1
+orbs:
+  aws-s3: circleci/aws-s3@1.0.9
+  slack: circleci/slack@3.4.2
+commands:
+  install:
+    parameters:
+      key:
+        type: string
+        default: 'books-frontend'
+    steps:
+      - restore_cache:
+          keys:
+            - <<parameters.key>>-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - <<parameters.key>>-{{ .Branch }}-
+            - <<parameters.key>>-
+      - when:
+          steps:
+            - run:
+                name: Install yarn packages
+                command: yarn install --frozen-lockfile
+      - save_cache:
+          key: <<parameters.key>>-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths: ~/.cache/yarn
+jobs:
+  build:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/books-frontend
+    parameters:
+      dev:
+        type: boolean
+        default: false
+    environment:
+      ENVIRONMENT: << parameters.environment >>
+    steps:
+      - checkout
+      - install:
+      - run:
+          command: yarn build src
+      - persist_to_workspace:
+          root: .
+          paths:
+            - build/
+  deploy:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/books-frontend
+    parameters:
+      AWS_ACCESS_KEY_ID:
+        type: env_var_name
+        default: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        type: env_var_name
+        default: AWS_SECRET_ACCESS_KEY
+      S3_BUCKET:
+        type: env_var_name
+        default: PROD_S3_BUCKET
+      SLACK_WEBHOOK:
+        type: env_var_name
+        default: SLACK_WEBHOOK
+    environment:
+      AWS_ACCESS_KEY_ID: << parameters.AWS_ACCESS_KEY_ID >>
+      AWS_SECRET_ACCESS_KEY: << parameters.AWS_SECRET_ACCESS_KEY >>
+      S3_BUCKET: << parameters.S3_BUCKET >>
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - aws-s3/copy:
+          from: static
+          to: s3://${S3_BUCKET}/static
+      - aws-s3/copy:
+          from: build
+          to: s3://${S3_BUCKET}/_next
+      - run:
+          command: yarn deploy
+  notify:
+    docker:
+      - image: circleci/node:lts
+    working_directory: ~/books-frontend
+    parametters:
+      channel:
+        type: string
+        default: deploy-store
+      branch:
+        type: string
+        default: release
+    environment:
+      BRANCH: << parameters.branch >>
+    steps:
+      - checkout
+      - run:
+          name: Set environment variables
+          command: |
+            export TITLE="`git show -s --format=%s -n1 $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
+            export MESSAGE="`git show -s --format=%b $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
+            export MESSAGE="$MESSAGE\n\n$(git log `git rev-parse --abbrev-ref HEAD`^1..`git rev-parse --abbrev-ref HEAD` --no-merges --pretty=format:'* `%h` %s')"
+            echo "export TITLE=$'$(echo "$TITLE")'" >> $BASH_ENV
+            echo "export MESSAGE=$'$(echo "$MESSAGE")'" >> $BASH_ENV
+      - slack/notify:
+          color: good
+          title: $TITLE
+          title_link: https://github.com/ridi/books-frontend/commit/$CIRCLE_SHA1
+          message: $MESSAGE
+          channel: << parameters.channel >>
+          include_project_field: false
+          include_job_number_field: false
+workflows:
+  version: 2
+  deploy-dev:
+    jobs:
+      - build:
+          name: build-dev
+          filters: &master_only
+            branches:
+              only:
+                - master
+          dev: true
+          env:
+            environment: local
+      - deploy:
+          name: deploy-dev
+          requires:
+            - build-dev
+          filters: *master_only
+          AWS_ACCESS_KEY_ID: DEV_AWS_ACCESS_KEY_ID
+          AWS_SECRET_ACCESS_KEY: DEV_AWS_SECRET_ACCESS_KEY
+      - notify:
+          name: notify-dev
+          requires:
+            - deploy-dev
+          filters: *master_only
+          channel: deploy-store-dev
+          branch: master
+  deploy-prod:
+    jobs:
+      - build:
+          name: build-prod
+          filters: &release_only
+            branches:
+              only: release
+      - deploy:
+          name: deploy-prod
+          requires:
+            - build-prod
+          filters: *release_only
+      - notify:
+          name: notify-prod
+          requires:
+            - deploy-prod
+          filters: *release_only
