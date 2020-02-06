@@ -7,18 +7,16 @@ commands:
     parameters:
       key:
         type: string
-        default: 'books-frontend'
+        default: books-frontend
     steps:
       - restore_cache:
           keys:
             - <<parameters.key>>-{{ .Branch }}-{{ checksum "yarn.lock" }}
             - <<parameters.key>>-{{ .Branch }}-
             - <<parameters.key>>-
-      - when:
-          steps:
-            - run:
-                name: Install yarn packages
-                command: yarn install --frozen-lockfile
+      - run:
+          name: Install yarn packages
+          command: yarn install --frozen-lockfile
       - save_cache:
           key: <<parameters.key>>-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: ~/.cache/yarn
@@ -28,14 +26,14 @@ jobs:
       - image: circleci/node:lts
     working_directory: ~/books-frontend
     parameters:
-      dev:
-        type: boolean
-        default: false
+      environment:
+        type: string
+        default: production
     environment:
       ENVIRONMENT: << parameters.environment >>
     steps:
       - checkout
-      - install:
+      - install
       - run:
           command: yarn build src
       - persist_to_workspace:
@@ -73,13 +71,14 @@ jobs:
       - aws-s3/copy:
           from: build
           to: s3://${S3_BUCKET}/_next
+      - install
       - run:
           command: yarn deploy
   notify:
     docker:
       - image: circleci/node:lts
     working_directory: ~/books-frontend
-    parametters:
+    parameters:
       channel:
         type: string
         default: deploy-store
@@ -116,9 +115,7 @@ workflows:
             branches:
               only:
                 - master
-          dev: true
-          env:
-            environment: local
+          environment: local
       - deploy:
           name: deploy-dev
           requires:
