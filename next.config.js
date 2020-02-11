@@ -23,7 +23,7 @@ module.exports = withBundleAnalyzer(
       withTM({
         transpileModules: ['p-retry'], // for IE11
         distDir: '../build',
-        assetPrefix: STATIC_CDN_URL || 'https://books.local.ridi.io',
+        assetPrefix: STATIC_CDN_URL || 'https://books.ridicdn.net',
         useFileSystemPublicRoutes: false,
         exportPathMap: () => ({}),
         webpack(config, option) {
