@@ -77,7 +77,7 @@ jobs:
           command: yarn serverless deploy -s << parameters.stage >> -v
       - run:
           command:
-            yarn serverless deploy list | awk '/Timestamp/ {print $NF}' | tail -n 1 > .deploytimestamp
+            yarn serverless deploy list -s << parameters.stage >> | awk '/Timestamp/ {print $NF}' | tail -n 1 > .deploytimestamp
       - persist_to_workspace:
           root: .
           paths:
