@@ -74,7 +74,7 @@ jobs:
       - checkout
       - install
       - run:
-          command: yarn build src
+          command: yarn next build src
       - persist_to_workspace:
           root: .
           paths:
