@@ -137,6 +137,8 @@ jobs:
         type: steps
         default: []
     steps:
+      - attach_workspace:
+          at: .
       - run:
           command: |
             curl -o- -L https://slss.io/install | bash
