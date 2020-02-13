@@ -38,7 +38,7 @@ pull_request_rules:
       - '#approved-reviews-by>=1'
     actions:
       merge:
-        method: merge
+        method: squash
         strict: true
         strict_method: rebase
       delete_head_branch:
