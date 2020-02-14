@@ -41,8 +41,9 @@ commands:
           steps:
             - run:
                 command: |
+                  export LAST_RELEASE=$([ "$CIRCLE_BRANCH" = master ] && echo "`git rev-parse --abbrev-ref HEAD`^1" || echo "`git for-each-ref --count=1 --sort=-committerdate --format='%(objectname)' refs/remotes/origin/release/`")
                   export MESSAGE="`git show -s --format=%b $CIRCLE_SHA1 | sed "s/'/\\\\\'/g"`"
-                  export MESSAGE="$MESSAGE\n\n$(git log `git rev-parse --abbrev-ref HEAD`^1..`git rev-parse --abbrev-ref HEAD` --no-merges --pretty=format:'* `%h` %s')"
+                  export MESSAGE="$MESSAGE\n\n$(git log $LAST_RELEASE..$CIRCLE_SHA1 --no-merges --pretty=format:'* `%h` %s')"
                   echo "export MESSAGE=$'$(echo "$MESSAGE")'" >> $BASH_ENV
       - when:
           condition: <<parameters.rollback>>
