@@ -6,6 +6,7 @@ import { displayNoneForTouchDevice, scrollBarHidden } from 'src/styles';
 import Arrow, { arrowTransition } from 'src/components/Carousel/Arrow';
 import { useScrollSlider } from 'src/hooks/useScrollSlider';
 import { DeviceTypeContext } from 'src/components/Context/DeviceType';
+import 'url-search-params-polyfill';
 
 interface Keyword {
   genre: string;
