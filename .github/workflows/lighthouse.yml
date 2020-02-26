@@ -1,0 +1,21 @@
+name: Google Lighthouse 
+
+on:
+  schedule:
+    - cron: '5 * * * *'
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Audit ridibooks.com using Lighthouse
+      uses: treosh/lighthouse-ci-action@v2
+      with:
+        urls: |
+          https://ridibooks.com
+    - name: Save Results
+      uses: actions/upload-artifact@v1
+      with:
+        name: lighthouse-results
+        path: '.lighthouseci' # This will save the Lighthouse results as .json files
