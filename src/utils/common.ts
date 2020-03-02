@@ -1,7 +1,7 @@
 import { UAParser } from 'ua-parser-js';
+// eslint-disable-next-line import/no-unresolved
 import * as BookApi from 'src/types/book';
 
-// tslint:disable-next-line
 export const safeJSONParse = (source: string | null, defaultValue: any) => {
   if (!source) {
     return defaultValue;
@@ -100,15 +100,15 @@ export const getMaxDiscountPercentage = (book?: BookApi.Book) => {
   const seriesRentDiscountPercentage =
     book.series?.price_info?.rent?.discount_percentage || 0;
 
-  const maxValue = Math.ceil(
-    Math.max(
-      singleBuyDiscountPercentage,
-      seriesBuyDiscountPercentage,
-      singleRentDiscountPercentage,
-      seriesRentDiscountPercentage,
-    ),
-  );
-  if (maxValue >= 10 && maxValue < 100) {
+  const excludeMax = [
+    singleBuyDiscountPercentage,
+    seriesBuyDiscountPercentage,
+    singleRentDiscountPercentage,
+    seriesRentDiscountPercentage,
+  ].filter((dp) => dp < 100);
+
+  const maxValue = Math.ceil(Math.max(...excludeMax));
+  if (maxValue >= 10) {
     return maxValue;
   }
   return 0;
