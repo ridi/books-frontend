@@ -1,5 +1,4 @@
 import { UAParser } from 'ua-parser-js';
-// eslint-disable-next-line import/no-unresolved
 import * as BookApi from 'src/types/book';
 
 export const safeJSONParse = (source: string | null, defaultValue: any) => {
@@ -107,7 +106,7 @@ export const getMaxDiscountPercentage = (book?: BookApi.Book) => {
     seriesRentDiscountPercentage,
   ].filter((dp) => dp < 100);
 
-  const maxValue = Math.ceil(Math.max(...excludeMax));
+  const maxValue = Math.round(Math.max(...excludeMax));
   if (maxValue >= 10) {
     return maxValue;
   }
