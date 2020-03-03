@@ -6,8 +6,12 @@ coverage:
       enabled: yes
       target: 90
       threshold: 1%
+      if_not_found: success
+      if_ci_failed: error
     patch:
       default:
-        enabled: no
+        enabled: yes
+        threshold: 0%
         if_not_found: success
+        if_ci_failed: error
 
