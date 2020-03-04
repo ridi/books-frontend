@@ -286,7 +286,7 @@ const ItemList: React.FC<any> = props => {
                   titleLineClamp={props.type === 'small' ? 1 : 2}
                   isAIRecommendation={false}
                   showSomeDeal={showSomeDeal}
-                  showTag={['bl', 'bl-serial'].includes(genre) && props.type === 'big'}
+                  showTag={false}
                   width={props.type === 'big' ? '177px' : null}
                   ratingInfo={(book as MdBook).rating}
                 />
