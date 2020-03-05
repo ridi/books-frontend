@@ -474,7 +474,7 @@ const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props
   const parentGenre = genre !== 'comics' ? genre.replace('-serial', '') : 'comic';
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const deviceType = useContext(DeviceTypeContext);
+  const { isMobile } = useContext(DeviceTypeContext);
   const genreSearchParam = new URLSearchParams();
   if (['bl', 'fantasy', 'romance'].includes(parentGenre)) {
     genreSearchParam.append('from', genre);
@@ -513,7 +513,7 @@ const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props
           );
         })}
       </List>
-      {!['mobile', 'tablet'].includes(deviceType) && (
+      {!isMobile && (
         <form
           css={[
             css`

@@ -149,7 +149,7 @@ const Section = styled.section`
 export const QuickMenuList: React.FC<QuickMenuListProps> = (props) => {
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const deviceType = useContext(DeviceTypeContext);
+  const { isMobile } = useContext(DeviceTypeContext);
   return (
     <Section>
       <h2 className="a11y">퀵 메뉴</h2>
@@ -158,7 +158,7 @@ export const QuickMenuList: React.FC<QuickMenuListProps> = (props) => {
           <MemoizedQuickMenuItem key={index} menu={menu} />
         ))}
       </MenuList>
-      {!['mobile', 'tablet'].includes(deviceType) && (
+      {!isMobile && (
         <form
           css={css`
             height: 0;

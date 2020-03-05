@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { getDeviceType } from 'src/utils/common';
 
-// import sentry from 'src/utils/sentry';
-// const { captureException } = sentry();
-export const DeviceTypeContext = React.createContext(null);
+export const DeviceTypeContext = React.createContext({
+  deviceType: null,
+  isMobile: false,
+});
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface DeviceTypeContextProps {}
-
-export const DeviceType: React.FC<DeviceTypeContextProps> = (props) => {
-  const [type, setType] = useState(null);
+export const DeviceType: React.FC = (props) => {
+  const [deviceType, setDeviceType] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    setType(getDeviceType());
+    const device = getDeviceType();
+    setDeviceType(device);
+    setIsMobile(['mobile', 'tablet'].includes(device));
   }, []);
   return (
-    <DeviceTypeContext.Provider value={type}>{props.children}</DeviceTypeContext.Provider>
+    <DeviceTypeContext.Provider value={{ deviceType, isMobile }}>{props.children}</DeviceTypeContext.Provider>
   );
 };

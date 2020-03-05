@@ -113,7 +113,7 @@ const SelectionBookList: React.FC<SelectionBookListProps> = React.memo((props) =
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref);
   const { genre, type, slug } = props;
-  const deviceType = useContext(DeviceTypeContext);
+  const { isMobile } = useContext(DeviceTypeContext);
   const [requestExclude, requestCancel] = useExcludeRecommendation();
   const [isMounted, setMounted] = useState(false);
 
@@ -153,7 +153,7 @@ const SelectionBookList: React.FC<SelectionBookListProps> = React.memo((props) =
             </li>
           ))}
       </ul>
-      {!['mobile', 'tablet'].includes(deviceType) && (
+      {!isMobile && (
         <form
           css={[
             css`

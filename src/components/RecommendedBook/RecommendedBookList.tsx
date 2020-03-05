@@ -138,7 +138,7 @@ const RecommendedBookList: React.FC<RecommendedBookListProps> = React.memo((prop
   const {
     theme, type, slug, genre,
   } = props;
-  const deviceType = useContext(DeviceTypeContext);
+  const { isMobile } = useContext(DeviceTypeContext);
 
   const { items } = props;
   const carouselItems = React.useMemo(
@@ -182,7 +182,7 @@ const RecommendedBookList: React.FC<RecommendedBookListProps> = React.memo((prop
       >
         {carouselItems}
       </BookList>
-      {!['mobile', 'tablet'].includes(deviceType) && (
+      {!isMobile && (
         <form css={displayNoneForTouchDevice}>
           <Arrow
             onClickHandler={moveLeft}
