@@ -1,4 +1,4 @@
-# Ridibooks
+# Mergify test
 
 ```spacebars
 
