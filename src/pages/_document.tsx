@@ -51,7 +51,7 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
   }
 
   public render() {
-    const isPartials = !!this.props.__NEXT_DATA__.page.match(/\/partials\//u);
+    const isPartials = !!this.props.__NEXT_DATA__.page.match(/^\/partials\//u);
     const { nonce } = this.props;
     return (
       <html lang="ko">

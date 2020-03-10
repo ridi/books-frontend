@@ -105,7 +105,7 @@ const BookShadowStyle = css`
     height: 100%;
     background: linear-gradient(to right,rgba(0,0,0,.2) 0,rgba(0,0,0,0) 5%,rgba(0,0,0,0) 95%,rgba(0,0,0,.2) 100% );
     border: solid 1px rgba(0,0,0,.1);
-    content: '';    
+    content: '';
   };
 `;
 
@@ -113,7 +113,7 @@ const ImageWrapper = styled.div<{ imageType: string }>`
   text-align: center;
   flex-shrink: 0;
   position: relative;
-  align-self: flex-start;  
+  align-self: flex-start;
   ${(props) => props.imageType === 'book' && BookShadowStyle};
 `;
 
@@ -298,20 +298,6 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
     return () => dispatch(notificationActions.setLoaded(false));
   }, [dispatch]);
 
-  if (!isLoaded) {
-    return (
-      <>
-        <Head>
-          <title>리디북스 - 알림</title>
-        </Head>
-        <Section>
-          <PageTitle title="알림" mobileHidden={isTitleHidden} />
-          <NotificationPlaceholder num={5} />
-        </Section>
-      </>
-    );
-  }
-
   return (
     <>
       <Head>
@@ -319,26 +305,30 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
       </Head>
       <Section>
         <PageTitle title="알림" mobileHidden={isTitleHidden} />
-        <NotiList>
-          {items.length === 0 ? (
-            <NoEmptyNotification>
-              <NotificationIcon css={notificationStyle} />
-              <NoEmptyNotificationText>새로운 알림이 없습니다.</NoEmptyNotificationText>
-            </NoEmptyNotification>
-          ) : (
-            items.map((item, index) => (
-              <NotificationItem
-                key={index}
-                createdAtTimeAgo={timeAgo(item.createdAt)}
-                item={item}
-                dot={index < unreadCount}
-                tracker={tracker}
-                slug={slug}
-                order={index}
-              />
-            ))
-          )}
-        </NotiList>
+        {isLoaded ? (
+          <NotiList>
+            {items.length === 0 ? (
+              <NoEmptyNotification>
+                <NotificationIcon css={notificationStyle} />
+                <NoEmptyNotificationText>새로운 알림이 없습니다.</NoEmptyNotificationText>
+              </NoEmptyNotification>
+            ) : (
+              items.map((item, index) => (
+                <NotificationItem
+                  key={index}
+                  createdAtTimeAgo={timeAgo(item.createdAt)}
+                  item={item}
+                  dot={index < unreadCount}
+                  tracker={tracker}
+                  slug={slug}
+                  order={index}
+                />
+              ))
+            )}
+          </NotiList>
+        ) : (
+          <NotificationPlaceholder num={5} />
+        )}
       </Section>
     </>
   );

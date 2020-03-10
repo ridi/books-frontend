@@ -24,6 +24,7 @@ import { cache } from 'emotion';
 import createCache from '@emotion/cache';
 
 import { ViewportIntersectionProvider } from 'src/hooks/useViewportIntersection';
+import InAppThemeProvider from 'src/components/Misc/InAppThemeProvider';
 import Meta from 'src/components/Meta';
 import sentry from 'src/utils/sentry';
 
@@ -34,6 +35,7 @@ interface StoreAppProps {
   // tslint:disable-next-line
   pageProps: any;
   isPartials?: boolean;
+  isInApp?: boolean;
   // tslint:disable-next-line
   query: any;
   ctxPathname?: string;
@@ -54,7 +56,8 @@ const Contents = styled.main`
 
 class StoreApp extends App<StoreAppProps, StoreAppState> {
   public static async getInitialProps({ ctx, Component, ...rest }: AppContext) {
-    const isPartials = !!ctx.pathname.match(/\/partials\//u);
+    const isPartials = !!ctx.pathname.match(/^\/partials\//u);
+    const isInApp = !!ctx.pathname.match(/^\/inapp\//u);
     // eslint-disable-next-line init-declarations
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
@@ -64,6 +67,7 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
     return {
       pageProps,
       isPartials,
+      isInApp,
       ctxPathname: rest.router ? rest.router.asPath : '/',
       query: {
         ...ctx.query,
@@ -110,6 +114,7 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
       query,
       pageProps,
       isPartials,
+      isInApp,
       store,
       // @ts-ignore
       nonce,
@@ -143,6 +148,29 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
         </>
       );
     }
+
+    if (isInApp) {
+      return (
+        <>
+          <Meta />
+          <CacheProvider value={createCache({ ...cache, nonce })}>
+            <Global styles={resetStyles} />
+            <Provider store={store}>
+              <ConnectedRouter>
+                <InAppThemeProvider>
+                  <ViewportIntersectionProvider>
+                    <Contents>
+                      <Component {...pageProps} />
+                    </Contents>
+                  </ViewportIntersectionProvider>
+                </InAppThemeProvider>
+              </ConnectedRouter>
+            </Provider>
+          </CacheProvider>
+        </>
+      );
+    }
+
     return (
       // CacheProvider 올바르게 동작하는지 확인하기
       <>
