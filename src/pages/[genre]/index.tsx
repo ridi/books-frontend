@@ -24,7 +24,7 @@ import { RootState } from 'src/store/config';
 import useIsSelectFetch from 'src/hooks/useIsSelectFetch';
 import { css } from '@emotion/core';
 
-import { DeviceType } from 'src/components/Context/DeviceType';
+import { DeviceTypeProvider } from 'src/hooks/useDeviceType';
 
 const { captureException } = sentry();
 
@@ -105,7 +105,7 @@ export const Home: NextPage<HomeProps> = (props) => {
         <title>{`${titleGenerator(currentGenre)} - 리디북스`}</title>
       </Head>
       <GenreTab currentGenre={currentGenre} />
-      <DeviceType>
+      <DeviceTypeProvider>
         {props.branches
           && props.branches.map((section, index) => (
             <React.Fragment key={index}>
@@ -117,7 +117,7 @@ export const Home: NextPage<HomeProps> = (props) => {
             margin-bottom: 24px;
           `}
         />
-      </DeviceType>
+      </DeviceTypeProvider>
     </>
   );
 };

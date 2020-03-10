@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 
 import TopBanner from 'src/components/TopBanner';
 import { ViewportIntersectionProvider } from 'src/hooks/useViewportIntersection';
-import * as DeviceTypeContext from 'src/hooks/useDeviceType';
+import { DeviceTypeProvider } from 'src/hooks/useDeviceType';
 
 import makeStore from 'src/store/config';
 
@@ -63,22 +63,34 @@ describe('TopBanner', () => {
   });
 
   describe('mobile', () => {
+    let spy: jest.SpyInstance;
+
     const contextValues = {
       deviceType: 'mobile',
       isMobile: true,      
     }
 
     beforeAll(() => {
-      jest.spyOn(DeviceTypeContext, 'useDeviceType')
-      .mockImplementation(() => contextValues);    
+      spy = jest.spyOn(window.navigator, 'userAgent', 'get')
+      .mockReturnValue(
+        'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) ' +
+        'AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
+      );
     });
 
+    afterAll(() => {	
+      spy.mockRestore();	
+    });
+
+    
     test('should hide arrows', () => {
       const { container } = actRender(() =>
         render(
           <Provider store={store}>
             <ViewportIntersectionProvider>
-              <TopBanner banners={BANNERS} slug="test" />
+              <DeviceTypeProvider>
+                <TopBanner banners={BANNERS} slug="test" />
+              </DeviceTypeProvider>
             </ViewportIntersectionProvider>
           </Provider>
         )
