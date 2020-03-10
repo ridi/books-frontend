@@ -18,7 +18,9 @@ export const DeviceTypeProvider: React.FC = (props) => {
     setDeviceType(device);
   }, []);
   return (
-    <DeviceTypeContext.Provider value={{ deviceType, isMobile: deviceType === 'mobile' }}>{props.children}</DeviceTypeContext.Provider>
+    <DeviceTypeContext.Provider value={{ deviceType, isMobile: deviceType === 'mobile' }}>
+      {props.children}
+    </DeviceTypeContext.Provider>
   );
 };
 
