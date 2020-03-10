@@ -203,7 +203,7 @@ const ItemList: React.FC<ItemListProps> = (props) => {
   const ref = useRef<HTMLUListElement>();
 
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const deviceType = useContext(DeviceTypeContext);
+  const { isMobile } = useContext(DeviceTypeContext);
   return (
     <>
       <List ref={ref} type={type}>
@@ -282,7 +282,7 @@ const ItemList: React.FC<ItemListProps> = (props) => {
             </RankingBookItem>
           ))}
       </List>
-      {!['mobile', 'tablet'].includes(deviceType) && (
+      {!isMobile && (
         <form
           css={[
             css`

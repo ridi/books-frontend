@@ -8,8 +8,9 @@ import BigBannerCarousel from 'src/components/Carousel/BigBannerCarousel';
 import { useEventTracker } from 'src/hooks/useEventTracker';
 import { useViewportIntersection } from 'src/hooks/useViewportIntersection';
 import { TopBanner } from 'src/types/sections';
-import { getDeviceType } from 'src/utils/common';
+import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import { SendEventType } from 'src/constants/eventTracking';
+
 
 const DESKTOP_INACTIVE_SCALE = 0.965;
 const ITEM_MARGIN = 10;
@@ -306,13 +307,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
     setInactiveScale(isDesktop ? DESKTOP_INACTIVE_SCALE : 1);
   }, [isDesktop]);
 
-  const [isMobile, setMobile] = React.useState(true);
-  React.useEffect(() => {
-    const device = getDeviceType();
-    if (!['mobile', 'tablet'].includes(device)) {
-      setMobile(false);
-    }
-  }, []);
+  const { deviceType, isMobile } = React.useContext(DeviceTypeContext);
 
   // 터치 핸들링
   const wrapperRef = React.useRef<HTMLDivElement>();
@@ -409,8 +404,6 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
   // 트래킹
   const [tracker] = useEventTracker();
   React.useEffect(() => {
-    const device = getDeviceType();
-    const deviceType = ['mobile', 'tablet'].includes(device) ? 'Mobile' : 'Pc';
     // FIXME: 이게 최선입니까?
     window.setImmediate(() => {
       const item = {
