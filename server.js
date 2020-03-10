@@ -11,6 +11,15 @@ const handle = app.getRequestHandler();
 const server = new Koa();
 const router = new Router();
 
+server.use(async (ctx, next) => {
+  if (ctx.request.path.match(/\/+$/)) {
+    ctx.status = 308;
+    ctx.redirect(`${ctx.request.path.replace(/\/+$/, '')}${ctx.request.search}`);
+  } else {
+    await next();
+  }
+});
+
 router.all("*", async ctx => {
   await handle(ctx.req, ctx.res);
   ctx.response = false;
