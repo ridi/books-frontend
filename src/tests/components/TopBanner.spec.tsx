@@ -65,11 +65,6 @@ describe('TopBanner', () => {
   describe('mobile', () => {
     let spy: jest.SpyInstance;
 
-    const contextValues = {
-      deviceType: 'mobile',
-      isMobile: true,      
-    }
-
     beforeAll(() => {
       spy = jest.spyOn(window.navigator, 'userAgent', 'get')
       .mockReturnValue(
@@ -82,7 +77,7 @@ describe('TopBanner', () => {
       spy.mockRestore();	
     });
 
-    
+
     test('should hide arrows', () => {
       const { container } = actRender(() =>
         render(
