@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useRef, useState,
+  useEffect, useRef, useState,
 } from 'react';
 import { displayNoneForTouchDevice, flexRowStart, scrollBarHidden } from 'src/styles';
 import {
@@ -11,8 +11,8 @@ import Arrow, { arrowTransition } from 'src/components/Carousel/Arrow';
 import { getArrowVerticalCenterPosition } from 'src/components/Carousel';
 import { useScrollSlider } from 'src/hooks/useScrollSlider';
 import { DisplayType, MdBook } from 'src/types/sections';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import { useExcludeRecommendation } from 'src/hooks/useExcludeRecommedation';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 
 export const listCSS = css`
   padding-top: 7px;
@@ -113,7 +113,7 @@ const SelectionBookList: React.FC<SelectionBookListProps> = React.memo((props) =
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref);
   const { genre, type, slug } = props;
-  const { isMobile } = useContext(DeviceTypeContext);
+  const { isMobile } = useDeviceType();
   const [requestExclude, requestCancel] = useExcludeRecommendation();
   const [isMounted, setMounted] = useState(false);
 

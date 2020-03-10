@@ -1,13 +1,13 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { EventBannerItem } from 'src/components/EventBanner/index';
 import { css } from '@emotion/core';
 import { between, BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import { EventBanner } from 'src/types/sections';
 import { useIntersectionObserver } from 'src/hooks/useIntersectionObserver';
 import { sendClickEvent, useEventTracker } from 'src/hooks/useEventTracker';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import styled from '@emotion/styled';
 import { SendEventType } from 'src/constants/eventTracking';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 
 const List = styled.ul`
   display: flex;
@@ -38,7 +38,7 @@ interface EventBannerListProps {
 const EventBannerList: React.FC<EventBannerListProps> = (props) => {
   const targetRef = useRef(null);
   const isIntersecting = useIntersectionObserver(targetRef, '0px');
-  const { deviceType } = useContext(DeviceTypeContext);
+  const { deviceType } = useDeviceType();
   const [tracker] = useEventTracker();
   useEffect(() => {
     if (isIntersecting) {

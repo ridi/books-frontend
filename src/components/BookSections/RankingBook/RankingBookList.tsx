@@ -1,5 +1,5 @@
 import React, {
-  useContext, useEffect, useRef, useState,
+  useEffect, useRef, useState,
 } from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/core';
@@ -23,7 +23,7 @@ import BookBadgeRenderer from 'src/components/Badge/BookBadgeRenderer';
 import FreeBookRenderer from 'src/components/Badge/FreeBookRenderer';
 import SetBookRenderer from 'src/components/Badge/SetBookRenderer';
 import ThumbnailRenderer from 'src/components/BookThumbnail/ThumbnailRenderer';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 import { getMaxDiscountPercentage } from 'src/utils/common';
 import { AdultBadge } from 'src/components/Badge/AdultBadge';
 import { CLOCK_ICON_URL, VERTICAL_RIGHT_ARROW_ICON_URL } from 'src/constants/icons';
@@ -203,7 +203,7 @@ const ItemList: React.FC<ItemListProps> = (props) => {
   const ref = useRef<HTMLUListElement>();
 
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const { isMobile } = useContext(DeviceTypeContext);
+  const { isMobile } = useDeviceType();
   return (
     <>
       <List ref={ref} type={type}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useRef } from 'react';
+import React, { useCallback, useRef } from 'react';
 import styled from '@emotion/styled';
 import QuickMenuShape from 'src/svgs/QuickMenuShape.svg';
 import { css } from '@emotion/core';
@@ -7,7 +7,7 @@ import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import Arrow, { arrowTransition } from 'src/components/Carousel/Arrow';
 import { useScrollSlider } from 'src/hooks/useScrollSlider';
 import { QuickMenu } from 'src/types/sections';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 import { useEventTracker } from 'src/hooks/useEventTracker';
 import { SendEventType } from 'src/constants/eventTracking';
 
@@ -149,7 +149,7 @@ const Section = styled.section`
 export const QuickMenuList: React.FC<QuickMenuListProps> = (props) => {
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const { isMobile } = useContext(DeviceTypeContext);
+  const { isMobile } = useDeviceType();
   return (
     <Section>
       <h2 className="a11y">퀵 메뉴</h2>

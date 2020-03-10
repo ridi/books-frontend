@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
   BookList,
   BookMeta,
@@ -17,10 +17,10 @@ import FreeBookRenderer from 'src/components/Badge/FreeBookRenderer';
 import SetBookRenderer from 'src/components/Badge/SetBookRenderer';
 import ThumbnailRenderer from 'src/components/BookThumbnail/ThumbnailRenderer';
 import { displayNoneForTouchDevice } from 'src/styles';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import { getMaxDiscountPercentage } from 'src/utils/common';
 import { AdultBadge } from 'src/components/Badge/AdultBadge';
 import { BadgeContainer } from 'src/components/Badge/BadgeContainer';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 
 interface RecommendedBookListProps {
   items: TodayRecommendation[] | HotRelease[];
@@ -138,7 +138,7 @@ const RecommendedBookList: React.FC<RecommendedBookListProps> = React.memo((prop
   const {
     theme, type, slug, genre,
   } = props;
-  const { isMobile } = useContext(DeviceTypeContext);
+  const { isMobile } = useDeviceType();
 
   const { items } = props;
   const carouselItems = React.useMemo(

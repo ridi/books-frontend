@@ -8,7 +8,7 @@ import BigBannerCarousel from 'src/components/Carousel/BigBannerCarousel';
 import { useEventTracker } from 'src/hooks/useEventTracker';
 import { useViewportIntersection } from 'src/hooks/useViewportIntersection';
 import { TopBanner } from 'src/types/sections';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 import { SendEventType } from 'src/constants/eventTracking';
 
 
@@ -307,8 +307,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
     setInactiveScale(isDesktop ? DESKTOP_INACTIVE_SCALE : 1);
   }, [isDesktop]);
 
-  const { deviceType, isMobile } = React.useContext(DeviceTypeContext);
-
+  const { deviceType, isMobile } = useDeviceType();
   // 터치 핸들링
   const wrapperRef = React.useRef<HTMLDivElement>();
   const touchRef = React.useRef(null);

@@ -1,13 +1,13 @@
 import { css } from '@emotion/core';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
-import React, { useContext, useRef } from 'react';
+import React, { useRef } from 'react';
 import ArrowV from 'src/svgs/ArrowV.svg';
 import { displayNoneForTouchDevice, scrollBarHidden } from 'src/styles';
 import Arrow, { arrowTransition } from 'src/components/Carousel/Arrow';
 import { useScrollSlider } from 'src/hooks/useScrollSlider';
-import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import 'url-search-params-polyfill';
 import styled from '@emotion/styled';
+import { useDeviceType } from 'src/hooks/useDeviceType';
 
 interface Keyword {
   genre: string;
@@ -474,7 +474,7 @@ const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props
   const parentGenre = genre !== 'comics' ? genre.replace('-serial', '') : 'comic';
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
-  const { isMobile } = useContext(DeviceTypeContext);
+  const { isMobile } = useDeviceType();
   const genreSearchParam = new URLSearchParams();
   if (['bl', 'fantasy', 'romance'].includes(parentGenre)) {
     genreSearchParam.append('from', genre);
