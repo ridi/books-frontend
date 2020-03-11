@@ -8,7 +8,7 @@ import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 const NotificationPlaceholderWrap = styled.div<{ opacity: number }, RIDITheme>`
   position: relative;
   display: flex;
-  margin: 0px auto;
+  margin: 0 auto;
   padding: 14px 0px;
   opacity: ${(props) => props.opacity};
   ${orBelow(
