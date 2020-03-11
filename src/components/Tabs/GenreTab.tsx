@@ -203,8 +203,7 @@ const normal = (theme: RIDITheme) => css``;
 
 interface TabItemProps {
   label: string;
-  activePath: string[];
-  currentPath: string;
+  activePath: RegExp;
   currentCSS: (theme: RIDITheme) => SerializedStyles;
   normalCSS: (theme: RIDITheme) => SerializedStyles;
   labelCSS: (theme: RIDITheme) => SerializedStyles;
@@ -225,141 +224,30 @@ const subServiceTabLabelCSS = (theme: RIDITheme) => css`
   }
 `;
 
-// Fixme
-const genres = {
-  general: {
-    path: '/',
-    activePaths: ['/', ''],
-    services: [],
-  },
-  bl: {
-    path: '/bl',
-    activePaths: ['/bl', '/bl-serial', '/bl/', '/bl-serial/', 'bl', 'bl-serial'],
-    services: [
-      { name: '단행본', path: '/bl', activePaths: ['/bl', '/bl/', 'bl'] },
-      {
-        name: '연재',
-        path: '/bl-serial',
-        activePaths: ['/bl-serial', '/bl-serial/', 'bl-serial'],
-      },
-    ],
-  },
-  'bl-serial': {
-    path: '/bl-serial',
-    activePaths: ['/bl', '/bl-serial', 'bl-serial', 'bl'],
-    services: [
-      { name: '단행본', path: '/bl', activePaths: ['/bl', '/bl/', 'bl'] },
-      {
-        name: '연재',
-        path: '/bl-serial',
-        activePaths: ['/bl-serial', '/bl-serial/', 'bl-serial'],
-      },
-    ],
-  },
-  fantasy: {
-    path: '/fantasy',
-    activePaths: [
-      '/fantasy',
-      '/fantasy-serial',
-      '/fantasy/',
-      '/fantasy-serial/',
-      'fantasy',
-      'fantasy-serial',
-    ],
-    services: [
-      {
-        name: '단행본',
-        path: '/fantasy',
-        activePaths: ['/fantasy', '/fantasy/', 'fantasy'],
-      },
-      {
-        name: '연재',
-        path: '/fantasy-serial',
-        activePaths: ['/fantasy-serial', '/fantasy-serial/', 'fantasy-serial'],
-      },
-    ],
-  },
-  'fantasy-serial': {
-    path: '/fantasy-serial',
-    activePaths: [
-      '/fantasy',
-      '/fantasy-serial',
-      '/fantasy/',
-      '/fantasy-serial/',
-      'fantasy',
-      'fantasy-serial',
-    ],
-    services: [
-      {
-        name: '단행본',
-        path: '/fantasy',
-        activePaths: ['/fantasy', '/fantasy/', 'fantasy'],
-      },
-      {
-        name: '연재',
-        path: '/fantasy-serial',
-        activePaths: ['/fantasy-serial', '/fantasy-serial/', 'fantasy-serial'],
-      },
-    ],
-  },
-  romance: {
-    path: '/romance',
-    activePaths: [
-      '/romance',
-      '/romance-serial',
-      '/romance/',
-      '/romance-serial/',
-      'romance',
-      'romance-serial',
-    ],
-    services: [
-      {
-        name: '단행본',
-        path: '/romance',
-        activePaths: ['/romance', '/romance/', 'romance'],
-      },
-      {
-        name: '연재',
-        path: '/romance-serial',
-        activePaths: ['/romance-serial', '/romance-serial/', 'romance-serial'],
-      },
-    ],
-  },
-  'romance-serial': {
-    path: '/romance-serial',
-    activePaths: [
-      '/romance',
-      '/romance-serial',
-      '/romance/',
-      '/romance-serial/',
-      'romance',
-      'romance-serial',
-    ],
-    services: [
-      {
-        name: '단행본',
-        path: '/romance',
-        activePaths: ['/romance', '/romance/', 'romance'],
-      },
-      {
-        name: '연재',
-        path: '/romance-serial',
-        activePaths: ['/romance-serial', '/romance-serial/', 'romance-serial'],
-      },
-    ],
-  },
-  comics: {
-    path: '/comics',
-    activePaths: ['/comics', 'comics', '/comics/'],
-    services: [],
-  },
+const subGenres: { [genre: string]: Array<{ name: string; path: string; activePaths: RegExp }> } = {
+  bl: [
+    { name: '단행본', path: '/bl', activePaths: /^\/bl\/?$/ },
+    { name: '연재', path: '/bl-serial', activePaths: /^\/bl-serial\/?$/ },
+  ],
+  fantasy: [
+    { name: '단행본', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
+    { name: '연재', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
+  ],
+  romance: [
+    { name: '단행본', path: '/romance', activePaths: /^\/romance\/?$/ },
+    { name: '연재', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
+  ],
 };
 
 const TabItem: React.FC<TabItemProps> = (props) => {
-  // Todo apply lint
-  const { route, currentPath, activePath } = props;
-  const isActivePath = activePath.includes(currentPath);
+  const router = useRouter();
+  const { route, activePath } = props;
+  const [isActivePath, setIsActivePath] = useState(false);
   const cookieGenre = Cookies.get('main_genre') || '';
+
+  useEffect(() => {
+    setIsActivePath(activePath.test(router.asPath));
+  }, [activePath, router.asPath]);
 
   return (
     <li
@@ -399,27 +287,6 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   );
 };
 
-const subServices = [
-  '/romance/',
-  '/romance-serial/',
-  '/bl/',
-  '/bl-serial/',
-  '/fantasy/',
-  '/fantasy-serial/',
-  '/romance',
-  '/romance-serial',
-  '/bl',
-  '/bl-serial',
-  '/fantasy',
-  '/fantasy-serial',
-  'bl',
-  'bl-serial',
-  'romance',
-  'romance-serial',
-  'fantasy',
-  'fantasy-serial',
-];
-
 interface GenreTabProps {
   currentGenre: string;
   isPartials?: boolean;
@@ -435,98 +302,30 @@ interface SavedSubServices {
 
 const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const { currentGenre, isPartials } = props;
-  const genreInfo = genres[currentGenre] ?? genres.general;
+  const subGenreData = subGenres[currentGenre.split('-')[0]];
 
-  const showSubGenre = genreInfo.services.length > 1;
   const router = useRouter();
-  const [latestSubServices, setLatestSubServices] = useState<SavedSubServices>({
+  const [subServices, setSubServices] = useState<SavedSubServices>({
     romance: '/romance',
     fantasy: '/fantasy',
     bl: '/bl',
   });
 
   useEffect(() => {
-    const latestSubService = safeJSONParse(localStorage.getItem('latest_sub_service'), {
-      romance: '/romance',
-      fantasy: '/fantasy',
-      bl: '/bl',
-    });
+    const latestSubService = safeJSONParse(localStorage.getItem('latest_sub_service'), subServices);
+    setSubServices(latestSubService);
 
-    if (subServices.includes(router?.query?.genre?.toString() || '')) {
-      if (
-        ['/bl', '/bl/', '/bl-serial', '/bl-serial/', 'bl', 'bl-serial'].includes(
-          router?.query?.genre.toString(),
-        )
-      ) {
-        localStorage.setItem(
-          'latest_sub_service',
-          JSON.stringify({
-            ...latestSubService,
-            bl: `/${router?.query?.genre.toString()}`,
-          }),
-        );
-        setLatestSubServices({
-          ...latestSubService,
-          bl: `/${router?.query?.genre.toString()}`,
-        });
-      }
-
-      if (
-        [
-          '/romance',
-          '/romance/',
-          '/romance-serial',
-          '/romance-serial/',
-          'romance',
-          'romance-serial',
-        ].includes(router?.query?.genre?.toString() || '')
-      ) {
-        localStorage.setItem(
-          'latest_sub_service',
-          JSON.stringify({
-            ...latestSubService,
-            romance: `/${`${router?.query?.genre.toString()}` || ''}`,
-          }),
-        );
-        setLatestSubServices({
-          ...latestSubService,
-          romance: `/${`${router?.query?.genre.toString()}` || ''}`,
-        });
-      }
-      if (
-        [
-          '/fantasy',
-          '/fantasy/',
-          '/fantasy-serial',
-          '/fantasy-serial/',
-          'fantasy',
-          'fantasy-serial',
-        ].includes(router?.query?.genre.toString())
-      ) {
-        localStorage.setItem(
-          'latest_sub_service',
-          JSON.stringify({
-            ...latestSubService,
-            fantasy: `/${router?.query?.genre.toString()}`,
-          }),
-        );
-        setLatestSubServices({
-          ...latestSubService,
-          fantasy: `/${router?.query?.genre.toString()}`,
-        });
-      }
+    const genre = /romance|fantasy|bl/.exec(router.asPath)?.[0];
+    if (genre) {
+      const updatedSubService = {
+        ...latestSubService,
+        [genre]: router.asPath,
+      };
+      setSubServices(updatedSubService);
+      localStorage.setItem('latest_sub_service', JSON.stringify(updatedSubService));
     }
+  }, [router.asPath]);
 
-    const items = safeJSONParse(localStorage.getItem('latest_sub_service'), {
-      romance: '/romance',
-      fantasy: '/fantasy',
-      bl: '/bl',
-    });
-
-    setLatestSubServices({
-      ...items,
-    });
-  }, [router]);
   return (
     <>
       <GenreTabWrapper>
@@ -578,8 +377,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
               normalCSS={normal}
               currentCSS={genreTab}
               labelCSS={genreTabLabelCSS}
-              currentPath={router.asPath}
-              activePath={['/', '']}
+              activePath={/^\/?$/}
               label="일반"
               route="/"
               isPartial={isPartials}
@@ -588,42 +386,25 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
               normalCSS={normal}
               currentCSS={genreTab}
               labelCSS={genreTabLabelCSS}
-              currentPath={router.asPath}
-              activePath={[
-                '/romance',
-                '/romance-serial',
-                '/romance/',
-                '/romance-serial/',
-                'romance',
-                'romance-serial',
-              ]}
+              activePath={/^\/romance(-serial)?\/?$/}
               label="로맨스"
-              route={latestSubServices.romance || '/romance'}
+              route={subServices.romance || '/romance'}
               isPartial={isPartials}
             />
             <TabItem
               normalCSS={normal}
               currentCSS={genreTab}
               labelCSS={genreTabLabelCSS}
-              currentPath={router.asPath}
-              activePath={[
-                '/fantasy',
-                '/fantasy-serial',
-                '/fantasy/',
-                '/fantasy-serial/',
-                'fantasy',
-                'fantasy-serial',
-              ]}
+              activePath={/^\/fantasy(-serial)?\/?$/}
               label="판타지"
-              route={latestSubServices.fantasy || '/fantasy'}
+              route={subServices.fantasy || '/fantasy'}
               isPartial={isPartials}
             />
             <TabItem
               normalCSS={normal}
               currentCSS={genreTab}
               labelCSS={genreTabLabelCSS}
-              currentPath={router.asPath}
-              activePath={['/comics', '/comics/', 'comics']}
+              activePath={/^\/comics\/?$/}
               label="만화"
               route="/comics"
               isPartial={isPartials}
@@ -632,10 +413,9 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
               normalCSS={normal}
               currentCSS={genreTab}
               labelCSS={genreTabLabelCSS}
-              currentPath={router.asPath}
-              activePath={['/bl', '/bl-serial', '/bl/', '/bl-serial/', 'bl', 'bl-serial']}
+              activePath={/^\/bl(-serial)?\/?$/}
               label="BL"
-              route={latestSubServices.bl || '/bl'}
+              route={subServices.bl || '/bl'}
               isPartial={isPartials}
             />
           </ul>
@@ -643,26 +423,23 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
         <li>
           <hr css={rulerCSS} />
         </li>
-        {showSubGenre ? (
-          <>
-            <li>
-              <ul css={subServicesListCSS}>
-                {genreInfo.services.map((service, index) => (
-                  <TabItem
-                    key={index}
-                    route={service.path}
-                    normalCSS={normal}
-                    currentCSS={subServiceTab}
-                    labelCSS={subServiceTabLabelCSS}
-                    currentPath={router.asPath}
-                    activePath={service.activePaths}
-                    label={service.name}
-                    isPartial={isPartials}
-                  />
-                ))}
-              </ul>
-            </li>
-          </>
+        {subGenreData ? (
+          <li>
+            <ul css={subServicesListCSS}>
+              {subGenreData.map((service, index) => (
+                <TabItem
+                  key={index}
+                  route={service.path}
+                  normalCSS={normal}
+                  currentCSS={subServiceTab}
+                  labelCSS={subServiceTabLabelCSS}
+                  activePath={service.activePaths}
+                  label={service.name}
+                  isPartial={isPartials}
+                />
+              ))}
+            </ul>
+          </li>
         ) : (
           <div
             css={[
