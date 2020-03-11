@@ -4,7 +4,7 @@ import { ThemeProvider } from 'emotion-theming';
 
 import { defaultTheme, darkTheme } from 'src/styles';
 
-export default ({ children }) => {
+const InAppThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState('');
   useEffect(() => {
     setTheme(Cookies.get('ridi_app_theme') || '');
@@ -16,3 +16,5 @@ export default ({ children }) => {
     </ThemeProvider>
   );
 };
+
+export default InAppThemeProvider;
