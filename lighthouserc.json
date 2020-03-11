@@ -3,10 +3,11 @@
     "collect": {
       "numberOfRuns": 3,
       "url": [
-        "https://ridibooks.com",
         "https://ridibooks.com/fantasy",
         "https://ridibooks.com/comics",
-        "https://ridibooks.com/romance"
+        "https://ridibooks.com/romance",
+        "https://ridibooks.com/bl",
+        "https://ridibooks.com/bl-serial"
       ]
     },
     "assert": {
