@@ -26,7 +26,7 @@ const { captureException } = sentry();
 const Section = styled.section<{}, RIDITheme>`
   background-color: ${(props) => props.theme.backgroundColor};
   max-width: 952px;
-  min-height: 800px;
+  min-height: 620px;
   margin: 0 auto;
   ${orBelow(
     BreakPoint.LG,
