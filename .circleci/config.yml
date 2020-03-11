@@ -2,7 +2,6 @@ version: 2.1
 orbs:
   aws-s3: circleci/aws-s3@1.0.9
   slack: circleci/slack@3.4.2
-  cypress: cypress-io/cypress@1
 commands:
   install:
     parameters:
@@ -21,21 +20,6 @@ commands:
       - save_cache:
           key: <<parameters.key>>-{{ .Branch }}-{{ checksum "yarn.lock" }}
           paths: ~/.cache/yarn
-  npm-install:
-    parameters:
-      key:
-        type: string
-        default: books-frontend
-    steps:
-      - restore_cache:
-          keys:
-            - <<parameters.key>>-{{ .Branch }}-{{ checksum "package-lock.json" }}
-      - run:
-          name: Install npm packages
-          command: npm install
-      - save_cache:
-          key: <<parameters.key>>-{{ .Branch }}-{{ checksum "package-lock.json" }}
-          paths: ~/.cache/npm
   notify:
     parameters:
       color:
@@ -194,13 +178,6 @@ jobs:
             ./node_modules/.bin/lhci upload --serverBaseUrl=${LHCI_SERVER_BASE_URL} --target lhci --token ${LHCI_PROJECT_TOKEN}
       - store_artifacts:
           path: /tmp/lhci
-  npm-install:
-    working_directory: ~/books-frontend
-    docker:
-      - image: circleci/node:lts
-    steps:
-      - checkout
-      - npm-install
   rollback:
     docker:
       - image: circleci/node:lts
@@ -298,23 +275,3 @@ workflows:
     jobs:
       - lhci:
           name: Lighthouse-CI
-
-  e2e:
-    jobs:
-      - npm-install
-      - cypress/install
-          requires:
-            - npm-install
-      - cypress/run:
-          name: Chrome E2E
-          requires:
-            - cypress/install
-          executor: cypress/browsers-chrome69
-          browser: chrome
-    triggers:
-      - schedule:
-          cron: "* * * * *"
-          filters:
-            branches:
-              only:
-                - cypress-ts
