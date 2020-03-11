@@ -1,13 +1,22 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
+import { css } from '@emotion/core';
 import { RIDITheme } from 'src/styles';
+import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
+
 
 const NotificationPlaceholderWrap = styled.div<{ opacity: number }, RIDITheme>`
   position: relative;
   display: flex;
-  margin: 0px 16px;
+  margin: 0px auto;
   padding: 14px 0px;
   opacity: ${(props) => props.opacity};
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      margin: 0 16px;
+    `,
+  )};
   ::after {
     content: '';
     width: 100%;
