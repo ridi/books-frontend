@@ -131,9 +131,11 @@ const Dot = styled.div<{ imageType: string }>`
 const NotificationMeta = styled.div`
   ${flexColumnStart};
   margin-left: 16px;
+  width: 100%;
 `;
 
 const NotificationTitle = styled.h3<{}, RIDITheme>`
+  width:100%;
   font-weight: normal;
   font-size: 15px;
   color: ${(props) => props.theme.textColor};

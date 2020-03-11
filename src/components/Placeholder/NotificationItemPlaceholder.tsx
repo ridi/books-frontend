@@ -10,7 +10,6 @@ const NotificationPlaceholderWrap = styled.div<{ opacity: number }, RIDITheme>`
   display: flex;
   margin: 0px auto;
   padding: 14px 0px;
-  min-height: 620px;
   opacity: ${(props) => props.opacity};
   ${orBelow(
     BreakPoint.LG,
