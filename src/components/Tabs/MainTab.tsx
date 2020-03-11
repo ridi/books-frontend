@@ -242,8 +242,9 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   const [isActiveTab, setIsActiveTab] = useState(false);
 
   useEffect(() => {
-    setIsActiveTab(pathRegexp.test(router.asPath));
-  }, [pathRegexp, router.asPath]);
+    const pathname = Array.isArray(router.query.pathname) ? router.query.pathname[0] : router.query.pathname || router.asPath;
+    setIsActiveTab(pathRegexp.test(pathname));
+  }, [pathRegexp, router]);
 
   return (
     <TabItemWrapper
