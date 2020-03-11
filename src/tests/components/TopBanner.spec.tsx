@@ -73,8 +73,8 @@ describe('TopBanner', () => {
       );
     });
 
-    afterAll(() => {	
-      spy.mockRestore();	
+    afterAll(() => {
+      spy.mockRestore();
     });
 
 
