@@ -12,7 +12,7 @@ const server = new Koa();
 const router = new Router();
 
 server.use(async (ctx, next) => {
-  if (ctx.request.path.match(/\/+$/)) {
+  if (ctx.request.path.match(/.+\/$/)) {
     ctx.status = 308;
     ctx.redirect(`${ctx.request.path.replace(/\/+$/, '')}${ctx.request.search}`);
   } else {
