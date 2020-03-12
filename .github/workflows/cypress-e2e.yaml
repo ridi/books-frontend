@@ -1,0 +1,57 @@
+name: Cypress E2E
+
+on:
+  push:
+    branches:
+      - cypress-ts
+#  schedule:
+#    - cron: '0 */1 * * *'
+jobs:
+  e2e:
+    name: Cypress E2E
+    strategy:
+      max-parallel: 3
+      fail-fast: false
+      matrix:
+        os: [ubuntu-16.04, ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+    container:
+      image: cypress/browsers:node12.13.0-chrome80-ff74
+      options: --user 1001
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - if: matrix.os == 'ubuntu-16.04'
+        name: Chrome
+        uses: cypress-io/github-action@v1
+        with:
+          browser: chrome
+
+      - if: matrix.os == 'ubuntu-latest'
+        name: Firefox
+        uses: cypress-io/github-action@v1
+        with:
+          browser: firefox
+
+      - if: matrix.os == 'windows-latest'
+        name: Edge
+        uses: cypress-io/github-action@v1
+        with:
+          browser: edge
+
+
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.os }}
+          path: cypress/screenshots
+          # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Video
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos-${{ matrix.os }}
+          path: cypress/videos
