@@ -25,10 +25,10 @@ jobs:
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v1
-          if: failure()
-          with:
-            name: cypress-screenshots-firefox
-            path: cypress/screenshots
+        if: failure()
+        with:
+          name: cypress-screenshots-firefox
+          path: cypress/screenshots
           # Test run video was always captured, so this action uses "always()" condition
       - name: Upload Video
         uses: actions/upload-artifact@v1
