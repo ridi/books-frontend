@@ -1,0 +1,36 @@
+name: Cypress E2E Edge
+
+on:
+  push:
+    branches:
+      - cypress-ts
+#  schedule:
+#    - cron: '0 */1 * * *'
+
+jobs:
+  e2e:
+    name: Cypress E2E Edge
+    runs-on: windows-latest
+    container: cypress/browsers:node12.13.0-chrome78-ff70
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Cypress
+        uses: cypress-io/github-action@v1
+        with:
+          browser: edge
+
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v1
+          if: failure()
+          with:
+            name: cypress-screenshots-edge
+            path: cypress/screenshots
+          # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Video
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos-edge
+          path: cypress/videos
