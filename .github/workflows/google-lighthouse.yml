@@ -2,7 +2,7 @@ name: Google Lighthouse
 
 on:
   schedule:
-    - cron: '0 */1 * * *'
+    - cron: '0 */2 * * *'
 
 jobs:
   lighthouse:

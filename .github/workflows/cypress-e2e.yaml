@@ -1,11 +1,8 @@
 name: Cypress E2E
 
 on:
-  push:
-    branches:
-      - cypress-ts
-#  schedule:
-#    - cron: '0 */1 * * *'
+  schedule:
+    - cron: '0 */2 * * *'
 jobs:
   chrome-and-ff:
     name: E2E Chrome & FF
@@ -14,11 +11,12 @@ jobs:
       max-parallel: 2
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, ubuntu-latest]
+#        os: [ubuntu-16.04, ubuntu-latest] 파이어 폭스는 일단 제외
+        os: [ubuntu-16.04]
 
     runs-on: ${{ matrix.os }}
     container:
-      image: cypress/browsers:node10.16.0-chrome77-ff71
+      image: cypress/browsers:node12.16.1-chrome80-ff73
       options: --user 1001
     steps:
       - name: Checkout
@@ -63,10 +61,7 @@ jobs:
         with:
           browser: edge
           config-file: ''
-
-      - run: |
-          dir
-          dir d:\a\books-frontend\books-frontend
+          # cypress.json 을 못 찾아 임의로 설정해 둠
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v1
