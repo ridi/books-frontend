@@ -7,40 +7,34 @@ on:
 #  schedule:
 #    - cron: '0 */1 * * *'
 jobs:
-  e2e:
-    name: Cypress E2E
+  chrome-and-ff:
+    name: E2E Chrome & FF
+    timeout-minutes: 10
     strategy:
-      max-parallel: 3
+      max-parallel: 2
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, ubuntu-latest, windows-latest]
+        os: [ubuntu-16.04, ubuntu-latest]
 
     runs-on: ${{ matrix.os }}
     container:
-      image: cypress/browsers:node12.13.0-chrome80-ff74
+      image: cypress/browsers:node10.16.0-chrome77-ff71
       options: --user 1001
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
 
       - if: matrix.os == 'ubuntu-16.04'
-        name: Chrome
+        name: Run E2E Chrome
         uses: cypress-io/github-action@v1
         with:
           browser: chrome
 
       - if: matrix.os == 'ubuntu-latest'
-        name: Firefox
+        name: Run E2E Firefox
         uses: cypress-io/github-action@v1
         with:
           browser: firefox
-
-      - if: matrix.os == 'windows-latest'
-        name: Edge
-        uses: cypress-io/github-action@v1
-        with:
-          browser: edge
-
 
       - name: Upload Screenshot
         uses: actions/upload-artifact@v1
@@ -54,4 +48,36 @@ jobs:
         if: always()
         with:
           name: cypress-videos-${{ matrix.os }}
+          path: cypress/videos
+  edge:
+    name: E2E Edge
+    runs-on: windows-2019
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run E2E
+        uses: cypress-io/github-action@v1
+        with:
+          browser: edge
+          config-file: ''
+
+      - run: |
+          dir
+          dir d:\a\books-frontend\books-frontend
+
+      - name: Upload Screenshot
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots-windows-2019
+          path: cypress/screenshots
+          # Test run video was always captured, so this action uses "always()" condition
+      - name: Upload Video
+        uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: cypress-videos-windows-2019
           path: cypress/videos
