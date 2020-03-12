@@ -1,5 +1,6 @@
 {
   "integrationFolder": "cypress/integration",
   "chromeWebSecurity": false,
-  "supportFile": "cypress/support/index.ts"
+  "supportFile": "cypress/support/index.ts",
+  "baseUrl": "https://ridibooks.com"
 }
