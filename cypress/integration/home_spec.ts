@@ -11,29 +11,41 @@ describe('장르 홈 방문 테스트', () => {
     cy.contains('판타지');
     cy.contains('BL');
     cy.contains('만화');
+    cy.contains('집 앞 서점에 방금 나온 신간!');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
   });
 
   it('로맨스 방문 가능', () => {
     cy.visit('/romance/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('오늘 리디의 발견');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
   });
 
   it('로맨스 연재 방문 가능', () => {
     cy.visit('/romance-serial/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('리디 기다리면 무료');
   });
 
   it('판타지 방문 가능', () => {
     cy.visit('/fantasy/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('오늘 리디의 발견');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
+    cy.contains('키워드로 검색하기');
+
   });
   it('판타지 연재 방문 가능', () => {
     cy.visit('/fantasy-serial/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('특별기간 기다리면 무료');
+    cy.contains('오늘 리디의 발견');
+    cy.contains('키워드로 검색하기');
   });
   it('로맨스 방문 가능', () => {
     cy.visit('/romance');
@@ -45,12 +57,28 @@ describe('장르 홈 방문 테스트', () => {
     cy.visit('/bl/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('오늘 리디의 발견');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
+    cy.contains('키워드로 검색하기');
   });
   it('BL 연재 방문 가능', () => {
     cy.visit('/bl-serial/');
     cy.contains('단행본');
     cy.contains('연재');
+    cy.contains('리디 기다리면 무료');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
   });
+
+  it('만화 홈 방문 가능', () => {
+    cy.visit('/comics/');
+    cy.contains('단행본');
+    cy.contains('연재');
+    cy.contains('오늘 리디의 발견');
+    cy.contains('사람들이 지금 많이 읽고 있는 책');
+    cy.contains('키워드로 검색하기');
+
+  });
+
 
   // it('검색 히스토리 목록 표시', () => {
   //   cy.clearLocalStorage();
