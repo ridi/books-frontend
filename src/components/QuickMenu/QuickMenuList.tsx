@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useCallback, useContext, useRef } from 'react';
 import styled from '@emotion/styled';
 import QuickMenuShape from 'src/svgs/QuickMenuShape.svg';
 import { css } from '@emotion/core';
@@ -8,6 +8,9 @@ import Arrow, { arrowTransition } from 'src/components/Carousel/Arrow';
 import { useScrollSlider } from 'src/hooks/useScrollSlider';
 import { QuickMenu } from 'src/types/sections';
 import { DeviceTypeContext } from 'src/components/Context/DeviceType';
+import { useEventTracker } from 'src/hooks/useEventTracker';
+import { SendEventType } from 'src/constants/eventTracking';
+
 const labelCSS = theme => css`
   font-size: 13px;
   line-height: 1.23;
@@ -81,8 +84,14 @@ interface QuickMenuListProps {
   items: QuickMenu[];
 }
 
-const Menu: React.FC<{ menu: QuickMenu }> = React.memo(props => {
-  const { menu } = props;
+function Item({ menu }) {
+  const [tracker] = useEventTracker();
+  const sendQuickMenuClickEvent = useCallback(() => {
+    tracker.sendEvent(SendEventType.QuickMenu, {
+      action: window.location.href,
+      label: menu.url,
+    });
+  }, [tracker]);
   return (
     <MenuItem>
       <MenuItemWrapper>
@@ -126,7 +135,8 @@ const Menu: React.FC<{ menu: QuickMenu }> = React.memo(props => {
       </MenuItemWrapper>
     </MenuItem>
   );
-});
+}
+const MemoizedQuickMenuItem: React.FC<{ menu: QuickMenu }> = React.memo(Item);
 
 export const QuickMenuList: React.FC<QuickMenuListProps> = props => {
   const ref = useRef<HTMLUListElement>(null);
@@ -142,7 +152,7 @@ export const QuickMenuList: React.FC<QuickMenuListProps> = props => {
       </h2>
       <MenuList ref={ref}>
         {props.items.map((menu, index) => (
-          <Menu key={index} menu={menu} />
+          <MemoizedQuickMenuItem key={index} menu={menu} />
         ))}
       </MenuList>
       {!['mobile', 'tablet'].includes(deviceType) && (

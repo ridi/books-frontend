@@ -6,6 +6,7 @@ import { EventBanner } from 'src/types/sections';
 import { useIntersectionObserver } from 'src/hooks/useIntersectionObserver';
 import { sendClickEvent, useEventTracker } from 'src/hooks/useEventTracker';
 import { getDeviceType } from 'src/utils/common';
+import { SendEventType } from 'src/constants/eventTracking';
 
 interface EventBannerListProps {
   items: EventBanner[];
@@ -21,7 +22,7 @@ const EventBannerList: React.FC<EventBannerListProps> = props => {
     if (isIntersecting) {
       const device = getDeviceType();
       const deviceType = ['mobile', 'tablet'].includes(device) ? 'Mobile' : 'Pc';
-      tracker.sendEvent('display', {
+      tracker.sendEvent(SendEventType.Display, {
         section: `${deviceType}.${props.slug}`,
         items: props.items.map((item, index) => ({
           id: item.id,

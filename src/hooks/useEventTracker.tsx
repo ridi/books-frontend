@@ -1,5 +1,7 @@
 import { DeviceType, Tracker } from '@ridi/event-tracker';
-import { FB_KEYS, GA_KEY, GTM_KEY } from 'src/constants/eventTracking';
+import {
+  FB_KEYS, GA_KEY, GTM_KEY, SendEventType,
+} from 'src/constants/eventTracking';
 import { useCallback, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from 'src/store/config';
@@ -72,7 +74,7 @@ export const useEventTracker = () => {
 export const sendClickEvent = (eventTracker, item, section, order) => {
   const device = getDeviceType();
   const deviceType = ['mobile', 'tablet'].includes(device) ? 'Mobile' : 'Pc';
-  eventTracker.sendEvent('click', {
+  eventTracker.sendEvent(SendEventType.Click, {
     section: `${deviceType}.${section}`,
     items: [{ id: item.b_id || item.id, idx: order, ts: new Date().getTime() }],
   });
@@ -94,7 +96,7 @@ export const useSendDisplayEvent = slug => {
         });
       });
       if (trackingItems.items.length > 0) {
-        tracker.sendEvent('display', trackingItems);
+        tracker.sendEvent(SendEventType.Display, trackingItems);
       }
     },
     [deviceType, slug],
