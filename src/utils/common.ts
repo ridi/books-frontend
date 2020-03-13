@@ -1,4 +1,3 @@
-import { UAParser } from 'ua-parser-js';
 import * as BookApi from 'src/types/book';
 
 export const safeJSONParse = (source: string | null, defaultValue: any) => {
@@ -81,11 +80,6 @@ export const splitArrayToChunk = (array: any[], size: number) => {
     index += size;
   }
   return chunked_arr;
-};
-
-export const getDeviceType = () => {
-  const result = new UAParser();
-  return result.getDevice().type;
 };
 
 export const getMaxDiscountPercentage = (book?: BookApi.Book) => {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { getDeviceType } from 'src/utils/common';
+import { UAParser } from 'ua-parser-js';
 
 interface Context {
   deviceType: string;
@@ -11,11 +11,15 @@ export const DeviceTypeContext = React.createContext<Context>({
   isMobile: true,
 });
 
+export const getDeviceType = () => {
+  const { type } = new UAParser().getDevice();
+  return ['mobile', 'tablet'].includes(type) ? 'mobile' : 'pc';
+};
+
 export const DeviceTypeProvider: React.FC = (props) => {
-  const device = ['mobile', 'tablet'].includes(getDeviceType()) ? 'mobile' : 'pc';
-  const [deviceType, setDeviceType] = useState(device);
+  const [deviceType, setDeviceType] = useState<ReturnType<typeof getDeviceType>>('mobile');
   useEffect(() => {
-    setDeviceType(device);
+    setDeviceType(getDeviceType());
   }, []);
   return (
     <DeviceTypeContext.Provider value={{ deviceType, isMobile: deviceType === 'mobile' }}>
