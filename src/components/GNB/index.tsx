@@ -323,6 +323,7 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
   const { loggedUser } = useSelector<RootState, AccountState>((state) => state.account);
   const dispatch = useDispatch();
   const route = useRouter();
+  const { isPartials } = props;
 
   const initialLoginPath = `${process.env.NEXT_PUBLIC_ACCOUNT_HOST}/account/login`;
   const initialSignupPath = `${process.env.NEXT_PUBLIC_ACCOUNT_HOST}/account/signup`;
@@ -357,7 +358,7 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
             <LogoWrapper>
               <li>
                 <a
-                  href="/"
+                  href={isPartials ? `${process.env.NEXT_PUBLIC_ACCOUNT_HOST}/` : '/'}
                   aria-label="리디북스 홈으로 이동"
                   css={css`
                     display: flex;
@@ -388,6 +389,7 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
               />
             </ButtonWrapper>
             <InstantSearch
+              isPartials={isPartials}
               searchKeyword={props.searchKeyword || ''}
             />
           </div>

@@ -255,6 +255,7 @@ export interface InstantSearchResultScheme {
 
 interface InstantSearchProps {
   searchKeyword: string;
+  isPartials: boolean;
 }
 
 const initialSearchResult = {
@@ -264,17 +265,17 @@ const initialSearchResult = {
 
 export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
   (props: InstantSearchProps) => {
+    const { isPartials, searchKeyword } = props;
     const inputRef = React.useRef<HTMLInputElement>();
     const listWrapperRef = React.useRef<HTMLDivElement>();
     const theme = useTheme<RIDITheme>();
     const [isLoaded, setLoaded] = useState(false);
     const [isFocused, setFocus] = useState(false);
-    const [keyword, setKeyword] = useState<string>(props.searchKeyword);
+    const [keyword, setKeyword] = useState<string>(searchKeyword);
     const [searchHistory, setSearchHistory] = useState<string[]>([]);
     const [enableSearchHistoryRecord, toggleSearchHistoryRecord] = useState(true);
     const [focusedPosition, setFocusedPosition] = useState(0);
     const [, setFetching] = useState(false);
-
     const [searchResult, setSearchResult] = useState<InstantSearchResultScheme>(
       initialSearchResult,
     );
@@ -395,30 +396,33 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
       [enableSearchHistoryRecord],
     );
 
-    const handleClickHistoryItem = useCallback(
-      (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        const label = e.currentTarget.getAttribute('data-value');
-        if (label) {
-          setKeyword(label);
-          setFocus(false);
-          setSearchResult(initialSearchResult);
+    const handleClickHistoryItem = useCallback((e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      const label = e.currentTarget.getAttribute('data-value');
+      if (label) {
+        setKeyword(label);
+        setFocus(false);
+        setSearchResult(initialSearchResult);
 
-          const url = new URL('/search/', location.href);
-          url.searchParams.append('q', label);
+        const url = new URL(
+          '/search/',
+          isPartials ? process.env.NEXT_PUBLIC_ACCOUNT_HOST : location.href,
+        );
+        url.searchParams.append('q', label);
 
-          window.location.href = url.toString();
-        }
-      },
-      [],
-    );
+        window.location.href = url.toString();
+      }
+    }, []);
 
     const handleClickBookItem = useCallback(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const { bookId } = e.currentTarget.dataset;
 
-        const url = new URL(`/books/${bookId}`, location.href);
+        const url = new URL(
+          `/books/${bookId}`,
+          isPartials ? process.env.NEXT_PUBLIC_ACCOUNT_HOST : location.href,
+        );
         url.searchParams.append('_s', 'instant');
         url.searchParams.append('_q', keyword);
 
@@ -431,7 +435,10 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
       (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
         const { authorId } = e.currentTarget.dataset;
-        const url = new URL(`/author/${authorId}`, location.href);
+        const url = new URL(
+          `/author/${authorId}`,
+          isPartials ? process.env.NEXT_PUBLIC_ACCOUNT_HOST : location.href,
+        );
         url.searchParams.append('_s', 'instant');
         url.searchParams.append('_q', keyword);
 
@@ -463,7 +470,10 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
           // Move search result page
           // Todo conditional check for partial component
 
-          const url = new URL('/search/', location.href);
+          const url = new URL(
+            '/search/',
+            isPartials ? process.env.NEXT_PUBLIC_ACCOUNT_HOST : location.href,
+          );
           url.searchParams.append('q', keyword);
 
           window.location.href = url.toString();
@@ -576,7 +586,12 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
             isFocused ? focused(theme) : initial(),
             css`
               outline: none;
-              ${orBelow(BreakPoint.LG, css`width: 100%;`)}
+              ${orBelow(
+              BreakPoint.LG,
+              css`
+                  width: 100%;
+                `,
+            )}
             `,
           ]}
         >
@@ -614,9 +629,7 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
               />
             </form>
             {keyword.length > 0 && isFocused && (
-              <RemoveSearchButton
-                onClick={handleClearInput}
-              >
+              <RemoveSearchButton onClick={handleClearInput}>
                 <Clear
                   css={css`
                     width: 14px;

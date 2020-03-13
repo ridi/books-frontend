@@ -22,12 +22,12 @@ import fixtureABC from './abc.fixture.json';
 afterEach(cleanup);
 
 // axiosMock.get.mockResolvedValue();
-const renderComponent = async () => {
+const renderComponent = async (isPartials) => {
   let result: RenderResult;
   await act(async () => {
     result = render(
       <ThemeProvider theme={defaultTheme}>
-        <InstantSearch searchKeyword={''} />
+        <InstantSearch searchKeyword={''} isPartials={isPartials}/>
       </ThemeProvider>,
     );
   });
@@ -36,7 +36,7 @@ const renderComponent = async () => {
 
 describe('test instant search', () => {
   it('should be render input', async () => {
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     expect(inputNode).not.toBe(null);
   });
@@ -46,7 +46,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       JSON.stringify(['history_1', 'history_2']),
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode, {});
@@ -64,7 +64,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       JSON.stringify(['history_1', 'history_2']),
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.click(inputNode, {});
@@ -108,7 +108,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       'maybe error be with you',
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.click(inputNode, {});
@@ -124,7 +124,7 @@ describe('test instant search', () => {
         data: fixtureABC,
       };
     });
-    let { container } = await renderComponent();
+    let { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode);
@@ -139,7 +139,7 @@ describe('test instant search', () => {
 
   it('should not be render search result', async () => {
     jest.useFakeTimers();
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.change(inputNode, { target: { value: '가나' } });
@@ -150,7 +150,7 @@ describe('test instant search', () => {
   });
 
   it('can be add search history', async () => {
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     const searchForm = container.getElementsByTagName('form');
     expect(searchForm).not.toBe(null);
@@ -173,7 +173,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       JSON.stringify(['history_1']),
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode, {});
@@ -195,7 +195,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       JSON.stringify(['history_1']),
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode, {});
@@ -229,7 +229,7 @@ describe('test instant search', () => {
       localStorageKeys.instantSearchHistory,
       JSON.stringify(['history_1', 'history_2']),
     );
-    const { container } = await renderComponent();
+    const { container } = await renderComponent(false);
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode, {});

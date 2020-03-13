@@ -160,9 +160,12 @@ const NotificationAddOn = styled.div`
   background: #ffde24;
   border-radius: 11px;
   background-clip: padding-box;
-  ${orBelow(BreakPoint.LG, css`
-    left: 17.5px;
-  `)};
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      left: 17.5px;
+    `,
+  )};
 `;
 
 const CartAddOnWrapper = styled.div`
@@ -177,9 +180,12 @@ const CartAddOnWrapper = styled.div`
   display: flex;
   max-height: 31px;
   height: 100%;
-  ${orBelow(BreakPoint.LG, css`
-    left: 12.5px;
-  `)};
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      left: 12.5px;
+    `,
+  )};
 `;
 
 const CartAddOnBackground = styled.div`
@@ -189,9 +195,12 @@ const CartAddOnBackground = styled.div`
   background: white;
   height: 20px;
   display: flex;
-  ${orBelow(BreakPoint.LG, css`
-    margin-left: 4px;
-  `)};
+  ${orBelow(
+    BreakPoint.LG,
+    css`
+      margin-left: 4px;
+    `,
+  )};
   background-clip: padding-box;
 `;
 
@@ -202,7 +211,6 @@ const CartAddOnCount = styled.span`
   line-height: 11.5px;
   color: #1f8ce6;
 `;
-
 
 interface MainTabProps {
   isPartials: boolean;
@@ -228,7 +236,7 @@ interface TabItemProps {
 // 반응형 레거시 코드 작업이 종료되면 이 부분 개선 해야 함.
 const TabItem: React.FC<TabItemProps> = (props) => {
   const {
-    // isPartials,
+    isPartials,
     path,
     pathRegexp,
     label,
@@ -242,10 +250,11 @@ const TabItem: React.FC<TabItemProps> = (props) => {
   const [isActiveTab, setIsActiveTab] = useState(false);
 
   useEffect(() => {
-    const pathname = Array.isArray(router.query.pathname) ? router.query.pathname[0] : router.query.pathname || router.asPath;
+    const pathname = Array.isArray(router.query.pathname)
+      ? router.query.pathname[0]
+      : router.query.pathname || router.asPath;
     setIsActiveTab(pathRegexp.test(pathname));
   }, [pathRegexp, router]);
-
   return (
     <TabItemWrapper
       css={
@@ -273,7 +282,10 @@ const TabItem: React.FC<TabItemProps> = (props) => {
           </StyledAnchor>
         </Link>
       ) : (
-        <StyledAnchor href={path} aria-label={label}>
+        <StyledAnchor
+          href={isPartials ? `${process.env.NEXT_PUBLIC_ACCOUNT_HOST}${path}` : path}
+          aria-label={label}
+        >
           <TabButton>
             {isActiveTab ? activeIcon : normalIcon}
             {addOn}
@@ -328,7 +340,9 @@ export const MainTab: React.FC<MainTabProps> = (props) => {
           normalIcon={<Home css={iconStyle} />}
           label={labels.mainTab.home}
           path="/"
-          pathRegexp={/^\/(romance|romance-serial|fantasy|fantasy-serial|bl|bl-serial|comics)?\/?$/}
+          pathRegexp={
+            /^\/(romance|romance-serial|fantasy|fantasy-serial|bl|bl-serial|comics)?\/?$/
+          }
         />
         <TabItem
           isPartials={isPartials}
@@ -337,9 +351,7 @@ export const MainTab: React.FC<MainTabProps> = (props) => {
           label={labels.mainTab.notification}
           path="/notification"
           pathRegexp={/^\/notification\/?$/g}
-          addOn={hasNotification && (
-            <NotificationAddOn />
-          )}
+          addOn={hasNotification && <NotificationAddOn />}
         />
         <TabItem
           isPartials={isPartials}
@@ -352,9 +364,7 @@ export const MainTab: React.FC<MainTabProps> = (props) => {
             cartCount > 0 && (
               <CartAddOnWrapper>
                 <CartAddOnBackground>
-                  <CartAddOnCount>
-                    {cartCount}
-                  </CartAddOnCount>
+                  <CartAddOnCount>{cartCount}</CartAddOnCount>
                 </CartAddOnBackground>
               </CartAddOnWrapper>
             )
