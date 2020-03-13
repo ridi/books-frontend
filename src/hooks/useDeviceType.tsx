@@ -12,9 +12,9 @@ export const DeviceTypeContext = React.createContext<Context>({
 });
 
 export const DeviceTypeProvider: React.FC = (props) => {
-  const [deviceType, setDeviceType] = useState('mobile');
+  const device = ['mobile', 'tablet'].includes(getDeviceType()) ? 'mobile' : 'pc';
+  const [deviceType, setDeviceType] = useState(device);
   useEffect(() => {
-    const device = ['mobile', 'tablet'].includes(getDeviceType()) ? 'mobile' : 'pc';
     setDeviceType(device);
   }, []);
   return (
