@@ -10,14 +10,16 @@ import { QuickMenu } from 'src/types/sections';
 import { DeviceTypeContext } from 'src/components/Context/DeviceType';
 import { useEventTracker } from 'src/hooks/useEventTracker';
 import { SendEventType } from 'src/constants/eventTracking';
+import { slateGray70 } from '@ridi/colors';
 
-const labelCSS = theme => css`
+const QuickMenuLabel = styled.span`
   font-size: 13px;
   line-height: 1.23;
-  color: ${theme.quickMenu.label};
+  color: ${slateGray70};
   min-width: 76px;
   text-align: center;
   word-break: keep-all;
+  margin-top: 8px;
   ${orBelow(
     BreakPoint.MD,
     css`
@@ -66,23 +68,42 @@ const MenuItem = styled.li`
   }
 `;
 
-const MenuItemWrapper = styled.div`
+const MenuAnchor = styled.a`
   ${orBelow(
     BreakPoint.LG,
     css`
       max-width: 50px;
     `,
   )};
-  a {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  flex: none;
 `;
 
 interface QuickMenuListProps {
   items: QuickMenu[];
 }
+
+const QuickMenuImage = styled.img`
+  top: 0;
+  transform: translate(-50%, 0);
+  left: 50%;
+  position: absolute;
+  width: 44px;
+  height: 44px;
+  z-index: 2;
+`;
+
+const quickMenuShape = css`
+  flex: none;
+  height: 44px;
+  width: 44px;
+  top: 0;
+  z-index: 1;
+`;
 
 function Item({ menu }) {
   const [tracker] = useEventTracker();
@@ -94,62 +115,45 @@ function Item({ menu }) {
   }, [tracker]);
   return (
     <MenuItem>
-      <MenuItemWrapper>
-        <a href={menu.url} aria-label={menu.name}>
-          <div
-            css={css`
-              position: relative;
-              height: 44px;
-              width: 100%;
-              margin-bottom: 8px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-            `}>
-            <QuickMenuShape
-              css={css`
-                flex: none;
-                height: 44px;
-                width: 44px;
-                top: 0;
-                z-index: 1;
-                fill: ${menu.bg_color};
-              `}
-            />
-            <img
-              css={css`
-                top: 0;
-                transform: translate(-50%, 0);
-                left: 50%;
-                position: absolute;
-                width: 44px;
-                height: 44px;
-                z-index: 2;
-              `}
-              alt={menu.name}
-              src={menu.icon}
-            />
-          </div>
-          <span css={labelCSS}>{menu.name}</span>
-        </a>
-      </MenuItemWrapper>
+      <MenuAnchor
+        onClick={sendQuickMenuClickEvent}
+        href={menu.url}
+        aria-label={menu.name}
+      >
+        <QuickMenuShape
+          css={[
+            quickMenuShape,
+            css`
+              fill: ${menu.bg_color};
+            `,
+          ]}
+        />
+        <QuickMenuImage alt={menu.name} src={menu.icon} />
+        <QuickMenuLabel>{menu.name}</QuickMenuLabel>
+      </MenuAnchor>
     </MenuItem>
   );
 }
 const MemoizedQuickMenuItem: React.FC<{ menu: QuickMenu }> = React.memo(Item);
 
-export const QuickMenuList: React.FC<QuickMenuListProps> = props => {
+const arrowWrapper = css`
+  z-index: 2;
+  position: absolute;
+  top: 30px;
+  transition: opacity 0.2s;
+`;
+
+const Section = styled.section`
+  position: relative;
+`;
+
+export const QuickMenuList: React.FC<QuickMenuListProps> = (props) => {
   const ref = useRef<HTMLUListElement>(null);
   const [moveLeft, moveRight, isOnTheLeft, isOnTheRight] = useScrollSlider(ref, true);
   const deviceType = useContext(DeviceTypeContext);
   return (
-    <section
-      css={css`
-        position: relative;
-      `}>
-      <h2 className={'a11y'} aria-label={'퀵 메뉴'}>
-        퀵 메뉴
-      </h2>
+    <Section>
+      <h2 className="a11y">퀵 메뉴</h2>
       <MenuList ref={ref}>
         {props.items.map((menu, index) => (
           <MemoizedQuickMenuItem key={index} menu={menu} />
@@ -162,39 +166,34 @@ export const QuickMenuList: React.FC<QuickMenuListProps> = props => {
             @media (hover: none) {
               display: none;
             }
-          `}>
+          `}
+        >
           <Arrow
-            label={'이전 퀵 메뉴'}
-            side={'left'}
+            label="이전 퀵 메뉴"
+            side="left"
             onClickHandler={moveLeft}
             wrapperStyle={[
+              arrowWrapper,
               css`
-                z-index: 2;
-                position: absolute;
                 left: 5px;
-                top: 30px;
-                transition: opacity 0.2s;
               `,
               !isOnTheLeft && arrowTransition,
             ]}
           />
           <Arrow
-            label={'다음 퀵 메뉴'}
-            side={'right'}
+            label="다음 퀵 메뉴"
+            side="right"
             onClickHandler={moveRight}
             wrapperStyle={[
+              arrowWrapper,
               css`
-                z-index: 2;
-                position: absolute;
                 right: 5px;
-                top: 30px;
-                transition: opacity 0.2s;
               `,
               !isOnTheRight && arrowTransition,
             ]}
           />
         </form>
       )}
-    </section>
+    </Section>
   );
 };
