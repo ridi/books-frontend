@@ -88,10 +88,11 @@ export const Home: NextPage<HomeProps> = (props) => {
       fetchHomeSections(props.genre, {}, {
         cancelToken: source.token,
       }).then((result) => {
-        setBranches(result.branches);
-        const bIds = keyToArray(result.branches, 'b_id');
+        const { branches: data = [] } = result;
+        setBranches(data);
+        const bIds = keyToArray(data, 'b_id');
         dispatch({ type: booksActions.insertBookIds.type, payload: bIds });
-        const categoryIds = keyToArray(result.branches, 'category_id');
+        const categoryIds = keyToArray(data, 'category_id');
         dispatch({
           type: categoryActions.insertCategoryIds.type,
           payload: categoryIds,
