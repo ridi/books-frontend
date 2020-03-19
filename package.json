@@ -7,7 +7,7 @@
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
     "@ridi/colors": "^0.7.1",
-    "@ridi/event-tracker": "^0.8.4",
+    "@ridi/event-tracker": "^0.8.5",
     "@ridi/web-icons": "^0.7.1",
     "@ridi/web-ui": "0.3.6",
     "@sentry/browser": "^5.10.2",
