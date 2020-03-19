@@ -108,6 +108,8 @@ function Item({ menu }) {
   const [tracker] = useEventTracker();
   const sendQuickMenuClickEvent = useCallback(() => {
     tracker.sendEvent(SendEventType.QuickMenu, {
+      // https://app.asana.com/0/1166576097448534/1162603665774601
+      category: SendEventType.QuickMenu,
       action: window.location.href,
       label: menu.url,
     });
