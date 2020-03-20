@@ -111,13 +111,6 @@ jobs:
       STAGE: << parameters.stage >>
       ASSET_PREFIX: << parameters.assetPrefix >>
     steps:
-      - run:
-          command:
-            yarn serverless deploy list -s << parameters.stage >> | awk '/Timestamp/ {print $NF}' | tail -n 1 > .lastdeploytimestamp
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .lastdeploytimestamp
       - checkout
       - attach_workspace:
           at: .
@@ -129,6 +122,13 @@ jobs:
           arguments: |
             --exclude "*.map"
       - install
+      - run:
+          command:
+            yarn serverless deploy list -s << parameters.stage >> | awk '/Timestamp/ {print $NF}' | tail -n 1 > .lastdeploytimestamp
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .lastdeploytimestamp
       - run:
           command: yarn deploy -s << parameters.stage >>
       - steps: << parameters.after-scripts >>
