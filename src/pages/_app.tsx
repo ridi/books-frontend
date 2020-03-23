@@ -24,6 +24,7 @@ import createCache from '@emotion/cache';
 import { ViewportIntersectionProvider } from 'src/hooks/useViewportIntersection';
 import InAppThemeProvider from 'src/components/Misc/InAppThemeProvider';
 import Meta from 'src/components/Meta';
+import DisallowedHostsFilter from 'src/components/Misc/DisallowedHostsFilter';
 import sentry from 'src/utils/sentry';
 
 const { captureException } = sentry();
@@ -151,6 +152,7 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
       return (
         <>
           <Meta />
+          <DisallowedHostsFilter />
           <CacheProvider value={createCache({ ...cache, nonce })}>
             <Global styles={resetStyles} />
             <Provider store={store}>
@@ -173,6 +175,7 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
       // CacheProvider 올바르게 동작하는지 확인하기
       <>
         <Meta />
+        <DisallowedHostsFilter />
         <CacheProvider value={createCache({ ...cache, nonce })}>
           <Global styles={resetStyles} />
           <Provider store={store}>
