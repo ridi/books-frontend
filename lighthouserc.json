@@ -72,6 +72,10 @@
             "aggregationMethod": "optimistic"
           }
         ],
+        "link-name": [
+          "warn",
+          {},
+        ],
         "interactive": [
           "warn",
           {
