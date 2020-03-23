@@ -177,6 +177,7 @@ const BannerBadge = styled.div`
   text-align: center;
   color: white;
   word-break: keep-all;
+  line-height: 12px;
 `;
 
 const ArrowWrapper = styled.div`
@@ -328,7 +329,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
   // passive: false 때문에 useEffect
   React.useEffect(() => {
     function handleTouchMove(e: TouchEvent) {
-      e.preventDefault();
+      // e.preventDefault();
       if (touchRef.current == null) {
         return;
       }
