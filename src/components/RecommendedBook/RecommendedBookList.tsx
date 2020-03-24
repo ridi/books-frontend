@@ -21,7 +21,7 @@ const ScrollContainer = styled.div`
 const BookList = styled.ul<{ type: RecommendedBookProps['type'] }>`
   flex: none;
   margin-top: -7px;
-  margin-left: ${(props) => (props.type === DisplayType.TodayRecommendation ? 28 : 6)}px;
+  margin-left: 10px;
   padding-top: 7px;
   padding-left: 7px;
   display: flex;
@@ -45,8 +45,10 @@ const hotReleaseMargin = css`
 
 const todayRecommendationMargin = css`
   align-items: center;
-
-  margin-right: 30px;
+  margin-right: 12px;
+  @media (min-width: 834px) {
+    margin-right: 20px;
+  }
   @media (min-width: 1000px) {
     margin-right: 22px;
   }
@@ -73,7 +75,11 @@ function RecommendedBookList(props: Omit<RecommendedBookProps, 'title'>) {
           theme={theme}
           slug={slug}
           genre={genre}
-          css={props.type === DisplayType.HotRelease ? hotReleaseMargin : todayRecommendationMargin}
+          css={
+              props.type === DisplayType.HotRelease
+                ? hotReleaseMargin
+                : todayRecommendationMargin
+            }
         />
       )),
     [items, type, theme, slug],

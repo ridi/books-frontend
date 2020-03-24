@@ -54,7 +54,7 @@ const RecommendationText = styled.p<{ bg?: 'white' | 'dark' }>`
   text-align: center;
   font-weight: bold;
   white-space: nowrap;
-  font-size: 0.84em;
+  font-size: 13px;
 
   width: 140px;
   @media (max-width: ${BreakPoint.LG}px) {
