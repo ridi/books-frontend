@@ -305,15 +305,21 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
+  const subServicesValidator = (saved: SavedSubServices) => ({
+    romance: ['/romance', '/romance-serial'].includes(saved.romance) ? saved.romance : '/romance',
+    fantasy: ['/fantasy', '/fantasy-serial'].includes(saved.fantasy) ? saved.fantasy : '/fantasy',
+    bl: ['/bl', '/bl-serial'].includes(saved.bl) ? saved.bl : '/bl',
+  });
+
   useEffect(() => {
     const latestSubService = safeJSONParse(
       localStorage.getItem('latest_sub_service'),
       subServices,
     );
-    setSubServices(latestSubService);
+    setSubServices(subServicesValidator(latestSubService));
 
-    const genre = /romance|fantasy|bl/.exec(router.asPath)?.[0];
-    if (genre) {
+    const genre = /romance|fantasy|bl/.exec(router.query.genre?.toString())?.[0];
+    if (router.pathname === '/[genre]' && genre) {
       const updatedSubService = {
         ...latestSubService,
         [genre]: router.asPath,
