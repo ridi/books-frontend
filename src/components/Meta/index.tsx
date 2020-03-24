@@ -32,11 +32,7 @@ export default () => (
       name="description"
       content="웹툰/웹소설, 전자책, 만화까지 취향에 딱 맞는 콘텐츠를 제안합니다."
     />
-    {process.env.STAGE === 'production' ? (
-      <link rel="manifest" href="https://books.ridicdn.net/_next/manifest.webmanifest" />
-    ) : (
-      <link rel="manifest" href="/manifest.webmanifest" />
-    )}
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link
       href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap&subset=korean"
       rel="stylesheet"
