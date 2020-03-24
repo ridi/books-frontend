@@ -35,12 +35,6 @@ const Ruler = styled.hr`
   background-color: ${slateGray10};
 `;
 
-const genreListPartialsCSS = css`
-  line-height: 47px;
-  position: relative;
-  top: -2px;
-`;
-
 const resetPadding = orBelow(
   999,
   css`
@@ -48,7 +42,7 @@ const resetPadding = orBelow(
   `,
 );
 
-const GenreList = styled.ul<{ isPartials: boolean }>`
+const GenreList = styled.ul`
   display: flex;
   flex-direction: row;
   height: 47px;
@@ -75,7 +69,6 @@ const GenreList = styled.ul<{ isPartials: boolean }>`
     cursor: pointer;
     :first-of-type {
       line-height: 56px;
-      ${(props) => props.isPartials && genreListPartialsCSS};
       margin-right: 0;
       a {
         padding: 0 20px;
@@ -341,7 +334,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
     <>
       <GenreTabWrapper>
         <li>
-          <GenreList isPartials={isPartials}>
+          <GenreList>
             <GenreListItem isCategory={isCategoryList}>
               <a href="/category/list" aria-label="카테고리 목록">
                 <GNBCategory
