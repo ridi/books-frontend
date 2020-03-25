@@ -3,13 +3,13 @@ import { BreakPoint } from 'src/utils/mediaQuery';
 
 export const ThumbnailWrapper = styled.div<{ lgWidth?: 100 | 120 }>`
   width: 140px;
-  height: 217px; // 216px -> 217px by 데미안
+  height: 216px;
   display: flex;
   align-items: flex-end;
   flex-shrink: 0;
   @media (max-width: ${BreakPoint.LG}px) {
     width: ${(props) => props.lgWidth || 100}px;
-    height: ${(props) => (props.lgWidth === 120 ? 184 : 159)}px; // 153px -> 159px by 데미안
+    height: ${(props) => (props.lgWidth === 120 ? 184 : 153)}px;
   }
 
   img {
