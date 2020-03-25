@@ -3,15 +3,17 @@ import React from 'react';
 
 const BooksCarouselWrapper = styled.div<{ itemsInPage: number; itemWidth: number; itemMargin: number }>`
   width: ${({ itemsInPage: n, itemWidth: w, itemMargin: d }) => (w + d) * n - d + 14}px;
-  margin: -7px auto 0;
-  padding-top: 7px;
-  padding-left: 7px;
+  margin: 0 auto;
   overflow: hidden;
 `;
 
 const BooksCarouselList = styled.ul<{ currentIdx: number; itemWidth: number; itemMargin: number }>`
   display: flex;
   flex-wrap: nowrap;
+
+  margin-top: 0;
+  padding-top: 7px;
+  padding-left: 7px;
 
   transform: translateX(${({ currentIdx: idx, itemWidth: w, itemMargin: d }) => -idx * (w + d)}px);
   transition: transform 0.2s;

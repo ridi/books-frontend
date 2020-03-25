@@ -15,18 +15,18 @@ const ScrollContainer = styled.div`
   overflow: auto;
   ${scrollBarHidden}
 
+  padding-top: 7px;
+  margin-top: -7px;
+
   display: flex;
 `;
 
 const BookList = styled.ul<{ type: RecommendedBookProps['type'] }>`
   flex: none;
-  margin-top: -7px;
   margin-left: 10px;
-  padding-top: 7px;
   padding-left: 7px;
   display: flex;
   flex-wrap: nowrap;
-
   @media (min-width: 1000px) {
     margin-left: 0;
     justify-content: center;
