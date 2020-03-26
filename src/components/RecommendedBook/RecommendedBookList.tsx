@@ -15,15 +15,18 @@ const ScrollContainer = styled.div`
   overflow: auto;
   ${scrollBarHidden}
 
-  padding-top: 7px;
-  margin-top: -7px;
 
+  margin-top: -7px;
+  // <BooksCarouselWrapper /> margin -8px 과 같은 맥락의 음수 마진
   display: flex;
 `;
 
 const BookList = styled.ul<{ type: RecommendedBookProps['type'] }>`
   flex: none;
   margin-left: 10px;
+
+  // 썸네일 상단, 좌측 절대 위치로 빠져나온 7px의 여유값
+  padding-top: 7px;
   padding-left: 7px;
   display: flex;
   flex-wrap: nowrap;
