@@ -1,6 +1,4 @@
-import React, {
-  useCallback, useRef, useState,
-} from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import {
   AIRecommendationBook,
@@ -30,6 +28,7 @@ import { sendClickEvent, useEventTracker } from 'src/hooks/useEventTracker';
 import { getMaxDiscountPercentage } from 'src/utils/common';
 import { AdultBadge } from 'src/components/Badge/AdultBadge';
 import { BadgeContainer } from 'src/components/Badge/BadgeContainer';
+import { slateGray20, slateGray60 } from '@ridi/colors';
 
 const SectionWrapper = styled.section`
   max-width: 1000px;
@@ -206,15 +205,15 @@ export const SelectionBookItem: React.FC<SelectionBookItemProps> = React.memo((p
         <button
           css={[
             css`
+              width: 55px;
               margin-top: 8px;
-              margin-left: 7px;
               border-radius: 4px;
-              border: solid 1px #d6d6d6;
+              border: 1px solid ${slateGray20};
               padding: 6px 7px;
               font-size: 10px;
               font-weight: bold;
               line-height: 1;
-              color: #aaaaaa;
+              color: ${slateGray60};
               outline: none;
             `,
             isFetching
