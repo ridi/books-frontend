@@ -5,7 +5,7 @@ const { captureException, withScope, init } = Sentry;
 
 export default () => {
   const sentryOptions = {
-    dsn: process.env.NEXT_STATIC_SENTRY_DSN,
+    dsn: process.env.SENTRY_DSN,
     release: process.env.BUILD_ID,
     maxBreadcrumbs: 30,
     environment: process.env.STAGE,
