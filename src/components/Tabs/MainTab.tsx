@@ -321,7 +321,7 @@ export const MainTab: React.FC<MainTabProps> = (props) => {
 
   useEffect(() => {
     // Notification Page에서는 호출 X
-    if (loggedUserInfo && /^\/notification\/?/.test(router.asPath)) {
+    if (loggedUserInfo && !/^\/notification\/$/.test(router.asPath)) {
       dispatch(notificationActions.loadNotificationUnreadCount());
     }
   }, [dispatch, loggedUserInfo, router.asPath]);
