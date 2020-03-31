@@ -359,7 +359,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
                 <span className="a11y">{labels.category}</span>
               </a>
             </GenreListItem>
-            <TabItem activePath={/^\/?$/} label="일반" href="/" />
+            <TabItem activePath={/^\/?$/} label="일반" href="/general" />
             <TabItem
               activePath={/^\/romance(-serial)?\/?$/}
               label="로맨스"
