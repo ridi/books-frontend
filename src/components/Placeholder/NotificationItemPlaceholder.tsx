@@ -33,7 +33,7 @@ const NotificationThumbnail = styled.div<{}, RIDITheme>`
   flex: none;
   width: 56px;
   height: 80px;
-  background: ${(props) => props.theme.placeholderColor};
+  background: ${(props) => props.theme.placeholderThumbnail};
 `;
 
 const NotificationMeta = styled.div`

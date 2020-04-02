@@ -130,7 +130,7 @@ const NotificationMeta = styled.div`
 const NotificationTitle = styled.h3<{}, RIDITheme>`
   width: 100%;
   font-weight: normal;
-  font-size: 15px;
+  font-size: 14px;
   color: ${(props) => props.theme.textColor};
   word-break: keep-all;
   margin-bottom: 3px;
