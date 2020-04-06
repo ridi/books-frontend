@@ -228,18 +228,26 @@ function checkWithinRingRange(start: number, end: number, idx: number): boolean 
 }
 
 interface CarouselItemProps {
+  slug: string;
   banner: TopBanner;
   active: boolean;
   invisible: boolean;
-  clickHandler: () => void;
 }
 
 function CarouselItem(props: CarouselItemProps) {
   const {
-    banner, active, invisible, clickHandler,
+    banner, active, invisible, slug,
   } = props;
   const [intersecting, setIntersecting] = React.useState(false);
   const ref = useViewportIntersection<HTMLLIElement>(setIntersecting);
+  const [tracker] = useEventTracker();
+  const handleBannerClick = React.useCallback(() => {
+    tracker.sendEvent(SendEventType.Click, {
+      section: slug,
+      items: [{ id: banner.id, idx: banner.list_order, ts: Date.now() }],
+    });
+  }, [tracker]);
+
   return (
     <CarouselItemContainer
       ref={ref}
@@ -247,7 +255,7 @@ function CarouselItem(props: CarouselItemProps) {
       invisible={invisible}
     >
       <BannerImageLink
-        onClick={clickHandler}
+        onClick={handleBannerClick}
         href={banner.landing_url}
         tabIndex={active ? 0 : -1}
       >
@@ -409,12 +417,6 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
 
   // 트래킹
   const [tracker] = useEventTracker();
-  const handleBannerClick = React.useCallback((banner: TopBanner) => {
-    tracker.sendEvent(SendEventType.Click, {
-      section: slug,
-      items: [{ id: banner.id, idx: banner.list_order, ts: Date.now() }],
-    });
-  }, [tracker]);
 
   React.useEffect(() => {
     // FIXME: 이게 최선입니까?
@@ -450,8 +452,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
       >
         {({ index, active, activeIndex }) => (
           <CarouselItem
-            // eslint-disable-next-line react/jsx-no-bind
-            clickHandler={handleBannerClick.bind(null, banners[index])}
+            slug={slug}
             key={index}
             banner={banners[index]}
             active={active}
