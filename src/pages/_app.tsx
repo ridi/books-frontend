@@ -52,13 +52,11 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
   public static async getInitialProps({ ctx, Component, ...rest }: AppContext) {
     const isPartials = !!ctx.pathname.match(/^\/partials\//u);
     const isInApp = !!ctx.pathname.match(/^\/inapp\//u);
-    // eslint-disable-next-line init-declarations
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
       : {};
-    const theme = getAppTheme(ctx.req.headers);
+    const theme = getAppTheme(ctx.req?.headers ?? {});
 
-    // @ts-ignore
     return {
       pageProps,
       isPartials,
@@ -67,7 +65,6 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
       ctxPathname: rest.router ? rest.router.asPath : '/',
       query: {
         ...ctx.query,
-        // @ts-ignore
         is_login: ctx?.query?.is_login === 'true' ? 'true' : 'false',
       },
     };
