@@ -246,7 +246,7 @@ function CarouselItem(props: CarouselItemProps) {
       section: slug,
       items: [{ id: banner.id, idx: banner.list_order, ts: Date.now() }],
     });
-  }, [tracker]);
+  }, [banner, slug, tracker]);
 
   return (
     <CarouselItemContainer
