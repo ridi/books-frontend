@@ -228,6 +228,7 @@ function checkWithinRingRange(start: number, end: number, idx: number): boolean 
 }
 
 interface CarouselItemProps {
+  slug: string;
   banner: TopBanner;
   active: boolean;
   invisible: boolean;
@@ -235,10 +236,18 @@ interface CarouselItemProps {
 
 function CarouselItem(props: CarouselItemProps) {
   const {
-    banner, active, invisible,
+    banner, active, invisible, slug,
   } = props;
   const [intersecting, setIntersecting] = React.useState(false);
   const ref = useViewportIntersection<HTMLLIElement>(setIntersecting);
+  const [tracker] = useEventTracker();
+  const handleBannerClick = React.useCallback(() => {
+    tracker.sendEvent(SendEventType.Click, {
+      section: slug,
+      items: [{ id: banner.id, idx: banner.list_order, ts: Date.now() }],
+    });
+  }, [banner, slug, tracker]);
+
   return (
     <CarouselItemContainer
       ref={ref}
@@ -246,6 +255,7 @@ function CarouselItem(props: CarouselItemProps) {
       invisible={invisible}
     >
       <BannerImageLink
+        onClick={handleBannerClick}
         href={banner.landing_url}
         tabIndex={active ? 0 : -1}
       >
@@ -407,6 +417,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
 
   // 트래킹
   const [tracker] = useEventTracker();
+
   React.useEffect(() => {
     // FIXME: 이게 최선입니까?
     window.setImmediate(() => {
@@ -441,6 +452,7 @@ export default function TopBannerCarousel(props: TopBannerCarouselProps) {
       >
         {({ index, active, activeIndex }) => (
           <CarouselItem
+            slug={slug}
             key={index}
             banner={banners[index]}
             active={active}
