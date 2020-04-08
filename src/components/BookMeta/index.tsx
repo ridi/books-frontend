@@ -61,7 +61,7 @@ export default function BookMeta(props: BookMetaProps) {
       {(showTag || (showSomeDeal && is_somedeal)) && (
         <TagWrapper>
           {showTag && (is_comic_hd || is_comic) && <Tag.Comic />}
-          {showTag && is_novel && <Tag.Comic />}
+          {showTag && is_novel && <Tag.Novel />}
           {showSomeDeal && is_somedeal && <Tag.SomeDeal />}
         </TagWrapper>
       )}
