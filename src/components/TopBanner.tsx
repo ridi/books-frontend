@@ -241,12 +241,14 @@ function CarouselItem(props: CarouselItemProps) {
   const [intersecting, setIntersecting] = React.useState(false);
   const ref = useViewportIntersection<HTMLLIElement>(setIntersecting);
   const [tracker] = useEventTracker();
+  const { deviceType } = useDeviceType();
+
   const handleBannerClick = React.useCallback(() => {
     tracker.sendEvent(SendEventType.Click, {
-      section: slug,
+      section: `${deviceType}.${slug}`,
       items: [{ id: banner.id, idx: banner.list_order, ts: Date.now() }],
     });
-  }, [banner, slug, tracker]);
+  }, [banner, slug, tracker, deviceType]);
 
   return (
     <CarouselItemContainer
