@@ -220,8 +220,12 @@ const paperIcon = css`
   fill: white;
 `;
 
-const Footer: React.FC<{}> = () => (
-  <section id="new_footer" css={sectionStyle}>
+const Footer: React.FC<{ isPartials?: boolean }> = (props) => (
+  <section
+    id="new_footer"
+    css={sectionStyle}
+    {...props.isPartials ? { 'data-partials': true } : {}}
+  >
     <FooterWrapper>
       <FlexBox
         css={css`

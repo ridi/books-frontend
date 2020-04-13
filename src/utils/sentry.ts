@@ -65,7 +65,7 @@ const sentryOptions = {
 let suppressSentry = false;
 try {
   // 클라이언트에서 partials인 경우 초기화하지 않음
-  if (window?.document.querySelector('div[data-partials]') != null) {
+  if (window?.document.querySelector('[data-partials]') != null) {
     suppressSentry = true;
   }
 } catch (_) {

@@ -343,7 +343,11 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
 
   return (
     // @ts-ignore
-    <GNBWrapper className="new_gnb" id={props.id}>
+    <GNBWrapper
+      className="new_gnb"
+      id={props.id}
+      {...isPartials ? { 'data-partials': true } : {}}
+    >
       <GNBContext.Provider value={{ origin }}>
         <Header>
           <Navigation>
