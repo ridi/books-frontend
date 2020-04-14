@@ -62,16 +62,8 @@ const sentryOptions = {
   ],
 };
 
-let suppressSentry = false;
-try {
-  // 클라이언트에서 partials인 경우 초기화하지 않음
-  if (window?.document.querySelector('div[data-partials]') != null) {
-    suppressSentry = true;
-  }
-} catch (_) {
-  // 에러가 났다면 window가 없는 경우, 서버임
-}
-if (!suppressSentry) {
+// 서버이거나, 클라이언트에서 partials가 아닌 경우 초기화
+if (process.env.IS_SERVER || !window.isPartials) {
   init(sentryOptions);
 }
 

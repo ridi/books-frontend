@@ -174,6 +174,7 @@ export const partialResetStyles = css`
     -moz-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     font-size: 14px;
+    font-family: ${fontFamilyWithNanum};
   }
   body {
     ${css([resetSpacing])};
