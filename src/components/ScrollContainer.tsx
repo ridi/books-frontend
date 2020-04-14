@@ -13,8 +13,9 @@ const ControllerContainer = styled.div`
 
 const SlidingContainer = styled.div`
   display: flex;
-  flex-wrap: none;
-  overflow: auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
   ${scrollBarHidden}
 `;
 
