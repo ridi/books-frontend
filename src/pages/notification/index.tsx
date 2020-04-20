@@ -291,9 +291,9 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
         <title>리디북스 - 알림</title>
       </Head>
       <Section>
-        {!isTitleHidden ? (
+        {!isTitleHidden && (
           <PageTitle title="알림" mobileHidden />
-        ) : null}
+        )}
         {isLoaded ? (
           <NotiList>
             {items.length === 0 ? (
