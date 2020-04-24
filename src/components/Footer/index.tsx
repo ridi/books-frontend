@@ -47,6 +47,13 @@ const FlexBox = styled.div`
   )};
 `;
 
+const StyledAnchor = styled.a`
+  word-break: keep-all;
+  :hover {
+    opacity: 0.7;
+  }
+`;
+
 const contactListCSS = (theme: RIDITheme) => css`
   //min-width: 192px;
   display: flex;
@@ -124,13 +131,6 @@ const hiddenMenu = css`
     BreakPoint.LG,
     'display: none;',
   )};
-`;
-
-const anchorHover = css`
-  word-break: keep-all;
-  :hover {
-    opacity: 0.7;
-  }
 `;
 
 const InformationWrapper = styled.address`
@@ -230,110 +230,107 @@ const Footer: React.FC<{}> = () => (
       >
         <ul css={contactListCSS}>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="https://help.ridibooks.com/hc/ko"
               target="_blank"
               rel="noopener"
             >
               <span css={serviceCenter}>고객센터</span>
-            </a>
+            </StyledAnchor>
           </li>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="https://help.ridibooks.com/hc/ko/sections/360002578234"
               target="_blank"
               rel="noopener"
             >
               <span css={serviceCenter}>공지사항</span>
-            </a>
+            </StyledAnchor>
           </li>
         </ul>
         <FooterMenuWrapper>
           <li>
             <FooterMenu>
               <li>
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://paper.ridibooks.com"
                   aria-label="리디 페이퍼"
                 >
                   <PaperIcon css={paperIcon} />
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a css={anchorHover} href="https://ridibooks.com/support/partner-card">
+                <StyledAnchor href="https://ridibooks.com/support/partner-card">
                   <FooterMenuLabel>제휴카드</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a css={anchorHover} href="https://ridibooks.com/support/app/download">
+                <StyledAnchor href="https://ridibooks.com/support/app/download">
                   <FooterMenuLabel>뷰어 다운로드</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a css={anchorHover} href="https://ridibooks.com/order/checkout/cash">
+                <StyledAnchor href="https://ridibooks.com/order/checkout/cash">
                   <FooterMenuLabel>리디캐시 충전</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
             </FooterMenu>
           </li>
           <li css={hiddenMenu}>
             <FooterMenu>
               <li>
-                <a css={anchorHover} href="https://ridibooks.com/partners/">
+                <StyledAnchor
+                  target="_blank"
+                  rel="noopener"
+                  href="https://help.ridibooks.com/hc/ko/articles/360046896553"
+                >
                   <FooterMenuLabel>콘텐츠 제공 문의</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://cp.ridibooks.com"
                   target="_blank"
                   rel="noopener"
                 >
                   <FooterMenuLabel>CP 사이트</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a css={anchorHover} href="mailto:biz@ridi.com">
+                <StyledAnchor href="mailto:biz@ridi.com">
                   <FooterMenuLabel>사업 제휴 문의</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://help.ridibooks.com/hc/ko/articles/360026484174"
                   target="_blank"
                   rel="noopener"
                 >
                   <FooterMenuLabel>페이퍼 대량구매 안내</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
             </FooterMenu>
           </li>
           <li css={hiddenMenu}>
             <FooterMenu>
               <li>
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://www.facebook.com/ridibooks"
                   target="_blank"
                   rel="noopener"
                 >
                   <FooterMenuLabel>페이스북</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li>
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://instagram.com/ridipaper/"
                   target="_blank"
                   rel="noopener"
                 >
                   <FooterMenuLabel>인스타그램</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
             </FooterMenu>
           </li>
@@ -344,22 +341,20 @@ const Footer: React.FC<{}> = () => (
                   height: 15.5px;
                 `}
               >
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://www.ridicorp.com/"
                   target="_blank"
                   rel="noopener"
                 >
                   <FooterMenuLabel>회사 소개</FooterMenuLabel>
-                </a>
+                </StyledAnchor>
               </li>
               <li
                 css={css`
                   height: 17px;
                 `}
               >
-                <a
-                  css={anchorHover}
+                <StyledAnchor
                   href="https://www.ridicorp.com/career/"
                   target="_blank"
                   rel="noopener"
@@ -375,7 +370,7 @@ const Footer: React.FC<{}> = () => (
                       height: 14px;
                     `}
                   />
-                </a>
+                </StyledAnchor>
               </li>
               <li
                 css={css`
@@ -473,19 +468,22 @@ const Footer: React.FC<{}> = () => (
                   `}
                 >
                   <li>
-                    <a css={anchorHover} href="https://ridibooks.com/partners/">
+                    <StyledAnchor
+                      target="_blank"
+                      rel="noopener"
+                      href="https://help.ridibooks.com/hc/ko/articles/360046896553"
+                    >
                       <FooterMenuLabel>콘텐츠 제공 문의</FooterMenuLabel>
-                    </a>
+                    </StyledAnchor>
                   </li>
                   <li>
-                    <a
-                      css={anchorHover}
+                    <StyledAnchor
                       href="https://cp.ridibooks.com"
                       target="_blank"
                       rel="noopener"
                     >
                       <FooterMenuLabel>CP 사이트</FooterMenuLabel>
-                    </a>
+                    </StyledAnchor>
                   </li>
                   <li>
                     <a href="mailto:biz@ridi.com">
@@ -530,18 +528,16 @@ const Footer: React.FC<{}> = () => (
         <Copyright className="museo">© RIDI Corp.</Copyright>
         <ul css={menuListCSS}>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="https://policy.ridi.com/legal/terms"
               target="_blank"
               rel="noopener"
             >
               <MiscMenuLabel>이용 약관</MiscMenuLabel>
-            </a>
+            </StyledAnchor>
           </li>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="https://policy.ridi.com/legal/privacy"
               target="_blank"
               rel="noopener"
@@ -553,27 +549,25 @@ const Footer: React.FC<{}> = () => (
               >
                 개인 정보 처리 방침
               </MiscMenuLabel>
-            </a>
+            </StyledAnchor>
           </li>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="https://policy.ridi.com/legal/youth"
               target="_blank"
               rel="noopener"
             >
               <MiscMenuLabel>청소년 보호 정책</MiscMenuLabel>
-            </a>
+            </StyledAnchor>
           </li>
           <li>
-            <a
-              css={anchorHover}
+            <StyledAnchor
               href="http://ftc.go.kr/info/bizinfo/communicationList.jsp"
               target="_blank"
               rel="noopener"
             >
               <MiscMenuLabel>사업자 정보 확인</MiscMenuLabel>
-            </a>
+            </StyledAnchor>
           </li>
         </ul>
       </MiscWrapper>
