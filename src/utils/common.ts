@@ -104,3 +104,23 @@ export const getMaxDiscountPercentage = (book: BookApi.Book | null) => {
   }
   return 0;
 };
+
+/**
+ * overflow-x: auto 를 가진 가까운 부모 엘리먼트 찾기
+ *
+ * @param {HTMLElement} element 시작 엘리먼트
+ * @param {number} findDepth 찾는 깊이
+ * @returns HTMLElement | null
+ */
+export function findNearestOverflowElement(element: HTMLElement, findDepth = 5): HTMLElement | null {
+  if (findDepth === 0) {
+    return null;
+  }
+  if (element.parentElement) {
+    if (window.getComputedStyle(element.parentElement).overflowX === 'auto') {
+      return element.parentElement;
+    }
+    return findNearestOverflowElement(element.parentElement, findDepth - 1);
+  }
+  return null;
+}
