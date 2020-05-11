@@ -101,7 +101,7 @@ const MAX_PAGE = 400;
 function getQueryParamsToString(searchParam: URLSearchParams, page: string) {
   const params = new URLSearchParams(searchParam);
   params.set('page', page);
-  return `${params.toString()}`;
+  return params.toString();
 }
 
 export function Pagination(props: PaginationProps) {

@@ -108,9 +108,9 @@ export const getMaxDiscountPercentage = (book: BookApi.Book | null) => {
 /**
  * overflow-x: auto 를 가진 가까운 부모 엘리먼트 찾기
  *
- * @param {HTMLElement} element 시작 엘리먼트
- * @param {number} findDepth 찾는 깊이
- * @returns HTMLElement | null
+ * @param element 시작 엘리먼트
+ * @param findDepth 찾는 깊이
+ * @returns 찾아 낸 부모엘리먼트 혹은 null
  */
 export function findNearestOverflowElement(element: HTMLElement, findDepth = 5): HTMLElement | null {
   if (findDepth === 0) {

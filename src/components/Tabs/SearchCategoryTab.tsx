@@ -90,7 +90,7 @@ function SearchCategoryTab(props: SearchCategoryProps) {
   const searchParam = new URLSearchParams(router?.query as Record<string, string>);
   useEffect(() => {
     if (ref.current) {
-      const activeItem = Array.from(ref.current.querySelectorAll('li')).find((item) => item.dataset.isActive === 'true');
+      const activeItem: HTMLLIElement | null = ref.current.querySelector('li[data-is-active=true]');
       if (activeItem) {
         const { offsetLeft = 0 } = activeItem;
         const scrollableItem = findNearestOverflowElement(activeItem, 3);
