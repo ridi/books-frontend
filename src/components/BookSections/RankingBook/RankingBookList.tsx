@@ -205,6 +205,7 @@ function RankingBook({
           order={index}
           css={css`
             width: ${type === 'big' ? 80 : 50}px;
+            max-height: ${type === 'big' ? 114 : 71}px;
           `}
           sizes={type === 'big' ? '80px' : '50px'}
           thumbnailId={getThumbnailIdFromBookDetail(book) || book.id}
