@@ -133,7 +133,7 @@ module.exports = withPlugins([
     },
   }],
   [withTM, {
-    transpileModules: ['p-retry'],
+    transpileModules: ['p-retry', 'entities'],
   }],
   [withImages, {
     inlineImageLimit: 0,
