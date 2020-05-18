@@ -27,6 +27,7 @@ const store = makeStore(
         '12345': {
           b_id: '12345',
           title: { main: '도서 표지' },
+          categories: [],
           property: {},
           authors: [],
           clientBookFields: {
@@ -36,6 +37,7 @@ const store = makeStore(
         '12346': {
           b_id: '12346',
           title: {main: '도서 표지'},
+          categories: [{genre: 'comic'}],
           property: {},
           authors: [{id: 1, role: AuthorRole.AUTHOR, name: '작가'}],
           clientBookFields: {
