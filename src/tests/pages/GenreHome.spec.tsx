@@ -42,6 +42,9 @@ const store = makeStore(
             is_comic: false,
           },
           authors: [],
+          categories: [{
+            genre:'fantasy'
+          }],
           title: { main: '판타지 도서 타이틀' },
         },
         '111020494': {
@@ -53,6 +56,7 @@ const store = makeStore(
             is_comic: false,
           },
           authors: [],
+          categories: [],
           title: { main: 'Bl 도서 Title1' },
         },
         '777035894': {
@@ -64,6 +68,15 @@ const store = makeStore(
             is_comic: false,
           },
           authors: [],
+          categories: [{
+            genre:'bl'
+          }],
+          series: {
+            property: {
+              last_volume_id: "999999",
+              is_completed: false,
+            }
+          },
           title: { main: 'Bl 도서 Title2' },
         },
       },

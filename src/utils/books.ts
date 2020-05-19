@@ -38,9 +38,11 @@ export function getThumbnailIdFromBookDetail(book: BookApi.Book | null) {
   if (!book) {
     return null;
   }
-  if (book.series && book.series.property.is_serial) {
+  // book.series.property.is_serial 이 아니라 장르를 체크해서 마지막 볼륨 bId 를 넘긴다.
+  const categoryName = book.categories[0]?.genre || 'general';
+  if (book.series) {
     if (
-      !book.series.property.is_completed && book.series.property.opened_last_volume_id.length !== 0
+      categoryName !== 'general' && !book.series.property.is_completed && book.series.property.opened_last_volume_id.length !== 0
     ) {
       return book.series.property.opened_last_volume_id;
     }

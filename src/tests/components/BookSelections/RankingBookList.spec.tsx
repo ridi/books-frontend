@@ -30,6 +30,7 @@ const store = makeStore(
             is_comic: true,
             is_comic_hd: true,
           },
+          categories: [{genre: 'bl'}],
           authors: [{name: 'Ridi', id: '1', role: 'author'}]
         },
       },
