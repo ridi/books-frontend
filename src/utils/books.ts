@@ -39,7 +39,7 @@ export function getThumbnailIdFromBookDetail(book: BookApi.Book | null) {
     return null;
   }
   // book.series.property.is_serial 이 아니라 장르를 체크해서 마지막 볼륨 bId 를 넘긴다.
-  const categoryName = book.categories.length > 0 ? book.categories[0].genre : 'general';
+  const categoryName = book.categories[0]?.genre || 'general';
   if (book.series) {
     if (
       categoryName !== 'general' && !book.series.property.is_completed && book.series.property.opened_last_volume_id.length !== 0
