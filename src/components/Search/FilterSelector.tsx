@@ -41,6 +41,7 @@ export function FilterSelector() {
       (router.query as Record<string, string>) || {},
     );
     searchParams.set('order', e.target.value);
+    searchParams.delete('is_login');
     setSelectedFilter(e.target.value);
     router.push(`/search?${searchParams.toString()}`);
   }

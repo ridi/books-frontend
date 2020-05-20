@@ -70,6 +70,7 @@ export function AdultExcludeToggle(props: { adultExclude: boolean }) {
   const toggle = (newValue: boolean) => {
     const value = newValue ? 'y' : 'n';
     searchParam.set('adult_exclude', value);
+    searchParam.delete('is_login');
     const cookie = new Cookies();
     cookie.set('adult_exclude', value, {
       path: '/',
