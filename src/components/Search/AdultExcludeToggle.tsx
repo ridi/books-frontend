@@ -65,18 +65,30 @@ function Toggle(props: {
 export function AdultExcludeToggle(props: { adultExclude: boolean }) {
   const { adultExclude } = props;
   const router = useRouter();
-  const searchParam = new URLSearchParams((router.query as Record<string, string>) || {});
+  const {
+    q = '',
+    order = 'score',
+    adult_exclude = 'n',
+    page = '1',
+    category_id = '0',
+  } = router.query as Record<string, string>;
+  const searchParams = new URLSearchParams({
+    q,
+    order,
+    adult_exclude,
+    page,
+    category_id,
+  });
 
   const toggle = (newValue: boolean) => {
     const value = newValue ? 'y' : 'n';
-    searchParam.set('adult_exclude', value);
-    searchParam.delete('is_login');
+    searchParams.set('adult_exclude', value);
     const cookie = new Cookies();
     cookie.set('adult_exclude', value, {
       path: '/',
       sameSite: 'lax',
     });
-    router.push(`/search?${searchParam.toString()}`);
+    router.push(`/search?${searchParams.toString()}`);
   };
   return (
     <Toggle

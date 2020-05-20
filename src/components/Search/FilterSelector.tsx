@@ -37,11 +37,20 @@ export function FilterSelector() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState(router.query?.order ?? 'score');
   function applyFilter(e: React.ChangeEvent<HTMLSelectElement>) {
-    const searchParams = new URLSearchParams(
-      (router.query as Record<string, string>) || {},
-    );
-    searchParams.set('order', e.target.value);
-    searchParams.delete('is_login');
+    const {
+      q = '',
+      order = 'score',
+      adult_exclude = 'n',
+      page = '1',
+      category_id = '0',
+    } = router.query as Record<string, string>;
+    const searchParams = new URLSearchParams({
+      q,
+      order,
+      adult_exclude,
+      page,
+      category_id,
+    });
     setSelectedFilter(e.target.value);
     router.push(`/search?${searchParams.toString()}`);
   }
