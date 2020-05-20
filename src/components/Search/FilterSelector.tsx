@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import { slateGray20, slateGray60 } from '@ridi/colors';
@@ -35,15 +35,26 @@ const Select = styled.select`
 
 export function FilterSelector() {
   const router = useRouter();
-  const [selectedFilter, setSelectedFilter] = useState(router.query?.order ?? 'score');
+  const [selectedFilter, setSelectedFilter] = useState<string>(String(router.query?.order ?? 'score'));
   function applyFilter(e: React.ChangeEvent<HTMLSelectElement>) {
-    const searchParams = new URLSearchParams(
-      (router.query as Record<string, string>) || {},
-    );
-    searchParams.set('order', e.target.value);
     setSelectedFilter(e.target.value);
-    router.push(`/search?${searchParams.toString()}`);
   }
+  useEffect(() => {
+    const {
+      q = '',
+      adult_exclude = 'n',
+      page = '1',
+      category_id = '0',
+    } = router.query as Record<string, string>;
+    const searchParams = new URLSearchParams({
+      q,
+      adult_exclude,
+      page,
+      category_id,
+      order: selectedFilter,
+    });
+    router.push(`/search?${searchParams.toString()}`);
+  }, [selectedFilter]);
   return (
     <label>
       <Select
