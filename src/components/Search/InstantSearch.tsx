@@ -534,7 +534,9 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
     }, [isAdultExclude, keyword]);
 
     useEffect(() => {
-      setAdultExclude(initializeAdultExclude(router));
+      if (isFocused) {
+        setAdultExclude(initializeAdultExclude(router));
+      }
     }, [isFocused]);
 
     useEffect(() => {
