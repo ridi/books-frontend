@@ -7,7 +7,7 @@
     "@emotion/styled": "^10.0.23",
     "@koa/router": "^8.0.8",
     "@ridi/colors": "^0.7.1",
-    "@ridi/event-tracker": "^0.8.5",
+    "@ridi/event-tracker": "^0.8.7",
     "@sentry/browser": "^5.15.3",
     "@sentry/node": "^5.15.3",
     "@sentry/webpack-plugin": "^1.9.3",
