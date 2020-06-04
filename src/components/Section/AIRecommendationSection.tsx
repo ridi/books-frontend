@@ -55,7 +55,10 @@ const AiRecommendationSection: React.FC<AiRecommendationSectionProps> = (props) 
         }
       } catch (error) {
         setIsRequestError(true);
-        sentry.captureException(error);
+        // 추천할 도서가 없으면 404 반환함 에러가 아님
+        if (error?.response?.status !== 404) {
+          sentry.captureException(error);
+        }
       }
     };
 
