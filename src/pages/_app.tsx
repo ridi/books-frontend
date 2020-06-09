@@ -145,7 +145,9 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
           </PartialSeparator>
           {/* Todo Apply Layout */}
           <Provider store={store}>
-            <Component {...pageProps} />
+            <AccountProvider>
+              <Component {...pageProps} />
+            </AccountProvider>
           </Provider>
         </>
       );
@@ -159,13 +161,15 @@ class StoreApp extends App<StoreAppProps, StoreAppState> {
           <CacheProvider value={createCache({ ...cache, nonce })}>
             <Global styles={resetStyles} />
             <Provider store={store}>
-              <InAppThemeProvider theme={theme ?? ''}>
-                <ViewportIntersectionProvider>
-                  <Contents>
-                    <Component {...pageProps} />
-                  </Contents>
-                </ViewportIntersectionProvider>
-              </InAppThemeProvider>
+              <AccountProvider>
+                <InAppThemeProvider theme={theme ?? ''}>
+                  <ViewportIntersectionProvider>
+                    <Contents>
+                      <Component {...pageProps} />
+                    </Contents>
+                  </ViewportIntersectionProvider>
+                </InAppThemeProvider>
+              </AccountProvider>
             </Provider>
           </CacheProvider>
         </>
