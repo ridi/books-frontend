@@ -1,5 +1,5 @@
 class StorageFactory {
-  storage?: typeof window.localStorage | typeof window.sessionStorage;
+  storage?: Storage;
 
   inMemory: { [key: string]: string } = {};
 
