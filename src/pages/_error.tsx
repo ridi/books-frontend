@@ -1,6 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { dodgerBlue50 } from '@ridi/colors';
+import { dodgerBlue50, slateGray20 } from '@ridi/colors';
 import { ErrorProps } from 'next/error';
 import React from 'react';
 
@@ -33,8 +33,23 @@ const logoStyle = css`
   fill: ${dodgerBlue50};
 `;
 
-export default function ErrorPage(props: ErrorProps) {
-  const { statusCode } = props;
+const detailStyle = css`
+  margin-top: 50px;
+  font-size: 10px;
+  color: ${slateGray20};
+  label {
+    text-decoration: underline;
+  }
+  input, label + p {
+    display: none;
+  }
+  input:checked + label + p {
+    display: block;
+  }
+`;
+
+export default function ErrorPage(props: ErrorProps & { err: Error }) {
+  const { statusCode, err } = props;
   const code = statusCode >= 400 ? String(statusCode) : '';
 
   return (
@@ -88,9 +103,19 @@ export default function ErrorPage(props: ErrorProps) {
             color: #525a61;
           `}
         >
-          <strong>요청하신 페이지가 없습니다.</strong>
-          <br />
-          입력하신 주소를 확인해 주세요.
+          {statusCode === 404 ? (
+            <>
+              <strong>요청하신 페이지가 없습니다.</strong>
+              <br />
+              입력하신 주소를 확인해 주세요.
+            </>
+          ) : (
+            <>
+              <strong>오류가 발생했습니다.</strong>
+              <br />
+              잠시 후 다시 시도해주세요.
+            </>
+          )}
         </p>
         <div css={css`margin: 40px 0;`}>
           <Button
@@ -115,6 +140,16 @@ export default function ErrorPage(props: ErrorProps) {
             </a>
           </Button>
         </div>
+
+        {statusCode >= 500 && (
+          <div css={detailStyle}>
+            <input type="checkbox" id="detail" />
+            <label htmlFor="detail">자세히 보기</label>
+            <p>
+              {JSON.stringify(err)}
+            </p>
+          </div>
+        )}
       </div>
     </>
   );
@@ -126,7 +161,7 @@ ErrorPage.getInitialProps = (context: ConnectedInitializeProps) => {
   if (err) {
     sentry.captureException(err, context);
     const statusCode = err.statusCode || res?.statusCode || 500;
-    return { statusCode };
+    return { statusCode, err };
   }
 
   return { statusCode: 404 };
