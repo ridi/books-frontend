@@ -1,48 +1,49 @@
 class StorageFactory {
-  storage: typeof window.localStorage | typeof window.sessionStorage;
+  storage?: typeof window.localStorage | typeof window.sessionStorage;
+
+  inMemory: { [key: string]: string } = {};
 
   constructor(storage: 'localStorage' | 'sessionStorage') {
-    this.storage = window[storage];
+    try {
+      this.storage = window[storage];
+    } catch {
+      this.storage = undefined;
+    }
   }
 
-  key(index: number): string | null {
-    try {
+  public key(index: number): string | null {
+    if (this.storage) {
       return this.storage.key(index);
-    } catch (e) {
-      return null;
     }
+    return Object.keys(this.inMemory)[index] || null;
   }
 
-  getItem(key: string): string | null {
-    try {
+  public getItem(key: string): string | null {
+    if (this.storage) {
       return this.storage.getItem(key);
-    } catch (e) {
-      return null;
     }
+    return Object.prototype.hasOwnProperty.call(this.inMemory, key) ? this.inMemory[key] : null;
   }
 
-  setItem(key: string, value: string): void {
-    try {
+  public setItem(key: string, value: string): void {
+    if (this.storage) {
       return this.storage.setItem(key, value);
-    } catch (e) {
-      return undefined;
     }
+    this.inMemory[key] = String(value);
   }
 
-  removeItem(key: string): void {
-    try {
+  public removeItem(key: string): void {
+    if (this.storage) {
       return this.storage.removeItem(key);
-    } catch (e) {
-      return undefined;
     }
+    delete this.inMemory[key];
   }
 
-  clear(): void {
-    try {
+  public clear(): void {
+    if (this.storage) {
       return this.storage.clear();
-    } catch (e) {
-      return undefined;
     }
+    this.inMemory = {};
   }
 }
 
