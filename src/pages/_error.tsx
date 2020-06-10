@@ -146,7 +146,7 @@ export default function ErrorPage(props: ErrorProps & { err: Error }) {
             <input type="checkbox" id="detail" />
             <label htmlFor="detail">자세히 보기</label>
             <p>
-              {JSON.stringify(err)}
+              {err.toString()}
             </p>
           </div>
         )}
