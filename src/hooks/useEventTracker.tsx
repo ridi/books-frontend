@@ -5,6 +5,7 @@ import {
 import { useEffect } from 'react';
 import sentry from 'src/utils/sentry';
 import { getDeviceType } from 'src/hooks/useDeviceType';
+import { localStorage } from 'src/utils/storages';
 
 import useAccount from './useAccount';
 

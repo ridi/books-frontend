@@ -21,6 +21,7 @@ import styled from '@emotion/styled';
 import { useTheme } from 'emotion-theming';
 import { GNBContext } from 'src/components/GNB';
 import * as SearchTypes from 'src/types/searchResults';
+import { localStorage } from 'src/utils/storages';
 
 import { slateGray60 } from '@ridi/colors';
 import { Switch } from 'src/components/Switch/Switch';
@@ -501,12 +502,12 @@ export const InstantSearch: React.FC<InstantSearchProps> = React.memo(
     useEffect(() => {
       toggleSearchHistoryRecord(
         safeJSONParse(
-          window.localStorage.getItem(localStorageKeys.instantSearchHistoryOption),
+          localStorage.getItem(localStorageKeys.instantSearchHistoryOption),
           true,
         ),
       );
       const history = safeJSONParse(
-        window.localStorage.getItem(localStorageKeys.instantSearchHistory),
+        localStorage.getItem(localStorageKeys.instantSearchHistory),
         [],
       );
 
