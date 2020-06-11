@@ -3,6 +3,7 @@ import {
   FB_KEYS, GA_KEY, GTM_KEY, SendEventType,
 } from 'src/constants/eventTracking';
 import { getDeviceType } from 'src/hooks/useDeviceType';
+import { localStorage } from 'src/utils/storages';
 
 const deviceType = getDeviceType() === 'mobile' ? DeviceType.Mobile : DeviceType.PC;
 

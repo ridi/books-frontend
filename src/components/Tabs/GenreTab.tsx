@@ -10,6 +10,7 @@ import cookieKeys from 'src/constants/cookies';
 import Cookies from 'universal-cookie';
 
 import { safeJSONParse } from 'src/utils/common';
+import { localStorage } from 'src/utils/storages';
 import Link from 'next/link';
 import {
   dodgerBlue60,

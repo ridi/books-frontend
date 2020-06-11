@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { localStorage } from 'src/utils/storages';
 
 const DisallowedHostsFilter: React.FC = () => {
   useEffect(() => {
