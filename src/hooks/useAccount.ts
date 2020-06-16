@@ -42,7 +42,13 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
       () => checkLoggedIn(cancel),
       { maxTries: 3, backoffTimeUnit: 500 },
     ).then(
-      setAccount,
+      (data) => {
+        configureScope((scope) => {
+          scope.setUser(data);
+        });
+        tracker.setUserId(data?.id ?? null);
+        setAccount(data);
+      },
       (err) => {
         if (err instanceof CancelledError) {
           if ((err.inner as AxiosError)?.response?.status === 401) {
@@ -55,13 +61,6 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
     );
     return () => cancel.cancel();
   }, []);
-
-  React.useEffect(() => {
-    configureScope((scope) => {
-      scope.setUser(account);
-    });
-    tracker.setUserId(account?.id ?? null);
-  }, [account]);
 
   return React.createElement(
     AccountContext.Provider,
