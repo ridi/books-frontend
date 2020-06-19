@@ -4,6 +4,8 @@ import React from 'react';
 
 import { RIDITheme } from 'src/styles';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
+import Lens from 'src/svgs/Lens.svg';
+
 import InstantSearchHistory from './InstantSearchHistory';
 
 const WrapperForm = styled.form<{ focused?: boolean }>`
@@ -28,9 +30,12 @@ const WrapperForm = styled.form<{ focused?: boolean }>`
 `;
 
 const SearchBoxWrapper = styled.div<{ focused?: boolean }, RIDITheme>`
-  ${(props) => props.focused && orBelow(BreakPoint.LG, `
-    padding: 6px;
-    background-color: ${props.theme.primaryColor};
+  ${(props) => orBelow(BreakPoint.LG, `
+    padding-top: 9px;
+    ${props.focused && `
+      padding: 6px;
+      background-color: ${props.theme.primaryColor};
+    `}
   `)}
 `;
 
@@ -42,10 +47,22 @@ const SearchBoxShape = styled.div`
   align-items: center;
 `;
 
+const StyledLens = styled(Lens)<{}, RIDITheme>`
+  fill: ${(props) => props.theme.input.placeholder};
+  flex: none;
+  width: 24px;
+  height: 24px;
+  margin: 4px;
+  margin-left: 6px;
+  opacity: 0.6;
+`;
+
 const SearchBox = styled.input`
   flex: 1;
-  padding: 10px 0;
+  height: 32px;
+  padding: 7px 0;
   font-size: 16px;
+  line-height: 18px;
 `;
 
 const StyledInstantSearchHistory = styled(InstantSearchHistory)`
@@ -91,6 +108,7 @@ export default function InstantSearch() {
     },
     [],
   );
+
   const handleSubmit = React.useCallback((e: React.FormEvent) => {
     e.preventDefault();
     if (!disableRecord) {
@@ -100,6 +118,7 @@ export default function InstantSearch() {
   const handleKeywordChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   }, []);
+
   const handleHistoryItemClick = React.useCallback((idx: number) => {
     setKeyword(searchHistory[idx]);
   }, [searchHistory]);
@@ -109,34 +128,41 @@ export default function InstantSearch() {
   const handleHistoryClear = React.useCallback(() => {
     updateSearchHistory({ type: 'clear' });
   }, []);
+
   const handleFocus = React.useCallback(() => setFocused(true), []);
-  const handleWrapperClick = React.useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
+  const handleBlur = React.useCallback((e: React.FocusEvent) => {
+    const relatedTarget = e.relatedTarget || document.activeElement;
+    if (!e.currentTarget.contains(relatedTarget as (Element | null))) {
       setFocused(false);
     }
   }, []);
+
   return (
     <WrapperForm
       focused={isFocused}
       onFocus={handleFocus}
-      onClick={handleWrapperClick}
+      onBlur={handleBlur}
       onSubmit={handleSubmit}
     >
-      <SearchBoxWrapper focused={isFocused}>
-        <SearchBoxShape>
-          <SearchBox onChange={handleKeywordChange} value={keyword} />
-        </SearchBoxShape>
-      </SearchBoxWrapper>
-      {isFocused && (
-        <StyledInstantSearchHistory
-          disableRecord={disableRecord}
-          searchHistory={searchHistory}
-          onDisableRecordChange={setDisableRecord}
-          onItemClick={handleHistoryItemClick}
-          onItemRemove={handleHistoryItemRemove}
-          onClear={handleHistoryClear}
-        />
-      )}
+      {/* 검색창 내부 포커스를 여기서 잡음 */}
+      <div tabIndex={-1}>
+        <SearchBoxWrapper focused={isFocused}>
+          <SearchBoxShape>
+            <StyledLens />
+            <SearchBox onChange={handleKeywordChange} value={keyword} />
+          </SearchBoxShape>
+        </SearchBoxWrapper>
+        {isFocused && (
+          <StyledInstantSearchHistory
+            disableRecord={disableRecord}
+            searchHistory={searchHistory}
+            onDisableRecordChange={setDisableRecord}
+            onItemClick={handleHistoryItemClick}
+            onItemRemove={handleHistoryItemRemove}
+            onClear={handleHistoryClear}
+          />
+        )}
+      </div>
     </WrapperForm>
   );
 }
