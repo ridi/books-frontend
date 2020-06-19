@@ -352,9 +352,7 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
                   cashOrderPath={cashOrderPath}
                 />
               </ButtonWrapper>
-              <InstantSearch
-                searchKeyword={props.searchKeyword || ''}
-              />
+              <InstantSearch />
             </LogoSearchBoxArea>
           </Navigation>
           <MainTab loggedUserInfo={loggedUser} />
