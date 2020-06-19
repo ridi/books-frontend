@@ -4,6 +4,7 @@ import React from 'react';
 
 import { RIDITheme } from 'src/styles';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
+import InstantSearchHistory from './InstantSearchHistory';
 
 const WrapperForm = styled.form<{ focused?: boolean }>`
   flex: 1;
@@ -47,22 +48,95 @@ const SearchBox = styled.input`
   font-size: 16px;
 `;
 
+const StyledInstantSearchHistory = styled(InstantSearchHistory)`
+  position: absolute;
+  width: 380px;
+  margin-top: 2px;
+  border-radius: 3px;
+  box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px 3px;
+  z-index: 10;
+
+  ${orBelow(BreakPoint.LG, `
+    position: static;
+    width: 100%;
+    margin-top: 0;
+    border-radius: 0;
+    box-shadow: none;
+  `)}
+`;
+
+type SearchHistoryAction =
+  | { type: 'add'; item: string }
+  | { type: 'remove'; index: number }
+  | { type: 'clear' }
+;
+
 export default function InstantSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = React.useState(String(router.query.q || ''));
   const [isFocused, setFocused] = React.useState(false);
+  const [disableRecord, setDisableRecord] = React.useState(false);
+  const [searchHistory, updateSearchHistory] = React.useReducer(
+    (state: string[], action: SearchHistoryAction) => {
+      switch (action.type) {
+        case 'add':
+          return [...new Set([action.item, ...state])].slice(0, 5);
+        case 'remove':
+          return state.filter((_, idx) => idx !== action.index);
+        case 'clear':
+          return [];
+        default:
+          return state;
+      }
+    },
+    [],
+  );
+  const handleSubmit = React.useCallback((e: React.FormEvent) => {
+    e.preventDefault();
+    if (!disableRecord) {
+      updateSearchHistory({ type: 'add', item: keyword });
+    }
+  }, [keyword, disableRecord]);
   const handleKeywordChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   }, []);
+  const handleHistoryItemClick = React.useCallback((idx: number) => {
+    setKeyword(searchHistory[idx]);
+  }, [searchHistory]);
+  const handleHistoryItemRemove = React.useCallback((idx: number) => {
+    updateSearchHistory({ type: 'remove', index: idx });
+  }, []);
+  const handleHistoryClear = React.useCallback(() => {
+    updateSearchHistory({ type: 'clear' });
+  }, []);
   const handleFocus = React.useCallback(() => setFocused(true), []);
-  const handleBlur = React.useCallback(() => setFocused(false), []);
+  const handleWrapperClick = React.useCallback((e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setFocused(false);
+    }
+  }, []);
   return (
-    <WrapperForm focused={isFocused} onFocus={handleFocus} onBlur={handleBlur}>
+    <WrapperForm
+      focused={isFocused}
+      onFocus={handleFocus}
+      onClick={handleWrapperClick}
+      onSubmit={handleSubmit}
+    >
       <SearchBoxWrapper focused={isFocused}>
         <SearchBoxShape>
           <SearchBox onChange={handleKeywordChange} value={keyword} />
         </SearchBoxShape>
       </SearchBoxWrapper>
+      {isFocused && (
+        <StyledInstantSearchHistory
+          disableRecord={disableRecord}
+          searchHistory={searchHistory}
+          onDisableRecordChange={setDisableRecord}
+          onItemClick={handleHistoryItemClick}
+          onItemRemove={handleHistoryItemRemove}
+          onClear={handleHistoryClear}
+        />
+      )}
     </WrapperForm>
   );
 }

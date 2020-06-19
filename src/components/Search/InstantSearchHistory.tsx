@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import * as labels from 'src/labels/instantSearch.json';
@@ -116,51 +116,42 @@ const HistoryOptionButton = styled.button`
 `;
 
 interface InstantSearchHistoryProps {
-  enableSearchHistoryRecord: boolean;
-  handleClickHistoryItem: (e: React.MouseEvent<HTMLElement>) => void;
-  handleRemoveHistory: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  handleClearHistory: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  handleToggleSearchHistoryRecord: (e: React.MouseEvent<HTMLButtonElement>) => void;
   searchHistory: string[];
-  focusedPosition: number;
+  focusedIdx?: number;
+  disableRecord?: boolean;
+  onItemClick?(index: number): void;
+  onItemRemove?(index: number): void;
+  onClear?(): void;
+  onDisableRecordChange?(disableRecord: boolean): void;
+  className?: string;
 }
 
 const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
   const {
-    enableSearchHistoryRecord,
-    handleClearHistory,
-    handleRemoveHistory,
-    handleClickHistoryItem,
-    handleToggleSearchHistoryRecord,
     searchHistory,
-    focusedPosition,
+    focusedIdx,
+    disableRecord,
+    onItemClick,
+    onItemRemove,
+    onClear,
+    onDisableRecordChange,
+    className,
   } = props;
 
   const wrapperRef = React.useRef<HTMLUListElement>(null);
 
-  useEffect(() => {
-    if (wrapperRef.current) {
-      const items = wrapperRef.current.querySelectorAll('li');
-      if (items.length > 0 && focusedPosition !== 0) {
-        const item = items[focusedPosition - 1];
-        if (item) {
-          item.focus();
-        }
-      }
-    }
-  }, [focusedPosition]);
   const hasHistory = searchHistory.length > 0;
   return (
-    <>
+    <div css={css`background-color: white;`} className={className}>
       <RecentHistoryLabel>{labels.recentKeywords}</RecentHistoryLabel>
       <HistoryList ref={wrapperRef}>
-        {enableSearchHistoryRecord && hasHistory ? (
+        {!disableRecord && hasHistory ? (
           <>
             {searchHistory.slice(0, 5).map((history: string, index: number) => (
               <SearchHistoryItem
                 tabIndex={0}
                 data-value={history}
-                onClick={handleClickHistoryItem}
+                onClick={() => onItemClick?.(index)}
                 key={index}
               >
                 {/* Fixme href */}
@@ -170,7 +161,7 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
                 <RemoveHistoryButton
                   data-value={history}
                   type="button"
-                  onClick={handleRemoveHistory}
+                  onClick={(e) => { e.stopPropagation(); onItemRemove?.(index); }}
                 >
                   <Close css={closeIcon} />
                   <span className="a11y">{labels.removeHistory}</span>
@@ -180,13 +171,13 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
           </>
         ) : (
           <TurnOffSearchHistory>
-            {!enableSearchHistoryRecord && <Exclamation css={exclamation} />}
+            {disableRecord && <Exclamation css={exclamation} />}
             <span
               css={css`
                 color: #9ea7ad;
               `}
             >
-              {!enableSearchHistoryRecord ? labels.turnOffStatus : labels.noSearchHistory}
+              {disableRecord ? labels.turnOffStatus : labels.noSearchHistory}
             </span>
           </TurnOffSearchHistory>
         )}
@@ -194,22 +185,22 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
       <HistoryOptionPanel>
         <HistoryOptionButton
           type="button"
-          onClick={handleToggleSearchHistoryRecord}
+          onClick={() => onDisableRecordChange?.(!disableRecord)}
         >
-          {enableSearchHistoryRecord
+          {!disableRecord
             ? labels.turnOffSearchHistory
             : labels.turnOnSearchHistory}
         </HistoryOptionButton>
-        {hasHistory && enableSearchHistoryRecord && (
+        {hasHistory && !disableRecord && (
           <HistoryOptionButton
             type="button"
-            onClick={handleClearHistory}
+            onClick={onClear}
           >
             {labels.clearSearchHistory}
           </HistoryOptionButton>
         )}
       </HistoryOptionPanel>
-    </>
+    </div>
   );
 };
 
