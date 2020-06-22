@@ -124,7 +124,9 @@ export default function InstantSearch() {
           Array.isArray(parsedHistory)
           && parsedHistory.every((item) => typeof item === 'string')
         ) {
-          return parsedHistory;
+          return parsedHistory
+            .map((item) => item.trim())
+            .filter((item) => item !== '');
         }
       } catch (_) {
         // invalid history, do nothing
@@ -134,24 +136,42 @@ export default function InstantSearch() {
   );
   const [adultExclude, setAdultExclude] = React.useState(false);
 
+  const doSearch = React.useCallback((searchKeyword: string) => {
+    const trimmedKeyword = searchKeyword.trim();
+    if (trimmedKeyword === '') {
+      return;
+    }
+    if (!disableRecord) {
+      updateSearchHistory({ type: 'add', item: trimmedKeyword });
+    }
+    const params = new URLSearchParams({
+      q: trimmedKeyword,
+      adult_exclude: adultExclude ? 'y' : 'n',
+    });
+    window.location.href = `/search?${params.toString()}`;
+  }, [disableRecord, adultExclude]);
+
   const handleSubmit = React.useCallback((e: React.FormEvent) => {
     e.preventDefault();
-    if (!disableRecord) {
-      updateSearchHistory({ type: 'add', item: keyword });
-    }
-  }, [keyword, disableRecord]);
+    doSearch(keyword);
+  }, [keyword, disableRecord, adultExclude]);
+
   const handleKeywordChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value);
   }, []);
 
   const handleHistoryItemClick = React.useCallback((idx: number) => {
-    setKeyword(searchHistory[idx]);
+    const historyKeyword = searchHistory[idx].trim();
+    setKeyword(historyKeyword);
+    doSearch(historyKeyword);
   }, [searchHistory]);
+
   const handleHistoryItemRemove = React.useCallback((idx: number) => {
     if (!disableRecord) {
       updateSearchHistory({ type: 'remove', index: idx });
     }
   }, [disableRecord]);
+
   const handleHistoryClear = React.useCallback(() => {
     if (!disableRecord) {
       updateSearchHistory({ type: 'clear' });
