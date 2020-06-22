@@ -5,6 +5,7 @@ import React from 'react';
 
 import localStorageKeys from 'src/constants/localStorage';
 import { RIDITheme } from 'src/styles';
+import Clear from 'src/svgs/Clear.svg';
 import Lens from 'src/svgs/Lens.svg';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
 import { localStorage } from 'src/utils/storages';
@@ -35,6 +36,12 @@ const WrapperForm = styled.form<{ focused?: boolean }>`
   `)}
 `;
 
+const FocusTrap = styled.div`
+  &, &:focus {
+    outline: none;
+  }
+`;
+
 const SearchBoxWrapper = styled.div<{ focused?: boolean }, RIDITheme>`
   ${(props) => orBelow(BreakPoint.LG, `
     padding-top: 9px;
@@ -53,6 +60,12 @@ const SearchBoxShape = styled.div`
   align-items: center;
 `;
 
+const StyledClear = styled(Clear)`
+  width: 24px;
+  height: 24px;
+  padding: 5px;
+`;
+
 const StyledLens = styled(Lens)<{}, RIDITheme>`
   fill: ${(props) => props.theme.input.placeholder};
   flex: none;
@@ -69,6 +82,12 @@ const SearchBox = styled.input`
   padding: 7px 0;
   font-size: 16px;
   line-height: 18px;
+`;
+
+const SearchResetButton = styled.button`
+  outline: none;
+  margin: 4px;
+  margin-right: 6px;
 `;
 
 const popupStyle = css`
@@ -160,6 +179,10 @@ export default function InstantSearch() {
     setKeyword(e.target.value);
   }, []);
 
+  const handleKeywordReset = React.useCallback(() => {
+    setKeyword('');
+  }, []);
+
   const handleHistoryItemClick = React.useCallback((idx: number) => {
     const historyKeyword = searchHistory[idx].trim();
     setKeyword(historyKeyword);
@@ -199,11 +222,16 @@ export default function InstantSearch() {
       onSubmit={handleSubmit}
     >
       {/* 검색창 내부 포커스를 여기서 잡음 */}
-      <div tabIndex={-1}>
+      <FocusTrap tabIndex={-1}>
         <SearchBoxWrapper focused={isFocused}>
           <SearchBoxShape>
             <StyledLens />
             <SearchBox onChange={handleKeywordChange} value={keyword} />
+            {isFocused && keyword !== '' && (
+              <SearchResetButton type="button" onClick={handleKeywordReset}>
+                <StyledClear />
+              </SearchResetButton>
+            )}
           </SearchBoxShape>
         </SearchBoxWrapper>
         {isFocused && (
@@ -227,7 +255,7 @@ export default function InstantSearch() {
             />
           )
         )}
-      </div>
+      </FocusTrap>
     </WrapperForm>
   );
 }
