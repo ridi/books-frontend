@@ -3,9 +3,11 @@ import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import React from 'react';
 
+import localStorageKeys from 'src/constants/localStorage';
 import { RIDITheme } from 'src/styles';
-import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
 import Lens from 'src/svgs/Lens.svg';
+import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
+import { localStorage } from 'src/utils/storages';
 
 import InstantSearchHistory from './InstantSearchHistory';
 import InstantSearchResult from './InstantSearchResult';
@@ -110,7 +112,25 @@ export default function InstantSearch() {
           return state;
       }
     },
-    [],
+    null,
+    () => {
+      const history = localStorage.getItem(localStorageKeys.instantSearchHistory);
+      if (history == null) {
+        return [];
+      }
+      try {
+        const parsedHistory = JSON.parse(history);
+        if (
+          Array.isArray(parsedHistory)
+          && parsedHistory.every((item) => typeof item === 'string')
+        ) {
+          return parsedHistory;
+        }
+      } catch (_) {
+        // invalid history, do nothing
+      }
+      return [];
+    },
   );
   const [adultExclude, setAdultExclude] = React.useState(false);
 
@@ -128,11 +148,15 @@ export default function InstantSearch() {
     setKeyword(searchHistory[idx]);
   }, [searchHistory]);
   const handleHistoryItemRemove = React.useCallback((idx: number) => {
-    updateSearchHistory({ type: 'remove', index: idx });
-  }, []);
+    if (!disableRecord) {
+      updateSearchHistory({ type: 'remove', index: idx });
+    }
+  }, [disableRecord]);
   const handleHistoryClear = React.useCallback(() => {
-    updateSearchHistory({ type: 'clear' });
-  }, []);
+    if (!disableRecord) {
+      updateSearchHistory({ type: 'clear' });
+    }
+  }, [disableRecord]);
 
   const handleFocus = React.useCallback(() => setFocused(true), []);
   const handleBlur = React.useCallback((e: React.FocusEvent) => {
@@ -141,6 +165,11 @@ export default function InstantSearch() {
       setFocused(false);
     }
   }, []);
+
+  React.useEffect(() => {
+    const history = JSON.stringify(searchHistory);
+    localStorage.setItem(localStorageKeys.instantSearchHistory, history);
+  }, [searchHistory]);
 
   return (
     <WrapperForm
