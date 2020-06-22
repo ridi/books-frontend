@@ -7,11 +7,14 @@ import localStorageKeys from 'src/constants/localStorage';
 import { RIDITheme } from 'src/styles';
 import Clear from 'src/svgs/Clear.svg';
 import Lens from 'src/svgs/Lens.svg';
+import { CancelToken } from 'src/utils/axios';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
+import sentry from 'src/utils/sentry';
 import { localStorage } from 'src/utils/storages';
 
 import InstantSearchHistory from './InstantSearchHistory';
 import InstantSearchResult from './InstantSearchResult';
+import { SearchResult } from './types';
 
 import mockResult from './mock.json';
 
@@ -107,17 +110,18 @@ const popupStyle = css`
   `)}
 `;
 
-type SearchHistoryAction =
-  | { type: 'add'; item: string }
-  | { type: 'remove'; index: number }
-  | { type: 'clear' }
-;
-
 export default function InstantSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = React.useState(String(router.query.q || ''));
   const [isFocused, setFocused] = React.useState(false);
   const [disableRecord, setDisableRecord] = React.useState(false);
+  const [adultExclude, setAdultExclude] = React.useState(false);
+
+  type SearchHistoryAction =
+    | { type: 'add'; item: string }
+    | { type: 'remove'; index: number }
+    | { type: 'clear' }
+  ;
   const [searchHistory, updateSearchHistory] = React.useReducer(
     (state: string[], action: SearchHistoryAction) => {
       switch (action.type) {
@@ -153,7 +157,39 @@ export default function InstantSearch() {
       return [];
     },
   );
-  const [adultExclude, setAdultExclude] = React.useState(false);
+
+  type InstantSearchState =
+    | { type: 'cold' }
+    | { type: 'pending'; keyword: string }
+    | { type: 'done'; keyword: string; result: SearchResult }
+  ;
+  type InstantSearchAction =
+    | { type: 'started'; keyword: string }
+    | { type: 'done'; keyword: string; result: SearchResult }
+  ;
+  const [instantSearchState, updateInstantSearchState] = React.useReducer(
+    (state: InstantSearchState, action: InstantSearchAction) => {
+      switch (action.type) {
+        case 'started':
+          return {
+            type: 'pending' as 'pending',
+            keyword: action.keyword,
+          };
+        case 'done':
+          if (state.type === 'pending' && state.keyword === action.keyword) {
+            return {
+              type: 'done' as 'done',
+              keyword: action.keyword,
+              result: action.result,
+            };
+          }
+          return state;
+        default:
+          return state;
+      }
+    },
+    { type: 'cold' },
+  );
 
   const doSearch = React.useCallback((searchKeyword: string) => {
     const trimmedKeyword = searchKeyword.trim();
@@ -210,9 +246,72 @@ export default function InstantSearch() {
   }, []);
 
   React.useEffect(() => {
+    const keywordToSearch = keyword.trim();
+    if (keywordToSearch === '') {
+      return;
+    }
+    const cancelSource = CancelToken.source();
+    const handle = window.setTimeout(() => {
+      // make the linter happy
+      (async () => {
+        // TODO: do actual instant search
+        await Promise.resolve(); // make linter happy
+        updateInstantSearchState({
+          type: 'done',
+          keyword: keywordToSearch,
+          result: {
+            authors: mockResult.author.authors,
+            books: mockResult.book.books,
+          },
+        });
+      })().catch((err) => {
+        if (err?.message === 'Cancel') {
+          return;
+        }
+        sentry.captureException(err);
+      });
+    }, 1000);
+    updateInstantSearchState({
+      type: 'started',
+      keyword: keywordToSearch,
+    });
+    return () => {
+      window.clearTimeout(handle);
+      cancelSource.cancel();
+    };
+  }, [keyword]);
+
+  React.useEffect(() => {
     const history = JSON.stringify(searchHistory);
     localStorage.setItem(localStorageKeys.instantSearchHistory, history);
   }, [searchHistory]);
+
+  let popup = null;
+  if (isFocused) {
+    if (keyword === '') {
+      popup = (
+        <InstantSearchHistory
+          css={popupStyle}
+          disableRecord={disableRecord}
+          searchHistory={searchHistory}
+          onDisableRecordChange={setDisableRecord}
+          onItemClick={handleHistoryItemClick}
+          onItemRemove={handleHistoryItemRemove}
+          onClear={handleHistoryClear}
+        />
+      );
+    } else if (instantSearchState.type === 'done') {
+      popup = (
+        <InstantSearchResult
+          css={popupStyle}
+          focusedPosition={0}
+          result={instantSearchState.result}
+          adultExclude={adultExclude}
+          onAdultExcludeChange={setAdultExclude}
+        />
+      );
+    }
+  }
 
   return (
     <WrapperForm
@@ -234,27 +333,7 @@ export default function InstantSearch() {
             )}
           </SearchBoxShape>
         </SearchBoxWrapper>
-        {isFocused && (
-          keyword === '' ? (
-            <InstantSearchHistory
-              css={popupStyle}
-              disableRecord={disableRecord}
-              searchHistory={searchHistory}
-              onDisableRecordChange={setDisableRecord}
-              onItemClick={handleHistoryItemClick}
-              onItemRemove={handleHistoryItemRemove}
-              onClear={handleHistoryClear}
-            />
-          ) : (
-            <InstantSearchResult
-              css={popupStyle}
-              focusedPosition={0}
-              result={{ books: mockResult.book.books, authors: mockResult.author.authors }}
-              adultExclude={adultExclude}
-              onAdultExcludeChange={setAdultExclude}
-            />
-          )
-        )}
+        {popup}
       </FocusTrap>
     </WrapperForm>
   );
