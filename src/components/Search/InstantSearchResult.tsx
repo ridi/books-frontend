@@ -1,11 +1,13 @@
 import React from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { getEscapedNode } from 'src/utils/highlight';
-import { BreakPoint, greaterThanOrEqualTo, orBelow } from 'src/utils/mediaQuery';
-import { gray100, slateGray50 } from '@ridi/colors';
+import { gray100, slateGray50, slateGray60 } from '@ridi/colors';
+
+import Switch from 'src/components/Switch';
 import { ADULT_BADGE_URL } from 'src/constants/icons';
 import * as SearchTypes from 'src/types/searchResults';
+import { getEscapedNode } from 'src/utils/highlight';
+import { BreakPoint, greaterThanOrEqualTo, orBelow } from 'src/utils/mediaQuery';
 
 import AuthorInfo from './Authors/AuthorInfo';
 import { SearchResult } from './types';
@@ -147,11 +149,36 @@ const Divider = styled.div`
   background: #e6e8e0;
 `;
 
+const AdultExcludeButton = styled.label`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 44px;
+  margin-bottom: 4px;
+  padding: 9px 16px;
+  outline: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  color: ${slateGray60};
+  :active {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  :hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+`;
+
 interface InstantSearchResultProps {
-  result: SearchResult;
-  handleClickAuthorItem: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  handleClickBookItem: (e: React.MouseEvent<HTMLButtonElement>) => void;
   focusedPosition: number;
+  result: SearchResult;
+  adultExclude?: boolean;
+  onAuthorClick?(id: number): void;
+  onBookClick?(id: string): void;
+  onAdultExcludeChange?(value: boolean): void;
+  className?: string;
 }
 
 // Todo 사용 컴포넌트마다 다른 options 사용해서 보여주기
@@ -175,23 +202,35 @@ const AuthorLabel: React.FC<{ author: string; authors: SearchTypes.AuthorsInfo[]
 
 const ResultWrapper = styled.div`
   padding: 4px 0 0;
+  background-color: white;
 `;
 
-function InstantSearchResult(props: InstantSearchResultProps) {
+export default function InstantSearchResult(props: InstantSearchResultProps) {
   const {
     focusedPosition,
-    handleClickAuthorItem,
-    handleClickBookItem,
     result: { authors, books },
+    adultExclude = false,
+    onAuthorClick,
+    onBookClick,
+    onAdultExcludeChange,
+    className,
   } = props;
   const focusRef = React.useCallback((node: HTMLButtonElement | null) => {
     if (node != null) {
       node.focus();
     }
   }, []);
+  const handleAuthorClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const id = e.currentTarget.dataset.authorId;
+    id && onAuthorClick?.(Number(id));
+  }, [onAuthorClick]);
+  const handleBookClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const id = e.currentTarget.dataset.bookId;
+    id && onBookClick?.(id);
+  }, [onBookClick]);
   const authorCount = authors.length;
   return (
-    <ResultWrapper>
+    <ResultWrapper className={className}>
       {authors.length > 0 && (
         <>
           <ul>
@@ -201,7 +240,7 @@ function InstantSearchResult(props: InstantSearchResultProps) {
                   ref={index === focusedPosition - 1 ? focusRef : undefined}
                   type="button"
                   data-author-id={author.id}
-                  onClick={handleClickAuthorItem}
+                  onClick={handleAuthorClick}
                 >
                   <AuthorInfo author={author} />
                 </AuthorListItemButton>
@@ -220,7 +259,7 @@ function InstantSearchResult(props: InstantSearchResultProps) {
                   ref={index + authorCount === focusedPosition - 1 ? focusRef : undefined}
                   type="button"
                   data-book-id={book.b_id}
-                  onClick={handleClickBookItem}
+                  onClick={handleBookClick}
                 >
                   <BookTitle>
                     {getEscapedNode(
@@ -238,10 +277,12 @@ function InstantSearchResult(props: InstantSearchResultProps) {
             ))}
           </ul>
           <InstantSearchDivider />
+          <AdultExcludeButton>
+            성인 제외
+            <Switch checked={adultExclude} onChange={onAdultExcludeChange} />
+          </AdultExcludeButton>
         </>
       )}
     </ResultWrapper>
   );
 }
-
-export default React.memo(InstantSearchResult);

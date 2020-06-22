@@ -45,7 +45,7 @@ interface Props extends Omit<React.HTMLProps<HTMLInputElement>, 'type' | 'onChan
   onChange?(checked: boolean): void;
 }
 
-export function Switch(props: Props) {
+export default function Switch(props: Props) {
   const { onChange, ...restProps } = props;
   const handleChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange?.(e.target.checked);

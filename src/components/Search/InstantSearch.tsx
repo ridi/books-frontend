@@ -1,3 +1,4 @@
+import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -7,6 +8,9 @@ import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
 import Lens from 'src/svgs/Lens.svg';
 
 import InstantSearchHistory from './InstantSearchHistory';
+import InstantSearchResult from './InstantSearchResult';
+
+import mockResult from './mock.json';
 
 const WrapperForm = styled.form<{ focused?: boolean }>`
   flex: 1;
@@ -65,7 +69,7 @@ const SearchBox = styled.input`
   line-height: 18px;
 `;
 
-const StyledInstantSearchHistory = styled(InstantSearchHistory)`
+const popupStyle = css`
   position: absolute;
   width: 380px;
   margin-top: 2px;
@@ -108,6 +112,7 @@ export default function InstantSearch() {
     },
     [],
   );
+  const [adultExclude, setAdultExclude] = React.useState(false);
 
   const handleSubmit = React.useCallback((e: React.FormEvent) => {
     e.preventDefault();
@@ -153,14 +158,25 @@ export default function InstantSearch() {
           </SearchBoxShape>
         </SearchBoxWrapper>
         {isFocused && (
-          <StyledInstantSearchHistory
-            disableRecord={disableRecord}
-            searchHistory={searchHistory}
-            onDisableRecordChange={setDisableRecord}
-            onItemClick={handleHistoryItemClick}
-            onItemRemove={handleHistoryItemRemove}
-            onClear={handleHistoryClear}
-          />
+          keyword === '' ? (
+            <InstantSearchHistory
+              css={popupStyle}
+              disableRecord={disableRecord}
+              searchHistory={searchHistory}
+              onDisableRecordChange={setDisableRecord}
+              onItemClick={handleHistoryItemClick}
+              onItemRemove={handleHistoryItemRemove}
+              onClear={handleHistoryClear}
+            />
+          ) : (
+            <InstantSearchResult
+              css={popupStyle}
+              focusedPosition={0}
+              result={{ books: mockResult.book.books, authors: mockResult.author.authors }}
+              adultExclude={adultExclude}
+              onAdultExcludeChange={setAdultExclude}
+            />
+          )
         )}
       </div>
     </WrapperForm>
