@@ -174,7 +174,22 @@ export default function InstantSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = React.useState(String(router.query.q || ''));
   const [isFocused, setFocused] = React.useState(false);
-  const [disableRecord, setDisableRecord] = React.useState(false);
+  const [disableRecord, setDisableRecord] = React.useState(() => {
+    const value = localStorage.getItem(localStorageKeys.instantSearchHistoryOption);
+    if (value == null) {
+      return false;
+    }
+    try {
+      const parsedValue = JSON.parse(value);
+      if (typeof parsedValue === 'boolean') {
+        // localStorage에는 저장 여부가 들어있기 때문에 뒤집는다
+        return !parsedValue;
+      }
+    } catch (_) {
+      // do nothing
+    }
+    return false;
+  });
   const [adultExclude, setAdultExclude] = React.useState(() => initializeAdultExclude(router));
   const [focusedPosition, setFocusedPosition] = React.useState<number | null>(null);
 
@@ -394,6 +409,15 @@ export default function InstantSearch() {
       { path: '/', sameSite: 'lax' },
     );
   }, [adultExclude]);
+
+  React.useEffect(() => {
+    // localStorage에는 저장 여부가 들어있기 때문에 뒤집는다
+    const value = JSON.stringify(!disableRecord);
+    localStorage.setItem(
+      localStorageKeys.instantSearchHistoryOption,
+      value,
+    );
+  }, [disableRecord]);
 
   React.useEffect(() => {
     const keywordToSearch = keyword.trim();
