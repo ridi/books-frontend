@@ -1,8 +1,9 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, CancelToken as CancelTokenType } from 'axios';
 import { AbortError } from 'p-retry';
 import { tokenInterceptor } from 'src/utils/axiosInterceptors';
 
 export const { CancelToken } = axios;
+export type { CancelTokenType };
 
 // eslint-disable-next-line no-process-env
 const TIME_OUT = 7000;

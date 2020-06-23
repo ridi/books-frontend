@@ -1,5 +1,6 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import libAxios from 'axios';
 import { useRouter } from 'next/router';
 import React from 'react';
 
@@ -7,16 +8,17 @@ import localStorageKeys from 'src/constants/localStorage';
 import { RIDITheme } from 'src/styles';
 import Clear from 'src/svgs/Clear.svg';
 import Lens from 'src/svgs/Lens.svg';
-import { CancelToken } from 'src/utils/axios';
+import axios, { CancelToken, CancelTokenType } from 'src/utils/axios';
+import { runWithExponentialBackoff, CancelledError } from 'src/utils/backoff';
+import { isJamo } from 'src/utils/hangul';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
 import sentry from 'src/utils/sentry';
+import { checkInstantSearchResult } from 'src/types/searchResults';
 import { localStorage } from 'src/utils/storages';
 
 import InstantSearchHistory from './InstantSearchHistory';
 import InstantSearchResult from './InstantSearchResult';
 import { SearchResult } from './types';
-
-import mockResult from './mock.json';
 
 const WrapperForm = styled.form<{ focused?: boolean }>`
   flex: 1;
@@ -55,7 +57,7 @@ const SearchBoxWrapper = styled.div<{ focused?: boolean }, RIDITheme>`
   `)}
 `;
 
-const SearchBoxShape = styled.div`
+const SearchBoxShape = styled.label`
   background: white;
   border-radius: 3px;
 
@@ -64,6 +66,7 @@ const SearchBoxShape = styled.div`
 `;
 
 const StyledClear = styled(Clear)`
+  display: block;
   width: 24px;
   height: 24px;
   padding: 5px;
@@ -109,6 +112,52 @@ const popupStyle = css`
     box-shadow: none;
   `)}
 `;
+
+async function doInstantSearch(
+  keyword: string,
+  adultExclude: boolean,
+  token: CancelTokenType,
+): Promise<SearchResult | null> {
+  const url = new URL('/search', process.env.NEXT_STATIC_SEARCH_API);
+  const params = new URLSearchParams([
+    ['site', 'ridi-store'],
+    ['where', 'book'],
+    ['where', 'author'],
+    ['what', 'instant'],
+    ['keyword', keyword],
+    ['adult_exclude', adultExclude ? 'y' : 'n'],
+  ]);
+  url.search = params.toString();
+  const urlString = url.toString();
+  try {
+    const resp = await runWithExponentialBackoff(
+      async () => {
+        try {
+          return await axios.get(urlString, {
+            cancelToken: token,
+          });
+        } catch (err) {
+          if (libAxios.isCancel(err)) {
+            throw new CancelledError();
+          }
+          throw err;
+        }
+      },
+      { backoffTimeUnit: 200, maxTries: 3 },
+    );
+    const data = checkInstantSearchResult(resp.data);
+    return {
+      books: data.book.books,
+      authors: data.author.authors,
+    };
+  } catch (err) {
+    const statusCode = err?.response?.statusCode ?? 0;
+    if (statusCode !== 401 && statusCode !== 403) {
+      sentry.captureException(err);
+    }
+    return null;
+  }
+}
 
 export default function InstantSearch() {
   const router = useRouter();
@@ -160,23 +209,32 @@ export default function InstantSearch() {
 
   type InstantSearchState =
     | { type: 'cold' }
-    | { type: 'pending'; keyword: string }
+    | { type: 'pending'; keyword: string; adultExclude: boolean; result?: SearchResult }
     | { type: 'done'; keyword: string; result: SearchResult }
   ;
   type InstantSearchAction =
-    | { type: 'started'; keyword: string }
-    | { type: 'done'; keyword: string; result: SearchResult }
+    | { type: 'started'; keyword: string; adultExclude: boolean }
+    | { type: 'done'; keyword: string; adultExclude: boolean; result: SearchResult }
   ;
   const [instantSearchState, updateInstantSearchState] = React.useReducer(
     (state: InstantSearchState, action: InstantSearchAction) => {
       switch (action.type) {
         case 'started':
+          if (action.keyword === '') {
+            return { type: 'cold' as 'cold' };
+          }
           return {
+            ...state,
             type: 'pending' as 'pending',
             keyword: action.keyword,
+            adultExclude: action.adultExclude,
           };
         case 'done':
-          if (state.type === 'pending' && state.keyword === action.keyword) {
+          if (
+            state.type === 'pending'
+            && state.keyword === action.keyword
+            && state.adultExclude === action.adultExclude
+          ) {
             return {
               type: 'done' as 'done',
               keyword: action.keyword,
@@ -247,22 +305,36 @@ export default function InstantSearch() {
 
   React.useEffect(() => {
     const keywordToSearch = keyword.trim();
+    updateInstantSearchState({
+      type: 'started',
+      keyword: keywordToSearch,
+      adultExclude,
+    });
+
     if (keywordToSearch === '') {
+      return;
+    }
+    if (keywordToSearch.length === 1 && isJamo(keywordToSearch)) {
       return;
     }
     const cancelSource = CancelToken.source();
     const handle = window.setTimeout(() => {
       // make the linter happy
       (async () => {
-        // TODO: do actual instant search
-        await Promise.resolve(); // make linter happy
+        const result = await doInstantSearch(
+          keywordToSearch,
+          adultExclude,
+          cancelSource.token,
+        );
+        if (result == null) {
+          return;
+        }
+
         updateInstantSearchState({
           type: 'done',
           keyword: keywordToSearch,
-          result: {
-            authors: mockResult.author.authors,
-            books: mockResult.book.books,
-          },
+          adultExclude,
+          result,
         });
       })().catch((err) => {
         if (err?.message === 'Cancel') {
@@ -271,15 +343,11 @@ export default function InstantSearch() {
         sentry.captureException(err);
       });
     }, 1000);
-    updateInstantSearchState({
-      type: 'started',
-      keyword: keywordToSearch,
-    });
     return () => {
       window.clearTimeout(handle);
       cancelSource.cancel();
     };
-  }, [keyword]);
+  }, [keyword, adultExclude]);
 
   React.useEffect(() => {
     const history = JSON.stringify(searchHistory);
@@ -300,16 +368,19 @@ export default function InstantSearch() {
           onClear={handleHistoryClear}
         />
       );
-    } else if (instantSearchState.type === 'done') {
-      popup = (
-        <InstantSearchResult
-          css={popupStyle}
-          focusedPosition={0}
-          result={instantSearchState.result}
-          adultExclude={adultExclude}
-          onAdultExcludeChange={setAdultExclude}
-        />
-      );
+    } else if (instantSearchState.type === 'done' || instantSearchState.type === 'pending') {
+      const { result } = instantSearchState;
+      if (result != null) {
+        popup = (
+          <InstantSearchResult
+            css={popupStyle}
+            focusedPosition={0}
+            result={result}
+            adultExclude={adultExclude}
+            onAdultExcludeChange={setAdultExclude}
+          />
+        );
+      }
     }
   }
 
