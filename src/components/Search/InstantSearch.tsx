@@ -295,6 +295,24 @@ export default function InstantSearch() {
     }
   }, [disableRecord]);
 
+  const handleAuthorClick = React.useCallback((id: number) => {
+    const params = new URLSearchParams({
+      _s: 'instant',
+      _q: keyword,
+    });
+    setFocused(false);
+    window.location.href = `/author/${id}?${params.toString()}`;
+  }, [keyword]);
+
+  const handleBookClick = React.useCallback((id: string) => {
+    const params = new URLSearchParams({
+      _s: 'instant',
+      _q: keyword,
+    });
+    setFocused(false);
+    window.location.href = `/books/${id}?${params.toString()}`;
+  }, [keyword]);
+
   const handleFocus = React.useCallback(() => setFocused(true), []);
   const handleBlur = React.useCallback((e: React.FocusEvent) => {
     const relatedTarget = e.relatedTarget || document.activeElement;
@@ -377,6 +395,8 @@ export default function InstantSearch() {
             focusedPosition={0}
             result={result}
             adultExclude={adultExclude}
+            onAuthorClick={handleAuthorClick}
+            onBookClick={handleBookClick}
             onAdultExcludeChange={setAdultExclude}
           />
         );
