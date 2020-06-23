@@ -133,6 +133,7 @@ interface InstantSearchResultProps {
   onAuthorClick?(id: number): void;
   onBookClick?(id: string): void;
   onAdultExcludeChange?(value: boolean): void;
+  onItemHover?(index: number): void;
   className?: string;
 }
 
@@ -171,6 +172,7 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
     onAuthorClick,
     onBookClick,
     onAdultExcludeChange,
+    onItemHover,
     className,
   } = props;
   const handleAuthorClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
@@ -198,6 +200,7 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
                   data-author-id={author.id}
                   tabIndex={-1}
                   onClick={handleAuthorClick}
+                  onMouseEnter={() => onItemHover?.(index)}
                 >
                   <AuthorInfo author={author} />
                 </AuthorListItemButton>
@@ -220,6 +223,7 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
                   data-book-id={book.b_id}
                   tabIndex={-1}
                   onClick={handleBookClick}
+                  onMouseEnter={() => onItemHover?.(authorCount + index)}
                 >
                   <BookTitle>
                     {getEscapedNode(

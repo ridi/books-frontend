@@ -123,6 +123,7 @@ interface InstantSearchHistoryProps {
   disableRecord?: boolean;
   onItemClick?(index: number): void;
   onItemRemove?(index: number): void;
+  onItemHover?(index: number): void;
   onClear?(): void;
   onDisableRecordChange?(disableRecord: boolean): void;
   className?: string;
@@ -135,6 +136,7 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
     disableRecord,
     onItemClick,
     onItemRemove,
+    onItemHover,
     onClear,
     onDisableRecordChange,
     className,
@@ -153,6 +155,7 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
               key={index}
               focused={index === focusedPosition}
               onClick={() => onItemClick?.(index)}
+              onMouseEnter={() => onItemHover?.(index)}
             >
               {/* Fixme href */}
               <a href="#history" tabIndex={-1}>

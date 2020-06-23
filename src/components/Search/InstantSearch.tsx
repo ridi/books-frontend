@@ -452,6 +452,7 @@ export default function InstantSearch() {
           adultExclude,
           result,
         });
+        setFocusedPosition(null);
       })().catch((err) => {
         if (err?.message === 'Cancel') {
           return;
@@ -482,6 +483,7 @@ export default function InstantSearch() {
           onDisableRecordChange={setDisableRecord}
           onItemClick={handleHistoryItemClick}
           onItemRemove={handleHistoryItemRemove}
+          onItemHover={setFocusedPosition}
           onClear={handleHistoryClear}
         />
       );
@@ -497,6 +499,7 @@ export default function InstantSearch() {
             onAuthorClick={handleAuthorClick}
             onBookClick={handleBookClick}
             onAdultExcludeChange={setAdultExclude}
+            onItemHover={setFocusedPosition}
           />
         );
       }
