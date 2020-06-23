@@ -368,6 +368,7 @@ export default function InstantSearch() {
       case 'Enter':
         if (focusedPosition != null) {
           e.preventDefault();
+          e.stopPropagation();
           if (keyword === '') {
             handleHistoryItemClick(focusedPosition);
           } else if (focusedPosition < authors.length) {
@@ -381,6 +382,8 @@ export default function InstantSearch() {
         setFocusedPosition(null);
         return;
     }
+    e.preventDefault();
+    e.stopPropagation();
     newPosition += itemCount + 1;
     newPosition %= (itemCount + 1);
     setFocusedPosition(newPosition === itemCount ? null : newPosition);
