@@ -56,7 +56,7 @@ const HistoryList = styled.ul`
   }
 `;
 
-const SearchHistoryItem = styled.li`
+const SearchHistoryItem = styled.li<{ focused?: boolean }>`
   cursor: pointer;
   box-sizing: border-box;
   padding-left: 16px;
@@ -79,7 +79,8 @@ const SearchHistoryItem = styled.li`
   :focus {
     background-color: #f7fafc;
   }
-  ${orBelow(
+  ${(props) => props.focused && 'background-color: #f7fafc;'}
+  ${(props) => orBelow(
     BreakPoint.LG,
     `
       :hover {
@@ -88,6 +89,7 @@ const SearchHistoryItem = styled.li`
       :focus {
         background-color: white;
       }
+      ${props.focused && 'background-color: white;'}
     `,
   )}
   outline: none;
@@ -117,7 +119,7 @@ const HistoryOptionButton = styled.button`
 
 interface InstantSearchHistoryProps {
   searchHistory: string[];
-  focusedIdx?: number;
+  focusedPosition?: number;
   disableRecord?: boolean;
   onItemClick?(index: number): void;
   onItemRemove?(index: number): void;
@@ -129,7 +131,7 @@ interface InstantSearchHistoryProps {
 const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
   const {
     searchHistory,
-    focusedIdx,
+    focusedPosition,
     disableRecord,
     onItemClick,
     onItemRemove,
@@ -146,29 +148,26 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
       <RecentHistoryLabel>{labels.recentKeywords}</RecentHistoryLabel>
       <HistoryList ref={wrapperRef}>
         {!disableRecord && hasHistory ? (
-          <>
-            {searchHistory.slice(0, 5).map((history: string, index: number) => (
-              <SearchHistoryItem
-                tabIndex={0}
+          searchHistory.map((history: string, index: number) => (
+            <SearchHistoryItem
+              key={index}
+              focused={index === focusedPosition}
+              onClick={() => onItemClick?.(index)}
+            >
+              {/* Fixme href */}
+              <a href="#history" tabIndex={-1}>
+                <span>{history}</span>
+              </a>
+              <RemoveHistoryButton
                 data-value={history}
-                onClick={() => onItemClick?.(index)}
-                key={index}
+                type="button"
+                onClick={(e) => { e.stopPropagation(); onItemRemove?.(index); }}
               >
-                {/* Fixme href */}
-                <a href="#history">
-                  <span>{history}</span>
-                </a>
-                <RemoveHistoryButton
-                  data-value={history}
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); onItemRemove?.(index); }}
-                >
-                  <Close css={closeIcon} />
-                  <span className="a11y">{labels.removeHistory}</span>
-                </RemoveHistoryButton>
-              </SearchHistoryItem>
-            ))}
-          </>
+                <Close css={closeIcon} />
+                <span className="a11y">{labels.removeHistory}</span>
+              </RemoveHistoryButton>
+            </SearchHistoryItem>
+          ))
         ) : (
           <TurnOffSearchHistory>
             {disableRecord && <Exclamation css={exclamation} />}

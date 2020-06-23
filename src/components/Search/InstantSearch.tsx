@@ -165,6 +165,7 @@ export default function InstantSearch() {
   const [isFocused, setFocused] = React.useState(false);
   const [disableRecord, setDisableRecord] = React.useState(false);
   const [adultExclude, setAdultExclude] = React.useState(false);
+  const [focusedPosition, setFocusedPosition] = React.useState<number | null>(null);
 
   type SearchHistoryAction =
     | { type: 'add'; item: string }
@@ -313,12 +314,59 @@ export default function InstantSearch() {
     window.location.href = `/books/${id}?${params.toString()}`;
   }, [keyword]);
 
+  const handleKeyDown = React.useCallback((e: React.KeyboardEvent) => {
+    let itemCount = 0;
+    let authors: SearchResult['authors'] = [];
+    let books: SearchResult['books'] = [];
+    if (keyword === '') {
+      itemCount = searchHistory.length;
+    } else if (instantSearchState.type === 'done' || instantSearchState.type === 'pending') {
+      const { result } = instantSearchState;
+      if (result != null) {
+        authors = result.authors;
+        books = result.books;
+        itemCount = authors.length + books.length;
+      }
+    }
+
+    let newPosition = focusedPosition ?? itemCount;
+    switch (e.key) {
+      case 'ArrowDown':
+      case 'Down':
+        newPosition += 1;
+        break;
+      case 'ArrowUp':
+      case 'Up':
+        newPosition -= 1;
+        break;
+      case 'Enter':
+        if (focusedPosition != null) {
+          e.preventDefault();
+          if (keyword === '') {
+            handleHistoryItemClick(focusedPosition);
+          } else if (focusedPosition < authors.length) {
+            handleAuthorClick(authors[focusedPosition].id);
+          } else if (focusedPosition < itemCount) {
+            handleBookClick(books[focusedPosition - authors.length].b_id);
+          }
+        }
+        return;
+      default:
+        setFocusedPosition(null);
+        return;
+    }
+    newPosition += itemCount + 1;
+    newPosition %= (itemCount + 1);
+    setFocusedPosition(newPosition === itemCount ? null : newPosition);
+  }, [focusedPosition, keyword, searchHistory, instantSearchState]);
+
   const handleFocus = React.useCallback(() => setFocused(true), []);
   const handleBlur = React.useCallback((e: React.FocusEvent) => {
     const relatedTarget = e.relatedTarget || document.activeElement;
     if (!e.currentTarget.contains(relatedTarget as (Element | null))) {
       setFocused(false);
     }
+    setFocusedPosition(null);
   }, []);
 
   React.useEffect(() => {
@@ -380,6 +428,7 @@ export default function InstantSearch() {
           css={popupStyle}
           disableRecord={disableRecord}
           searchHistory={searchHistory}
+          focusedPosition={focusedPosition ?? undefined}
           onDisableRecordChange={setDisableRecord}
           onItemClick={handleHistoryItemClick}
           onItemRemove={handleHistoryItemRemove}
@@ -392,7 +441,7 @@ export default function InstantSearch() {
         popup = (
           <InstantSearchResult
             css={popupStyle}
-            focusedPosition={0}
+            focusedPosition={focusedPosition ?? undefined}
             result={result}
             adultExclude={adultExclude}
             onAuthorClick={handleAuthorClick}
@@ -412,7 +461,7 @@ export default function InstantSearch() {
       onSubmit={handleSubmit}
     >
       {/* 검색창 내부 포커스를 여기서 잡음 */}
-      <FocusTrap tabIndex={-1}>
+      <FocusTrap tabIndex={-1} onKeyDown={handleKeyDown}>
         <SearchBoxWrapper focused={isFocused}>
           <SearchBoxShape>
             <StyledLens />
