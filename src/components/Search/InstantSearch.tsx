@@ -492,7 +492,7 @@ export default function InstantSearch() {
       );
     } else if (instantSearchState.type === 'done' || instantSearchState.type === 'pending') {
       const { result } = instantSearchState;
-      if (result != null) {
+      if (result != null && result.books.length + result.authors.length > 0) {
         popup = (
           <InstantSearchResult
             css={popupStyle}
