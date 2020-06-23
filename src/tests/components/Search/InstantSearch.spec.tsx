@@ -170,7 +170,7 @@ describe('test instant search', () => {
 
     const history =
       safeJSONParse(localStorage.getItem(localStorageKeys.instantSearchHistory), []);
-    expect(spyHref).toHaveBeenCalledWith('https://books.local.ridi.io/search?q=ABC&adult_exclude=y');
+    expect(spyHref).toHaveBeenCalledWith('/search?q=ABC&adult_exclude=y');
     expect(history.length).toBe(1);
   });
 
