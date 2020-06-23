@@ -1,8 +1,9 @@
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import libAxios from 'axios';
-import { useRouter } from 'next/router';
+import { useRouter, NextRouter } from 'next/router';
 import React from 'react';
+import Cookies from 'universal-cookie';
 
 import localStorageKeys from 'src/constants/localStorage';
 import * as labels from 'src/labels/instantSearch.json';
@@ -160,12 +161,21 @@ async function doInstantSearch(
   }
 }
 
+function initializeAdultExclude(router: NextRouter) {
+  if (router.query.adult_exclude) {
+    return router.query.adult_exclude === 'y';
+  }
+  const cookie = new Cookies();
+  const cookieValue = cookie.get('adult_exclude');
+  return cookieValue === 'y';
+}
+
 export default function InstantSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = React.useState(String(router.query.q || ''));
   const [isFocused, setFocused] = React.useState(false);
   const [disableRecord, setDisableRecord] = React.useState(false);
-  const [adultExclude, setAdultExclude] = React.useState(false);
+  const [adultExclude, setAdultExclude] = React.useState(() => initializeAdultExclude(router));
   const [focusedPosition, setFocusedPosition] = React.useState<number | null>(null);
 
   type SearchHistoryAction =
@@ -369,6 +379,21 @@ export default function InstantSearch() {
     }
     setFocusedPosition(null);
   }, []);
+
+  React.useEffect(() => {
+    if (isFocused) {
+      setAdultExclude(initializeAdultExclude(router));
+    }
+  }, [isFocused]);
+
+  React.useEffect(() => {
+    const cookie = new Cookies();
+    cookie.set(
+      'adult_exclude',
+      adultExclude ? 'y' : 'n',
+      { path: '/', sameSite: 'lax' },
+    );
+  }, [adultExclude]);
 
   React.useEffect(() => {
     const keywordToSearch = keyword.trim();
