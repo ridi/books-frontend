@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 
 import localStorageKeys from 'src/constants/localStorage';
+import * as labels from 'src/labels/instantSearch.json';
 import { RIDITheme } from 'src/styles';
 import Clear from 'src/svgs/Clear.svg';
 import Lens from 'src/svgs/Lens.svg';
@@ -465,7 +466,11 @@ export default function InstantSearch() {
         <SearchBoxWrapper focused={isFocused}>
           <SearchBoxShape>
             <StyledLens />
-            <SearchBox onChange={handleKeywordChange} value={keyword} />
+            <SearchBox
+              placeholder={labels.searchPlaceHolder}
+              value={keyword}
+              onChange={handleKeywordChange}
+            />
             {isFocused && keyword !== '' && (
               <SearchResetButton type="button" onClick={handleKeywordReset}>
                 <StyledClear />
