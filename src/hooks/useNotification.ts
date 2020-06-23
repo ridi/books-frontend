@@ -172,6 +172,7 @@ export function NotificationProvider(props: { children?: React.ReactNode }) {
       setUnreadCount(data.unreadCount);
       setItems(data.notifications);
       await requestNotificationRead(token);
+      setUnreadCount(0);
     },
     [token],
   );
