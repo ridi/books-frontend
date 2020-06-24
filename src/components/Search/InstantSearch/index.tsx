@@ -189,20 +189,20 @@ export default function InstantSearch() {
   };
 
   type InstantSearchState =
-    | { type: 'cold' }
-    | { type: 'pending'; keyword: string; adultExclude: boolean; result?: SearchResult }
-    | { type: 'done'; keyword: string; result: SearchResult }
+    | { status: 'cold' }
+    | { status: 'pending'; keyword: string; adultExclude: boolean; result?: SearchResult }
+    | { status: 'done'; keyword: string; result: SearchResult }
   ;
 
-  const [instantSearchState, updateInstantSearchState] = useImmer<InstantSearchState>({ type: 'cold' });
+  const [instantSearchState, updateInstantSearchState] = useImmer<InstantSearchState>({ status: 'cold' });
 
   const startInstantSearch = (_keyword: string, _adultExclude: boolean) => {
     updateInstantSearchState((draft) => {
       if (keyword === '') {
-        draft.type = 'cold';
+        draft.status = 'cold';
       } else {
         return {
-          type: 'pending',
+          status: 'pending',
           keyword: _keyword,
           adultExclude: _adultExclude,
         };
@@ -213,12 +213,12 @@ export default function InstantSearch() {
   const doneInstantSearch = (_keyword: string, _adultExclude: boolean, result: SearchResult) => {
     updateInstantSearchState((draft) => {
       if (
-        draft.type === 'pending'
+        draft.status === 'pending'
         && draft.keyword === _keyword
         && draft.adultExclude === _adultExclude
       ) {
         return {
-          type: 'done',
+          status: 'done',
           keyword: _keyword,
           result,
         };
@@ -296,7 +296,7 @@ export default function InstantSearch() {
     let books: SearchResult['books'] = [];
     if (keyword === '') {
       itemCount = searchHistory.length;
-    } else if (instantSearchState.type === 'done' || instantSearchState.type === 'pending') {
+    } else if (instantSearchState.status === 'done' || instantSearchState.status === 'pending') {
       const { result } = instantSearchState;
       if (result != null) {
         authors = result.authors;
@@ -436,7 +436,7 @@ export default function InstantSearch() {
           onClear={handleHistoryClear}
         />
       );
-    } else if (instantSearchState.type === 'done' || instantSearchState.type === 'pending') {
+    } else if (instantSearchState.status === 'done' || instantSearchState.status === 'pending') {
       const { result } = instantSearchState;
       if (result != null && result.books.length + result.authors.length > 0) {
         popup = (
