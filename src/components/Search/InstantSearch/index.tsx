@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { useRouter, NextRouter } from 'next/router';
 import React from 'react';
+import { useImmer } from 'use-immer';
 import Cookies from 'universal-cookie';
 
 import localStorageKeys from 'src/constants/localStorage';
@@ -155,30 +156,9 @@ export default function InstantSearch() {
   const [adultExclude, setAdultExclude] = React.useState(() => initializeAdultExclude(router));
   const [focusedPosition, setFocusedPosition] = React.useState<number | null>(null);
 
-  type SearchHistoryAction =
-    | { type: 'add'; item: string }
-    | { type: 'remove'; index: number }
-    | { type: 'clear' }
-  ;
-  const [searchHistory, updateSearchHistory] = React.useReducer(
-    (state: string[], action: SearchHistoryAction) => {
-      switch (action.type) {
-        case 'add':
-          return [...new Set([action.item, ...state])].slice(0, 5);
-        case 'remove':
-          return state.filter((_, idx) => idx !== action.index);
-        case 'clear':
-          return [];
-        default:
-          return state;
-      }
-    },
-    null,
-    () => {
-      const history = localStorage.getItem(localStorageKeys.instantSearchHistory);
-      if (history == null) {
-        return [];
-      }
+  const [searchHistory, updateSearchHistory] = useImmer<string[]>(() => {
+    const history = localStorage.getItem(localStorageKeys.instantSearchHistory);
+    if (history) {
       try {
         const parsedHistory = JSON.parse(history);
         if (
@@ -192,51 +172,59 @@ export default function InstantSearch() {
       } catch (_) {
         // invalid history, do nothing
       }
-      return [];
-    },
-  );
+    }
+    return [];
+  });
+
+  const addSearchHistory = (item: string) => {
+    updateSearchHistory((draft) => [...new Set([item, ...draft])].slice(0, 5));
+  };
+
+  const removeSearchHistory = (index: number) => {
+    updateSearchHistory((draft) => draft.filter((_, idx) => idx !== index));
+  };
+
+  const clearSearchHistory = () => {
+    updateSearchHistory(() => []);
+  };
 
   type InstantSearchState =
     | { type: 'cold' }
     | { type: 'pending'; keyword: string; adultExclude: boolean; result?: SearchResult }
     | { type: 'done'; keyword: string; result: SearchResult }
   ;
-  type InstantSearchAction =
-    | { type: 'started'; keyword: string; adultExclude: boolean }
-    | { type: 'done'; keyword: string; adultExclude: boolean; result: SearchResult }
-  ;
-  const [instantSearchState, updateInstantSearchState] = React.useReducer(
-    (state: InstantSearchState, action: InstantSearchAction) => {
-      switch (action.type) {
-        case 'started':
-          if (action.keyword === '') {
-            return { type: 'cold' as 'cold' };
-          }
-          return {
-            ...state,
-            type: 'pending' as 'pending',
-            keyword: action.keyword,
-            adultExclude: action.adultExclude,
-          };
-        case 'done':
-          if (
-            state.type === 'pending'
-            && state.keyword === action.keyword
-            && state.adultExclude === action.adultExclude
-          ) {
-            return {
-              type: 'done' as 'done',
-              keyword: action.keyword,
-              result: action.result,
-            };
-          }
-          return state;
-        default:
-          return state;
+
+  const [instantSearchState, updateInstantSearchState] = useImmer<InstantSearchState>({ type: 'cold' });
+
+  const startInstantSearch = (_keyword: string, _adultExclude: boolean) => {
+    updateInstantSearchState((draft) => {
+      if (keyword === '') {
+        draft.type = 'cold';
+      } else {
+        return {
+          type: 'pending',
+          keyword: _keyword,
+          adultExclude: _adultExclude,
+        };
       }
-    },
-    { type: 'cold' },
-  );
+    });
+  };
+
+  const doneInstantSearch = (_keyword: string, _adultExclude: boolean, result: SearchResult) => {
+    updateInstantSearchState((draft) => {
+      if (
+        draft.type === 'pending'
+        && draft.keyword === _keyword
+        && draft.adultExclude === _adultExclude
+      ) {
+        return {
+          type: 'done',
+          keyword: _keyword,
+          result,
+        };
+      }
+    });
+  };
 
   const doSearch = React.useCallback((searchKeyword: string) => {
     const trimmedKeyword = searchKeyword.trim();
@@ -244,7 +232,7 @@ export default function InstantSearch() {
       return;
     }
     if (!disableRecord) {
-      updateSearchHistory({ type: 'add', item: trimmedKeyword });
+      addSearchHistory(trimmedKeyword);
     }
     const params = new URLSearchParams({
       q: trimmedKeyword,
@@ -274,13 +262,13 @@ export default function InstantSearch() {
 
   const handleHistoryItemRemove = React.useCallback((idx: number) => {
     if (!disableRecord) {
-      updateSearchHistory({ type: 'remove', index: idx });
+      removeSearchHistory(idx);
     }
   }, [disableRecord]);
 
   const handleHistoryClear = React.useCallback(() => {
     if (!disableRecord) {
-      updateSearchHistory({ type: 'clear' });
+      clearSearchHistory();
     }
   }, [disableRecord]);
 
@@ -386,11 +374,7 @@ export default function InstantSearch() {
 
   React.useEffect(() => {
     const keywordToSearch = keyword.trim();
-    updateInstantSearchState({
-      type: 'started',
-      keyword: keywordToSearch,
-      adultExclude,
-    });
+    startInstantSearch(keywordToSearch, adultExclude);
 
     if (keywordToSearch === '') {
       return;
@@ -410,15 +394,9 @@ export default function InstantSearch() {
         if (result == null) {
           return;
         }
-
-        updateInstantSearchState({
-          type: 'done',
-          keyword: keywordToSearch,
-          adultExclude,
-          result: {
-            authors: result.author.authors,
-            books: result.book.books,
-          },
+        doneInstantSearch(keywordToSearch, adultExclude, {
+          authors: result.author.authors,
+          books: result.book.books,
         });
         setFocusedPosition(null);
       })().catch((err) => {
