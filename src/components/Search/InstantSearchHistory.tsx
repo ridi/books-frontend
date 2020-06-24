@@ -146,7 +146,7 @@ const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
 
   const hasHistory = searchHistory.length > 0;
   return (
-    <div css={css`background-color: white;`} className={className}>
+    <div className={className}>
       <RecentHistoryLabel>{labels.recentKeywords}</RecentHistoryLabel>
       <HistoryList ref={wrapperRef}>
         {!disableRecord && hasHistory ? (

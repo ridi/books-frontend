@@ -156,14 +156,6 @@ const AuthorLabel: React.FC<{ author: string; authors: SearchTypes.AuthorsInfo[]
   );
 };
 
-const ResultWrapper = styled.div`
-  padding: 4px 0 0;
-  border-radius: 3px;
-  background-color: white;
-
-  ${orBelow(BreakPoint.LG, 'border-radius: 0;')}
-`;
-
 export default function InstantSearchResult(props: InstantSearchResultProps) {
   const {
     focusedPosition,
@@ -186,7 +178,7 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
   const authorCount = authors.length;
 
   return (
-    <ResultWrapper className={className}>
+    <div className={className}>
       {authors.length > 0 && (
         <>
           <ul>
@@ -247,6 +239,6 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
           </AdultExcludeButton>
         </>
       )}
-    </ResultWrapper>
+    </div>
   );
 }

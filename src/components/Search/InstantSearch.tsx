@@ -1,4 +1,3 @@
-import { css } from '@emotion/core';
 import styled from '@emotion/styled';
 import libAxios from 'axios';
 import { useRouter, NextRouter } from 'next/router';
@@ -98,20 +97,30 @@ const SearchResetButton = styled.button`
   margin-right: 6px;
 `;
 
-const popupStyle = css`
+const PopupWrapper = styled.div<{ focused?: boolean }>`
   position: absolute;
   width: 380px;
   margin-top: 2px;
   border-radius: 3px;
-  box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px 3px;
-  z-index: 10;
+  background-color: white;
 
-  ${orBelow(BreakPoint.LG, `
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+
+  ${(props) => props.focused && `
+    box-shadow: rgba(0, 0, 0, 0.3) 3px 3px 10px 3px;
+    z-index: 10;
+  `}
+
+  ${(props) => orBelow(BreakPoint.LG, `
     position: static;
     width: 100%;
     margin-top: 0;
     border-radius: 0;
     box-shadow: none;
+
+    opacity: 0;
+    ${props.focused && 'opacity: 1;'}
   `)}
 `;
 
@@ -479,7 +488,6 @@ export default function InstantSearch() {
     if (keyword === '') {
       popup = (
         <InstantSearchHistory
-          css={popupStyle}
           disableRecord={disableRecord}
           searchHistory={searchHistory}
           focusedPosition={focusedPosition ?? undefined}
@@ -495,7 +503,6 @@ export default function InstantSearch() {
       if (result != null && result.books.length + result.authors.length > 0) {
         popup = (
           <InstantSearchResult
-            css={popupStyle}
             focusedPosition={focusedPosition ?? undefined}
             result={result}
             adultExclude={adultExclude}
@@ -533,7 +540,9 @@ export default function InstantSearch() {
             )}
           </SearchBoxShape>
         </SearchBoxWrapper>
-        {popup}
+        <PopupWrapper focused={isFocused}>
+          {popup}
+        </PopupWrapper>
       </FocusTrap>
     </WrapperForm>
   );
