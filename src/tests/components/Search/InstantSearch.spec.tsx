@@ -18,7 +18,7 @@ import localStorageKeys from 'src/constants/localStorage';
 import { safeJSONParse } from '../../../utils/common';
 
 import axios from 'axios';
-import fixtureABC from './abc.fixture.json';
+import instantSearchFixture from './instantSearch.fixture.json';
 import { RouterContext } from 'next/dist/next-server/lib/router-context';
 
 afterEach(cleanup);
@@ -130,19 +130,19 @@ describe('test instant search', () => {
   it('should render search result', async () => {
     (axios as any).__setHandler((method: string, url: string) => {
       return {
-        data: fixtureABC,
+        data: instantSearchFixture,
       };
     });
     let { container } = await renderComponent();
     const inputNode = getByPlaceholderText(container, labels.searchPlaceHolder);
     await act(async () => {
       fireEvent.focus(inputNode);
-      fireEvent.change(inputNode, { target: { value: 'ABC' } });
+      fireEvent.change(inputNode, { target: { value: '유유' } });
       jest.runAllTimers();
     });
     expect(
-      container.querySelector('[data-author-id="90615"] span:nth-child(2)')?.textContent,
-    ).toBe('ABC디이');
+      container.querySelector('[data-author-id="81117"] span:nth-child(2)')?.textContent,
+    ).toBe('유유');
   });
 
   it('should not be render search result', async () => {
