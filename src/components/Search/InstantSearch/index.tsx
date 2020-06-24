@@ -199,14 +199,14 @@ export default function InstantSearch() {
   const startInstantSearch = (_keyword: string, _adultExclude: boolean) => {
     updateInstantSearchState((draft) => {
       if (keyword === '') {
-        draft.status = 'cold';
-      } else {
-        return {
-          status: 'pending',
-          keyword: _keyword,
-          adultExclude: _adultExclude,
-        };
+        return { status: 'cold' };
       }
+      return {
+        ...draft,
+        status: 'pending',
+        keyword: _keyword,
+        adultExclude: _adultExclude,
+      };
     });
   };
 
