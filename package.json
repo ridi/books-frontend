@@ -24,6 +24,7 @@
     "emotion-server": "^10.0.17",
     "emotion-theming": "^10.0.19",
     "entities": "^2.0.2",
+    "immer": "^7.0.4",
     "immer-reducer": "^0.7.9",
     "intersection-observer": "^0.7.0",
     "jwt-decode": "^2.2.0",
@@ -51,6 +52,7 @@
     "ua-parser-js": "^0.7.20",
     "universal-cookie": "^4.0.3",
     "use-debounce": "^3.1.0",
+    "use-immer": "^0.4.0",
     "webfontloader": "^1.6.28",
     "workbox-webpack-plugin": "^4.3.1",
     "workbox-window": "^4.3.1"
