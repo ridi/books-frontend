@@ -1,5 +1,4 @@
 import styled from '@emotion/styled';
-import libAxios from 'axios';
 import { useRouter, NextRouter } from 'next/router';
 import React from 'react';
 import Cookies from 'universal-cookie';
@@ -9,17 +8,17 @@ import * as labels from 'src/labels/instantSearch.json';
 import { RIDITheme } from 'src/styles';
 import Clear from 'src/svgs/Clear.svg';
 import Lens from 'src/svgs/Lens.svg';
-import axios, { CancelToken, CancelTokenType } from 'src/utils/axios';
-import { runWithExponentialBackoff, CancelledError } from 'src/utils/backoff';
+import { CancelToken } from 'src/utils/axios';
+import { CancelledError } from 'src/utils/backoff';
 import { isJamo } from 'src/utils/hangul';
 import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
+import { runInstantSearch } from 'src/utils/search';
 import sentry from 'src/utils/sentry';
-import { checkInstantSearchResult } from 'src/types/searchResults';
 import { localStorage } from 'src/utils/storages';
 
-import InstantSearchHistory from './InstantSearchHistory';
-import InstantSearchResult from './InstantSearchResult';
-import { SearchResult } from './types';
+import { SearchResult } from '../types';
+import InstantSearchHistory from './History';
+import InstantSearchResult from './Result';
 
 const WrapperForm = styled.form<{ focused?: boolean }>`
   flex: 1;
@@ -123,52 +122,6 @@ const PopupWrapper = styled.div<{ focused?: boolean }>`
     ${props.focused && 'opacity: 1;'}
   `)}
 `;
-
-async function doInstantSearch(
-  keyword: string,
-  adultExclude: boolean,
-  token: CancelTokenType,
-): Promise<SearchResult | null> {
-  const url = new URL('/search', process.env.NEXT_STATIC_SEARCH_API);
-  const params = new URLSearchParams([
-    ['site', 'ridi-store'],
-    ['where', 'book'],
-    ['where', 'author'],
-    ['what', 'instant'],
-    ['keyword', keyword],
-    ['adult_exclude', adultExclude ? 'y' : 'n'],
-  ]);
-  url.search = params.toString();
-  const urlString = url.toString();
-  try {
-    const resp = await runWithExponentialBackoff(
-      async () => {
-        try {
-          return await axios.get(urlString, {
-            cancelToken: token,
-          });
-        } catch (err) {
-          if (libAxios.isCancel(err)) {
-            throw new CancelledError();
-          }
-          throw err;
-        }
-      },
-      { backoffTimeUnit: 200, maxTries: 3 },
-    );
-    const data = checkInstantSearchResult(resp.data);
-    return {
-      books: data.book.books,
-      authors: data.author.authors,
-    };
-  } catch (err) {
-    const statusCode = err?.response?.statusCode ?? 0;
-    if (statusCode !== 401 && statusCode !== 403) {
-      sentry.captureException(err);
-    }
-    return null;
-  }
-}
 
 function initializeAdultExclude(router: NextRouter) {
   if (router.query.adult_exclude) {
@@ -449,7 +402,7 @@ export default function InstantSearch() {
     const handle = window.setTimeout(() => {
       // make the linter happy
       (async () => {
-        const result = await doInstantSearch(
+        const result = await runInstantSearch(
           keywordToSearch,
           adultExclude,
           cancelSource.token,
@@ -462,11 +415,18 @@ export default function InstantSearch() {
           type: 'done',
           keyword: keywordToSearch,
           adultExclude,
-          result,
+          result: {
+            authors: result.author.authors,
+            books: result.book.books,
+          },
         });
         setFocusedPosition(null);
       })().catch((err) => {
-        if (err?.message === 'Cancel') {
+        if (err instanceof CancelledError) {
+          return;
+        }
+        const statusCode = err?.response?.statusCode ?? 0;
+        if (statusCode === 401 || statusCode === 403) {
           return;
         }
         sentry.captureException(err);

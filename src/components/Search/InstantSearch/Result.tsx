@@ -9,8 +9,8 @@ import * as SearchTypes from 'src/types/searchResults';
 import { getEscapedNode } from 'src/utils/highlight';
 import { BreakPoint, greaterThanOrEqualTo, orBelow } from 'src/utils/mediaQuery';
 
-import AuthorInfo from './Authors/AuthorInfo';
-import { SearchResult } from './types';
+import AuthorInfo from '../Authors/AuthorInfo';
+import { SearchResult } from '../types';
 
 const BookListItem = styled.li<{ focused?: boolean }>`
   ${orBelow(BreakPoint.LG, 'min-height: 40px;')};
