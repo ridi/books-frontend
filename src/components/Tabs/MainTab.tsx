@@ -298,7 +298,7 @@ const genreValueReplace = (visitedGenre: string) => {
 
 export const MainTab: React.FC<MainTabProps> = (props) => {
   const { loggedUserInfo } = props;
-  const { unreadCount, requestFetchUnreadCount } = useNotification();
+  const { unreadCount, items, requestFetchUnreadCount } = useNotification();
   const router = useRouter();
   const [, setHomeURL] = useState('/');
   const cartCount = useCartCount(loggedUserInfo);
@@ -333,7 +333,7 @@ export const MainTab: React.FC<MainTabProps> = (props) => {
           label={labels.mainTab.notification}
           path="/notification"
           pathRegexp={/^\/notification\/?$/g}
-          addOn={Boolean(unreadCount) && (
+          addOn={Boolean(unreadCount) && !items && (
             <NotificationAddOn />
           )}
         />
