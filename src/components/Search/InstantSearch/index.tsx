@@ -496,6 +496,7 @@ export default function InstantSearch() {
           <SearchBoxShape>
             <StyledLens focused={isFocused} />
             <SearchBox
+              aria-label="인스턴트 검색"
               placeholder={labels.searchPlaceHolder}
               value={keyword}
               onChange={handleKeywordChange}
