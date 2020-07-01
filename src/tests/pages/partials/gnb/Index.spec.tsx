@@ -100,7 +100,7 @@ test('should be render event page with nav bar', async () => {
   );
 
   expect(queryByAltText(/리디셀렉트/)).not.toBe(null);
-  expect(queryByAltText(/스/)).not.toBe(null);
+  expect(queryByAltText(/리디북스/)).not.toBe(null);
   expect(queryByText(/BL/)).not.toBe(null);
 });
 

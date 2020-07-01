@@ -23,5 +23,3 @@ export const RIDISELECT_LOGO_URL = RidiSelectLogo;
 export const CARET_DOWN_ICON_URL = CaretDown;
 export const CHECK_ICON_URL = Check;
 export const LENS_ICON_URL = Lens;
-
-console.log(Lens, Check, RIDIBOOKS_LOGO_URL);
