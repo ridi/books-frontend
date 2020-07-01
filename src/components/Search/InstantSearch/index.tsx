@@ -346,6 +346,8 @@ export default function InstantSearch() {
           } else if (focusedPosition < itemCount) {
             handleBookClick(books[focusedPosition - authors.length].b_id);
           }
+        } else if (keyword !== '') {
+          doSearch(keyword);
         }
         return;
       default:
@@ -371,6 +373,7 @@ export default function InstantSearch() {
   React.useEffect(() => {
     if (isFocused) {
       setAdultExclude(initializeAdultExclude(router));
+      setFocusedPosition(null);
     }
   }, [isFocused]);
 
