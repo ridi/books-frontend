@@ -9,6 +9,7 @@ import RidiBooksLogo from 'src/assets/svg/RidiLogo.svg';
 import RidiSelectLogo from 'src/assets/svg/RidiSelectLogo.svg';
 import CaretDown from 'src/assets/svg/CaretDown.svg';
 import Check from 'src/assets/svg/Check.svg';
+import Lens from 'src/assets/svg/Lens.svg';
 
 export const ADULT_BADGE_URL = AdultBadge;
 export const STAR_RATING_URL = StarRating;
@@ -21,3 +22,6 @@ export const RIDIBOOKS_LOGO_URL = RidiBooksLogo;
 export const RIDISELECT_LOGO_URL = RidiSelectLogo;
 export const CARET_DOWN_ICON_URL = CaretDown;
 export const CHECK_ICON_URL = Check;
+export const LENS_ICON_URL = Lens;
+
+console.log(Lens, Check, RIDIBOOKS_LOGO_URL);

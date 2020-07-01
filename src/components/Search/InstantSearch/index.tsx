@@ -5,13 +5,12 @@ import React from 'react';
 import { useImmer } from 'use-immer';
 import Cookies from 'universal-cookie';
 
-import lens from 'src/assets/image/lens.png';
+import { LENS_ICON_URL } from 'src/constants/icons';
 import localStorageKeys from 'src/constants/localStorage';
 import * as labels from 'src/labels/instantSearch.json';
 import { RIDITheme } from 'src/styles';
 import ArrowLeft from 'src/svgs/Arrow_Left_13.svg';
 import Clear from 'src/svgs/Clear.svg';
-
 import { CancelToken } from 'src/utils/axios';
 import { CancelledError } from 'src/utils/backoff';
 import { isJamo } from 'src/utils/hangul';
@@ -94,9 +93,9 @@ const StyledLens = styled('img', {
   shouldForwardProp: (prop) => isPropValid(prop) && prop !== 'focused',
 })<{focused?: boolean}, RIDITheme>`
   flex: none;
-  width: 18px;
-  height: 18px;
-  margin: 8px 7px 8px 9px;
+  width: 24px;
+  height: 24px;
+  margin: 0 4px 0 6px;
   opacity: ${(props) => (props.focused ? 1 : 0.6)};
 `;
 
@@ -493,7 +492,7 @@ export default function InstantSearch() {
             )
           }
           <SearchBoxShape>
-            <StyledLens alt="인스턴트 검색" src={lens} focused={isFocused} />
+            <StyledLens alt="인스턴트 검색" src={LENS_ICON_URL} focused={isFocused} />
             <SearchBox
               placeholder={labels.searchPlaceHolder}
               value={keyword}
