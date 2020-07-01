@@ -347,6 +347,9 @@ export default function InstantSearch() {
             handleBookClick(books[focusedPosition - authors.length].b_id);
           }
         } else if (keyword !== '') {
+          // Fixme Chrome, FF 에서 input 검색에 엔터를 두 번 쳐야되는 문제가 있음
+          e.preventDefault();
+          e.stopPropagation();
           doSearch(keyword);
         }
         return;
