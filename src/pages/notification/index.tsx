@@ -190,7 +190,7 @@ interface NotificationPageProps {
 
 export const NotificationItem: React.FunctionComponent<NotificationItemProps> = (props) => {
   const {
-    item, createdAtTimeAgo, dot = false, slug, order,
+    item, landingUrl, createdAtTimeAgo, dot = false, slug, order,
   } = props;
 
   const handleVisibleRef = React.useRef<boolean>(false);
@@ -208,7 +208,7 @@ export const NotificationItem: React.FunctionComponent<NotificationItemProps> = 
       <NotiItemWrapper
         // eslint-disable-next-line react/jsx-no-bind
         onClick={tracker.sendClickEvent.bind(null, item, slug, order)}
-        href={item.landingUrl}
+        href={landingUrl}
       >
         <ImageWrapper
           className={slug}
