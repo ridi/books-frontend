@@ -187,16 +187,11 @@ const Section = styled.section`
   )}
   ${orBelow(
     BreakPoint.LG,
-    `
-      padding-left: 20px;
-      padding-right: 26px;
-      padding-top: 16px;
-      padding-bottom: 16px;
-    `,
+    'padding: 16px 20px;',
   )}
   ${greaterThanOrEqualTo(
     BreakPoint.LG + 1,
-    'padding-left: 24px;',
+    'padding-left: 24px; padding-right: 24px;',
   )}
 `;
 
