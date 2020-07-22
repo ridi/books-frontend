@@ -56,6 +56,9 @@ const UserPreferredSection: React.FC<UserPreferredSectionProps> = (props) => {
         [
           'bl',
           'bl-serial',
+          'bl-novel-serial',
+          'bl-webtoon-serial',
+          'bl-comics',
           'fantasy',
           'fantasy-serial',
           'comics',

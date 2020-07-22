@@ -18,7 +18,7 @@ interface BookMetaProps {
   titleLineClamp?: number;
   showSomeDeal?: boolean;
   isAIRecommendation?: boolean;
-  showTag: boolean;
+  showTag?: boolean;
   width?: string;
   className?: string;
   ratingInfo?: StarRatingType;
