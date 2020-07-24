@@ -17,6 +17,7 @@ export async function runSearch(query: Query) {
     page,
     categoryId,
     order,
+    isSerial,
   } = query;
   const searchUrl = new URL('/search', process.env.NEXT_STATIC_SEARCH_API);
 
@@ -26,6 +27,7 @@ export async function runSearch(query: Query) {
   if (orderType.includes(order)) {
     searchUrl.searchParams.set('order', order);
   }
+  searchUrl.searchParams.set('serial', isSerial ? 'y' : 'n');
 
   if (/^\d+$/.test(categoryId)) {
     searchUrl.searchParams.set('category_id', categoryId);

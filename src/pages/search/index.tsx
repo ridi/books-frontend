@@ -129,7 +129,11 @@ const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   margin: 5px 0 17px;
 `;
 
-function SearchPage() {
+interface Props {
+  forceAdultExclude?: true;
+}
+
+function SearchPage({ forceAdultExclude }: Props) {
   const dispatch = useDispatch();
   const { query, calculateUpdateQuery } = useSearchQueries();
   const {
@@ -146,7 +150,10 @@ function SearchPage() {
 
   React.useEffect(() => {
     (async () => {
-      const result = await runSearch(query);
+      const result = await runSearch({
+        ...query,
+        isAdultExclude: forceAdultExclude || query.isAdultExclude,
+      });
       setAuthors((orig) => orig || result.author);
       setBooks((orig) => orig || result.book);
       setCategories((orig) => orig || result.book.aggregations);
@@ -302,12 +309,12 @@ function SearchPage() {
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
-          <SkeletonFilterBar type="short" />
+          {!forceAdultExclude && <SkeletonFilterBar type="short" />}
         </Filters>
       ) : (
         <Filters>
           <FilterSelector />
-          <AdultExcludeToggle adultExclude={isAdultExclude} />
+          {!forceAdultExclude && <AdultExcludeToggle adultExclude={isAdultExclude} />}
         </Filters>
       )}
       {booksNode}
