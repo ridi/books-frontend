@@ -142,6 +142,7 @@ function SearchPage({ forceAdultExclude }: Props) {
     page,
     categoryId: currentCategoryId,
     order,
+    isSerial,
   } = query;
   const [authors, setAuthors] = React.useState<SearchTypes.AuthorResult>();
   const [books, setBooks] = React.useState<SearchTypes.BookResult>();
@@ -264,7 +265,7 @@ function SearchPage({ forceAdultExclude }: Props) {
         <SearchBookList>
           {books.books.map((item, index) => (
             <SearchBookItem key={item.b_id}>
-              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} />
+              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} useDeeplink={isSerial} />
             </SearchBookItem>
           ))}
         </SearchBookList>
