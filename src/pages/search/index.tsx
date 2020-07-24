@@ -193,7 +193,7 @@ function SearchPage() {
     const availableMaxPage = Math.min(Math.ceil(books.total / ITEM_PER_PAGE), MAX_PAGE);
     if (page > availableMaxPage && books.total > 0) {
       const search = calculateUpdateQuery({ page: availableMaxPage });
-      router.replace(`/search?${search}`);
+      router.replace(`${router.pathname}?${search}`);
     }
   }, [page, books?.total, calculateUpdateQuery]);
   useEffect(() => {
@@ -202,7 +202,7 @@ function SearchPage() {
     }
     if (categories.every((category) => String(category.category_id) !== currentCategoryId)) {
       const search = calculateUpdateQuery({ categoryId: '0' });
-      router.replace(`/search?${search}`);
+      router.replace(`${router.pathname}?${search}`);
     }
   }, [categories, currentCategoryId]);
 

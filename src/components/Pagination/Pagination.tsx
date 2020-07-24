@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import styled from '@emotion/styled';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import {
@@ -110,6 +111,7 @@ export function Pagination(props: PaginationProps) {
   const showPreviousButton = currentPaginationPosition > 1;
   const showNextButton = currentPaginationPosition < totalPagination;
 
+  const router = useRouter();
   const { calculateUpdateQuery } = useSearchQueries();
   const calculatePageUpdate = React.useCallback((page: number) => calculateUpdateQuery({ page }), [calculateUpdateQuery]);
   return (
@@ -119,7 +121,7 @@ export function Pagination(props: PaginationProps) {
           {showStartAndLastButton && (
             <>
               <Link
-                href={`/search?${calculatePageUpdate(1)}`}
+                href={`${router.pathname}?${calculatePageUpdate(1)}`}
                 passHref
               >
                 <Anchor>처음</Anchor>
@@ -128,7 +130,7 @@ export function Pagination(props: PaginationProps) {
             </>
           )}
           <Link
-            href={`/search?${calculatePageUpdate((currentPaginationPosition - 2) * showPageCount + 1)}`}
+            href={`${router.pathname}?${calculatePageUpdate((currentPaginationPosition - 2) * showPageCount + 1)}`}
             passHref
           >
             <Anchor>
@@ -145,7 +147,7 @@ export function Pagination(props: PaginationProps) {
           }
           return (
             <li key={index}>
-              <Link href={`/search?${calculatePageUpdate(moveToPage)}`} passHref>
+              <Link href={`${router.pathname}?${calculatePageUpdate(moveToPage)}`} passHref>
                 <Anchor isActive={currentPage === moveToPage}>{moveToPage}</Anchor>
               </Link>
             </li>
@@ -155,7 +157,7 @@ export function Pagination(props: PaginationProps) {
       {showNextButton && (
         <>
           <Link
-            href={`/search?${calculatePageUpdate(currentPaginationPosition * showPageCount + 1)}`}
+            href={`${router.pathname}?${calculatePageUpdate(currentPaginationPosition * showPageCount + 1)}`}
             passHref
           >
             <Anchor>
@@ -165,7 +167,7 @@ export function Pagination(props: PaginationProps) {
           {showStartAndLastButton && (
             <>
               <Ellipsis />
-              <Link href={`/search?${calculatePageUpdate(totalPage)}`} passHref>
+              <Link href={`${router.pathname}?${calculatePageUpdate(totalPage)}`} passHref>
                 <Anchor>마지막</Anchor>
               </Link>
             </>
