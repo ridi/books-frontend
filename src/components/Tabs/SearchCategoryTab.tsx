@@ -7,6 +7,7 @@ import {
   slateGray60,
 } from '@ridi/colors';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import ScrollContainer from 'src/components/ScrollContainer';
 import { useSearchQueries } from 'src/hooks/useSearchQueries';
@@ -66,7 +67,8 @@ function Category(props: {
   } = props;
   const active = currentCategoryId === category.category_id;
   const { calculateUpdateQuery } = useSearchQueries();
-  const href = `/search?${calculateUpdateQuery({ categoryId: String(category.category_id), page: 1 })}`;
+  const router = useRouter();
+  const href = `${router.pathname}?${calculateUpdateQuery({ categoryId: String(category.category_id), page: 1 })}`;
   return (
     <CategoryItem
       ref={active ? focusElementRef as React.Ref<HTMLLIElement> : undefined}

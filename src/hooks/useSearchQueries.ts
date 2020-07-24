@@ -51,7 +51,7 @@ export function useSearchQueries(): SearchQueriesHook {
   }, [query]);
   const updateQuery = React.useCallback((newQuery: Partial<Query>) => {
     const search = calculateUpdateQuery(newQuery);
-    router.push(`/search?${search}`);
+    router.push(`${router.pathname}?${search}`);
   }, [router, calculateUpdateQuery]);
   const [first, setFirst] = React.useState(true);
 
