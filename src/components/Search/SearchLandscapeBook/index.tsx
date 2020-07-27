@@ -158,6 +158,7 @@ interface SearchLandscapeBookProps {
   q: string;
   item: SearchTypes.SearchBookDetail;
   title: string;
+  useDeeplink: boolean;
 }
 
 type CategoryNames = Pick<
@@ -214,7 +215,7 @@ function RenderAuthors(props: { authors: AuthorsInfo[]; fallback: string }) {
 
 export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const {
-    item, title, q, index,
+    item, title, q, index, useDeeplink,
   } = props;
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);
@@ -255,9 +256,14 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
       sentry.captureException(error);
     }
   };
+
+  const path = `/books/${item.b_id}?${searchParam.toString()}`;
+  const deeplink = `https://ridi.page.link/?link=https://deeplink.ridibooks.com${path}&apn=com.initialcoms.ridi`;
+  const anchor = useDeeplink ? deeplink : path;
+
   return (
     <>
-      <ThumbnailAnchor href={`/books/${item.b_id}?${searchParam.toString()}`} onClick={searchBookClick}>
+      <ThumbnailAnchor href={anchor} onClick={searchBookClick}>
         <StyledThumbnailWithBadge
           bId={item.b_id}
           genre={genres[0] ?? ''}
@@ -268,7 +274,7 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
       </ThumbnailAnchor>
       <MetaWrapper>
         <SearchBookTitle>
-          <a href={`/books/${item.b_id}?${searchParam.toString()}`} onClick={searchBookClick}>
+          <a href={anchor} onClick={searchBookClick}>
             {getEscapedNode(computeSearchBookTitle(item))}
           </a>
         </SearchBookTitle>
@@ -331,7 +337,7 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
             </SearchBookMetaItem>
           )}
         </SearchBookMetaList>
-        <a href={`/books/${item.b_id}?${searchParam.toString()}`} onClick={searchBookClick}>
+        <a href={anchor} onClick={searchBookClick}>
           <BookDesc>
             {clearDesc.length > 170 ? `${clearDesc.slice(0, 170)}...` : clearDesc}
           </BookDesc>

@@ -7,11 +7,13 @@ import {
   dodgerBlue50,
   slateGray10,
   slateGray20,
+  slateGray30,
   slateGray40,
   slateGray50,
   slateGray90,
 } from '@ridi/colors';
 import Lens from 'src/svgs/Lens.svg';
+import Info from 'src/svgs/Info.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import { SearchCategoryTab } from 'src/components/Tabs';
 import { useCallback, useEffect } from 'react';
@@ -129,7 +131,31 @@ const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   margin: 5px 0 17px;
 `;
 
-function SearchPage() {
+const RestrictionMessageWrapper = styled.a`
+  font-size: 12px;
+  color: ${slateGray30};
+`;
+
+const RestrictionMessageIcon = styled(Info)`
+  width: 14px;
+  height: 14px;
+  fill: ${slateGray30};
+  vertical-align: top;
+  margin-right: 2px;
+`;
+
+const RestrictionMessage = () => (
+  <RestrictionMessageWrapper href="https://help.ridibooks.com/hc/ko/articles/360050414894">
+    <RestrictionMessageIcon />
+    기능 제한 안내
+  </RestrictionMessageWrapper>
+);
+
+interface Props {
+  forceAdultExclude?: true;
+}
+
+function SearchPage({ forceAdultExclude }: Props) {
   const dispatch = useDispatch();
   const { query, calculateUpdateQuery } = useSearchQueries();
   const {
@@ -138,6 +164,7 @@ function SearchPage() {
     page,
     categoryId: currentCategoryId,
     order,
+    isSerial,
   } = query;
   const [authors, setAuthors] = React.useState<SearchTypes.AuthorResult>();
   const [books, setBooks] = React.useState<SearchTypes.BookResult>();
@@ -146,7 +173,10 @@ function SearchPage() {
 
   React.useEffect(() => {
     (async () => {
-      const result = await runSearch(query);
+      const result = await runSearch({
+        ...query,
+        isAdultExclude: forceAdultExclude || query.isAdultExclude,
+      });
       setAuthors((orig) => orig || result.author);
       setBooks((orig) => orig || result.book);
       setCategories((orig) => orig || result.book.aggregations);
@@ -257,7 +287,7 @@ function SearchPage() {
         <SearchBookList>
           {books.books.map((item, index) => (
             <SearchBookItem key={item.b_id}>
-              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} />
+              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} useDeeplink={isSerial} />
             </SearchBookItem>
           ))}
         </SearchBookList>
@@ -307,7 +337,11 @@ function SearchPage() {
       ) : (
         <Filters>
           <FilterSelector />
-          <AdultExcludeToggle adultExclude={isAdultExclude} />
+          {!forceAdultExclude ? (
+            <AdultExcludeToggle adultExclude={isAdultExclude} />
+          ) : (
+            <RestrictionMessage />
+          )}
         </Filters>
       )}
       {booksNode}

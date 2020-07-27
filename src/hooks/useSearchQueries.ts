@@ -8,6 +8,7 @@ export interface Query {
   page: number;
   categoryId: string;
   order: string;
+  isSerial: boolean;
 }
 
 interface SearchQueriesHook {
@@ -25,6 +26,7 @@ function extractQuery(query: Record<string, string | string[]>): Query {
     page = '1',
     category_id = '0',
     order = 'score',
+    serial = 'n',
   } = query;
   return {
     q: String(q),
@@ -32,6 +34,7 @@ function extractQuery(query: Record<string, string | string[]>): Query {
     page: parseInt(String(page), 10) || 1,
     categoryId: String(category_id),
     order: String(order),
+    isSerial: serial === 'y',
   };
 }
 
@@ -46,6 +49,7 @@ export function useSearchQueries(): SearchQueriesHook {
       page: String(mergedQuery.page),
       category_id: mergedQuery.categoryId,
       order: mergedQuery.order,
+      serial: mergedQuery.isSerial ? 'y' : 'n',
     });
     return searchParams.toString();
   }, [query]);
