@@ -131,25 +131,25 @@ const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   margin: 5px 0 17px;
 `;
 
-const RestrictionMessage = () => {
-  const Wrapper = styled.a`
-    font-size: 12px;
-    color: ${slateGray30};
-  `;
-  const Icon = styled(Info)`
-    width: 14px;
-    height: 14px;
-    fill: ${slateGray30};
-    vertical-align: top;
-    margin-right: 2px;
-  `;
-  return (
-    <Wrapper href="https://help.ridibooks.com/hc/ko/articles/360050414894">
-      <Icon />
-      기능 제한 안내
-    </Wrapper>
-  );
-};
+const RestrictionMessageWrapper = styled.a`
+  font-size: 12px;
+  color: ${slateGray30};
+`;
+
+const RestrictionMessageIcon = styled(Info)`
+  width: 14px;
+  height: 14px;
+  fill: ${slateGray30};
+  vertical-align: top;
+  margin-right: 2px;
+`;
+
+const RestrictionMessage = () => (
+  <RestrictionMessageWrapper href="https://help.ridibooks.com/hc/ko/articles/360050414894">
+    <RestrictionMessageIcon />
+    기능 제한 안내
+  </RestrictionMessageWrapper>
+);
 
 interface Props {
   forceAdultExclude?: true;
