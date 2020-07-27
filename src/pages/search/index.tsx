@@ -7,11 +7,13 @@ import {
   dodgerBlue50,
   slateGray10,
   slateGray20,
+  slateGray30,
   slateGray40,
   slateGray50,
   slateGray90,
 } from '@ridi/colors';
 import Lens from 'src/svgs/Lens.svg';
+import Info from 'src/svgs/Info.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import { SearchCategoryTab } from 'src/components/Tabs';
 import { useCallback, useEffect } from 'react';
@@ -128,6 +130,26 @@ const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   width: ${(props) => ({ short: 70, long: 92 }[props.type])}px;
   margin: 5px 0 17px;
 `;
+
+const RestrictionMessage = () => {
+  const Wrapper = styled.a`
+    font-size: 12px;
+    color: ${slateGray30};
+  `;
+  const Icon = styled(Info)`
+    width: 14px;
+    height: 14px;
+    fill: ${slateGray30};
+    vertical-align: top;
+    margin-right: 2px;
+  `;
+  return (
+    <Wrapper href="https://help.ridibooks.com/hc/ko/articles/360050414894">
+      <Icon />
+      기능 제한 안내
+    </Wrapper>
+  );
+};
 
 interface Props {
   forceAdultExclude?: true;
@@ -310,12 +332,16 @@ function SearchPage({ forceAdultExclude }: Props) {
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
-          {!forceAdultExclude && <SkeletonFilterBar type="short" />}
+          <SkeletonFilterBar type="short" />
         </Filters>
       ) : (
         <Filters>
           <FilterSelector />
-          {!forceAdultExclude && <AdultExcludeToggle adultExclude={isAdultExclude} />}
+          {!forceAdultExclude ? (
+            <AdultExcludeToggle adultExclude={isAdultExclude} />
+          ) : (
+            <RestrictionMessage />
+          )}
         </Filters>
       )}
       {booksNode}
