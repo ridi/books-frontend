@@ -29,10 +29,10 @@ import { useSearchQueries } from 'src/hooks/useSearchQueries';
 import { booksActions } from 'src/services/books';
 import { ITEM_PER_PAGE, MAX_PAGE, runSearch } from 'src/utils/search';
 import { Border } from 'src/components/Tabs/SearchCategoryTab';
-import SkeletonAuthors from 'src/components/Skeleton/Authors';
-import SkeletonBar from 'src/components/Skeleton/Bar';
-import SkeletonCategoryTab from 'src/components/Skeleton/CategoryTab';
-import Skeleton from 'src/components/Skeleton/SearchLandscapeBook';
+import SkeletonAuthors from 'src/components/Search/Skeleton/Authors';
+import SkeletonBar from 'src/components/Search/Skeleton/Bar';
+import SkeletonCategoryTab from 'src/components/Search/Skeleton/CategoryTab';
+import Skeleton from 'src/components/Search/Skeleton/SearchLandscapeBook';
 import Authors, { MAXIMUM_AUTHOR } from 'src/components/Search/Authors';
 import useAccount from 'src/hooks/useAccount';
 
@@ -68,10 +68,7 @@ const SearchBookList = styled.ul`
 `;
 
 const SearchBookItem = styled.li`
-  display: flex;
-  padding: 20px 0;
   border-bottom: 1px solid ${slateGray20};
-  align-items: flex-start;
   ${orBelow(BreakPoint.LG, 'margin: 0 16px;')};
 `;
 
@@ -150,6 +147,53 @@ const RestrictionMessage = () => (
     기능 제한 안내
   </RestrictionMessageWrapper>
 );
+
+function AuthorResults(props: { authors?: SearchTypes.AuthorResult; q: string}) {
+  const {
+    authors = {} as SearchTypes.AuthorResult,
+    q,
+  } = props;
+  if (authors?.total > 0) {
+    return (
+      <>
+        <SearchTitle>
+          {`‘${q}’ 저자 검색 결과`}
+          <TotalAuthor>
+            {authors.total > MAXIMUM_AUTHOR ? `총 ${MAXIMUM_AUTHOR}명+` : `총 ${authors.total}명`}
+          </TotalAuthor>
+        </SearchTitle>
+        <Authors author={authors} q={q || ''} />
+      </>
+    );
+  }
+  return (
+    <>
+      <SkeletonH2Bar />
+      <SkeletonAuthors />
+    </>
+  );
+}
+
+function Categories(props: { categories?: SearchTypes.Aggregation[]; currentId: string}) {
+  const {
+    categories = {} as SearchTypes.Aggregation[],
+    currentId,
+  } = props;
+  if (categories?.length > 0) {
+    return (
+      <SearchCategoryTab
+        categories={categories}
+        currentCategoryId={parseInt(currentId, 10)}
+      />
+    );
+  }
+  return (
+    <>
+      <SkeletonCategoryTab />
+      <Border color={slateGray10} />
+    </>
+  );
+}
 
 interface Props {
   forceAdultExclude?: true;
@@ -236,82 +280,6 @@ function SearchPage({ forceAdultExclude }: Props) {
     }
   }, [categories, currentCategoryId]);
 
-  let authorsNode = null;
-  if (authors != null) {
-    const { total } = authors;
-    if (total > 0) {
-      authorsNode = (
-        <>
-          <SearchTitle>
-            {`‘${q}’ 저자 검색 결과`}
-            <TotalAuthor>
-              {total > MAXIMUM_AUTHOR ? `총 ${MAXIMUM_AUTHOR}명+` : `총 ${total}명`}
-            </TotalAuthor>
-          </SearchTitle>
-          <Authors author={authors} q={q || ''} />
-        </>
-      );
-    }
-  } else {
-    authorsNode = (
-      <>
-        <SkeletonH2Bar />
-        <SkeletonAuthors />
-      </>
-    );
-  }
-
-  let categoriesNode = null;
-  if (categories != null) {
-    if (categories.length > 0) {
-      categoriesNode = (
-        <SearchCategoryTab
-          categories={categories}
-          currentCategoryId={parseInt(currentCategoryId, 10)}
-        />
-      );
-    }
-  } else {
-    categoriesNode = (
-      <>
-        <SkeletonCategoryTab />
-        <Border color={slateGray10} />
-      </>
-    );
-  }
-
-  let booksNode;
-  if (books != null) {
-    if (books.total > 0) {
-      booksNode = (
-        <SearchBookList>
-          {books.books.map((item, index) => (
-            <SearchBookItem key={item.b_id}>
-              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} useDeeplink={isSerial} />
-            </SearchBookItem>
-          ))}
-        </SearchBookList>
-      );
-    } else {
-      booksNode = (
-        <NoResult>
-          <NoResultLens />
-          <NoResultText>{`‘${q}’에 대한 도서 검색 결과가 없습니다.`}</NoResultText>
-          <SuggestButton href="https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=664028" rel="noreferrer nooppener" target="_blank">도서 제안하기</SuggestButton>
-        </NoResult>
-      );
-    }
-  } else {
-    booksNode = (
-      <SearchBookList>
-        {[0.8, 0.5, 0.3].map((opacity) => (
-          <SearchBookItem key={opacity}>
-            <Skeleton />
-          </SearchBookItem>
-        ))}
-      </SearchBookList>
-    );
-  }
   return (
     <SearchResultSection>
       <Head>
@@ -321,14 +289,13 @@ function SearchPage({ forceAdultExclude }: Props) {
           검색 결과 - 리디북스
         </title>
       </Head>
-      {authorsNode}
-
+      <AuthorResults authors={authors} q={q} />
       {keywordPending ? (
         <SkeletonH2Bar />
       ) : (
         <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
       )}
-      {categoriesNode}
+      <Categories categories={categories} currentId={currentCategoryId} />
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
@@ -344,7 +311,25 @@ function SearchPage({ forceAdultExclude }: Props) {
           )}
         </Filters>
       )}
-      {booksNode}
+      {books?.total === 0 ? (
+        <NoResult>
+          <NoResultLens />
+          <NoResultText>{`‘${q}’에 대한 도서 검색 결과가 없습니다.`}</NoResultText>
+          <SuggestButton href="https://help.ridibooks.com/hc/ko/requests/new?ticket_form_id=664028" rel="noreferrer nooppener" target="_blank">도서 제안하기</SuggestButton>
+        </NoResult>
+      ) : (
+        <SearchBookList>
+          {books?.books.map((item, index) => (
+            <SearchBookItem key={item.b_id}>
+              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} useDeeplink={isSerial} />
+            </SearchBookItem>
+          )) || [0.8, 0.5, 0.3].map((opacity) => (
+            <SearchBookItem key={opacity}>
+              <Skeleton />
+            </SearchBookItem>
+          ))}
+        </SearchBookList>
+      )}
       {hasPagination ? (
         <Pagination
           itemPerPage={ITEM_PER_PAGE}

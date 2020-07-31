@@ -8,4 +8,5 @@ declare module '*.ico'
 declare interface Window {
   isPartials?: boolean;
   isExternalLink?: (url: string) => boolean;
+  isLoginRequired?: (url: string) => boolean;
 }
