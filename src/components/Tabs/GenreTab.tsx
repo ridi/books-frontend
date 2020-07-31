@@ -230,10 +230,10 @@ const subGenres: {
   [genre: string]: Array<{ name: string; path: string; activePaths: RegExp }>;
 } = {
   bl: [
-    { name: '소설 단행본', path: '/bl', activePaths: /^\/bl\/?$/ },
-    { name: '웹소설', path: '/bl-novel-serial', activePaths: /^\/bl-novel-serial\/?$/ },
-    { name: '만화 단행본', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
-    { name: '웹툰', path: '/bl-webtoon-serial', activePaths: /^\/bl-webtoon-serial\/?$/ },
+    { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
+    { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
+    { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
+    { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
   ],
   fantasy: [
     { name: '단행본', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
@@ -297,7 +297,7 @@ interface GenreTabProps {
 
 interface SavedSubServices {
   romance: string;
-  bl: string;
+  'bl-novel': string;
   fantasy: string;
 }
 
@@ -309,14 +309,14 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const [subServices, setSubServices] = useState<SavedSubServices>({
     romance: '/romance',
     fantasy: '/fantasy',
-    bl: '/bl',
+    'bl-novel': '/bl-novel',
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
   const subServicesValidator = (saved: SavedSubServices) => ({
     romance: ['/romance', '/romance-serial'].includes(saved.romance) ? saved.romance : '/romance',
     fantasy: ['/fantasy', '/fantasy-serial'].includes(saved.fantasy) ? saved.fantasy : '/fantasy',
-    bl: ['/bl', '/bl-novel-serial', '/bl-comics', '/bl-webtoon-serial'].includes(saved.bl) ? saved.bl : '/bl',
+    'bl-novel': ['/bl-novel', '/bl-webnovel', '/bl-comics', '/bl-webtoon'].includes(saved['bl-novel']) ? saved['bl-novel'] : '/bl-novel',
   });
 
   useEffect(() => {
@@ -381,7 +381,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
             <TabItem
               activePath={/^\/bl(-serial|-comics|-webtoon-serial|-novel-serial)?\/?$/}
               label="BL"
-              href={subServices.bl || '/bl'}
+              href={subServices['bl-novel'] || '/bl-novel'}
             />
           </GenreList>
         </li>

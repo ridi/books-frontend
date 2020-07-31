@@ -148,7 +148,7 @@ Home.getInitialProps = async (ctx: ConnectedInitializeProps) => {
   const isServer = Boolean(ctx.req);
 
   const genre = (query.genre || 'general').toString();
-  if (!['bl-novel-serial', 'bl-webtoon-serial', 'bl-comics', 'general', 'romance', 'romance-serial', 'fantasy', 'fantasy-serial', 'comics', 'bl', 'bl-serial'].includes(genre)) {
+  if (!['bl-novel', 'bl-webnovel', 'bl-comics', 'bl-webtoon', 'general', 'romance', 'romance-serial', 'fantasy', 'fantasy-serial', 'comics'].includes(genre)) {
     throw new NotFoundError(genre);
   }
 
