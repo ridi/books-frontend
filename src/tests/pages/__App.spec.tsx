@@ -33,24 +33,6 @@ jest.mock('src/store/config', () => ({
 }));
 
 describe('App', () => {
-  describe('getInitialProps', () => {
-    it('should extract theme', async () => {
-      jest.spyOn(document, 'cookie', 'get').mockReturnValue('ridi_app_theme=dark');
-      const props = await App.getInitialProps({
-        ctx: {
-          req: {
-            headers: {
-              cookie: 'ridi_app_theme=dark',
-            },
-          },
-          store,
-        },
-        Component: () => null,
-      });
-      expect(props.theme).toBe('dark');
-    });
-  });
-
   it('should render regular pages', async () => {
     const mock = jest.fn().mockReturnValue(<div>mock</div>);
     requestIdleCallback.mock();
