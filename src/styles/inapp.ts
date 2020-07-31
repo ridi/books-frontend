@@ -1,7 +1,10 @@
 import { css } from '@emotion/core';
+import facepaint from 'facepaint';
 import { defaultTheme, darkTheme } from 'src/styles/themes';
 
 export const darkScheme = '@media (prefers-color-scheme: dark)';
+
+export const mq = facepaint([darkScheme]);
 
 export const inappStyles = css`
   * { -webkit-tap-highlight-color: rgba(255,255,255,0); }
