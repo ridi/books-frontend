@@ -271,6 +271,7 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const path = `/books/${item.b_id}${isInApp ? '/in-app-search' : ''}?${searchParam.toString()}`;
   const deeplink = `https://ridi.page.link/?link=https://deeplink.ridibooks.com${path}&apn=com.initialcoms.ridi`;
   const anchor = useDeeplink ? deeplink : path;
+  // 인앱에서는 북컴포넌트 전체를 링크로 사용
   const WrapperWithAnchor = isInApp ? Wrapper.withComponent('a') : Wrapper;
 
   return (
