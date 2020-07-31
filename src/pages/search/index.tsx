@@ -29,10 +29,10 @@ import { useSearchQueries } from 'src/hooks/useSearchQueries';
 import { booksActions } from 'src/services/books';
 import { ITEM_PER_PAGE, MAX_PAGE, runSearch } from 'src/utils/search';
 import { Border } from 'src/components/Tabs/SearchCategoryTab';
-import SkeletonAuthors from 'src/components/Skeleton/Authors';
-import SkeletonBar from 'src/components/Skeleton/Bar';
-import SkeletonCategoryTab from 'src/components/Skeleton/CategoryTab';
-import Skeleton from 'src/components/Skeleton/SearchLandscapeBook';
+import SkeletonAuthors from 'src/components/Search/Skeleton/Authors';
+import SkeletonBar from 'src/components/Search/Skeleton/Bar';
+import SkeletonCategoryTab from 'src/components/Search/Skeleton/CategoryTab';
+import Skeleton from 'src/components/Search/Skeleton/SearchLandscapeBook';
 import Authors, { MAXIMUM_AUTHOR } from 'src/components/Search/Authors';
 import useAccount from 'src/hooks/useAccount';
 
@@ -68,10 +68,7 @@ const SearchBookList = styled.ul`
 `;
 
 const SearchBookItem = styled.li`
-  display: flex;
-  padding: 20px 0;
   border-bottom: 1px solid ${slateGray20};
-  align-items: flex-start;
   ${orBelow(BreakPoint.LG, 'margin: 0 16px;')};
 `;
 

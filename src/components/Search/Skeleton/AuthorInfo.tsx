@@ -5,7 +5,7 @@ import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import {
   AuthorInfoWrapper,
   AuthorIconWrapper,
-} from '../Search/Authors/AuthorInfo';
+} from '../Authors/AuthorInfo';
 
 import SkeletonBar from './Bar';
 

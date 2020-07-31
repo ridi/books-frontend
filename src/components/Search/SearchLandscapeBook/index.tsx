@@ -10,6 +10,7 @@ import {
 } from '@ridi/colors';
 import * as React from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import { getEscapedNode } from 'src/utils/highlight';
 import { constructSearchDesc } from 'src/utils/books';
@@ -24,9 +25,15 @@ import { useBookSelector, useBookDescription } from 'src/hooks/useBookDetailSele
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
 
-import Skeleton from '../../Skeleton/SearchLandscapeBook';
+import Skeleton from '../Skeleton/SearchLandscapeBook';
 import MetaWrapper from './MetaWrapper';
 import PriceInfo from './PriceInfo';
+
+export const Wrapper = styled.div`
+  display: flex;
+  padding: 20px 0;
+  align-items: flex-start;
+`;
 
 const StyledThumbnailWithBadge = styled(ThumbnailWithBadge)`
   width: 100px;
@@ -193,9 +200,10 @@ function computeCategoryNames(categoryNames: CategoryNames) {
 
 function RenderAuthors(props: { authors: AuthorsInfo[]; fallback: string }) {
   const { authors, fallback } = props;
+  const router = useRouter();
   if (authors.length === 0) {
     return (
-      <a href={`/search?q=${fallback}`}>{fallback}</a>
+      <a href={`${router.pathname}?q=${fallback}`}>{fallback}</a>
     );
   }
   if (authors.length === 1) {
@@ -217,6 +225,9 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const {
     item, title, q, index, useDeeplink,
   } = props;
+  const router = useRouter();
+  const isInApp = router.pathname === '/inapp/search';
+
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);
   if (book === null) {
@@ -257,12 +268,13 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
     }
   };
 
-  const path = `/books/${item.b_id}?${searchParam.toString()}`;
+  const path = `/books/${item.b_id}${isInApp ? '/in-app-search' : ''}?${searchParam.toString()}`;
   const deeplink = `https://ridi.page.link/?link=https://deeplink.ridibooks.com${path}&apn=com.initialcoms.ridi`;
   const anchor = useDeeplink ? deeplink : path;
+  const WrapperWithAnchor = isInApp ? Wrapper.withComponent('a') : Wrapper;
 
   return (
-    <>
+    <WrapperWithAnchor {...isInApp && { href: anchor }}>
       <ThumbnailAnchor href={anchor} onClick={searchBookClick}>
         <StyledThumbnailWithBadge
           bId={item.b_id}
@@ -312,7 +324,7 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
           </SearchBookMetaItem>
           <SearchBookMetaItem>
             <SearchBookMetaField type="normal">
-              <Link href={`/search?q=${encodeURIComponent(`출판사:${item.publisher}`)}`} passHref>
+              <Link href={`${router.pathname}?q=${encodeURIComponent(`출판사:${item.publisher}`)}`} passHref>
                 <a>
                   {item.highlight.publisher
                     ? getEscapedNode(item.highlight.publisher)
@@ -348,6 +360,6 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
           genre={genres[0] ?? ''}
         />
       </MetaWrapper>
-    </>
+    </WrapperWithAnchor>
   );
 }
