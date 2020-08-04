@@ -45,12 +45,18 @@ export function useSearchQueries(): SearchQueriesHook {
     const mergedQuery = { ...query, ...newQuery };
     const searchParams = new URLSearchParams({
       q: mergedQuery.q,
-      adult_exclude: mergedQuery.isAdultExclude ? 'y' : 'n',
       page: String(mergedQuery.page),
-      category_id: mergedQuery.categoryId,
       order: mergedQuery.order,
-      serial: mergedQuery.isSerial ? 'y' : 'n',
     });
+    if (mergedQuery.categoryId !== '0') {
+      searchParams.append('category_id', mergedQuery.categoryId);
+    }
+    if (mergedQuery.isAdultExclude) {
+      searchParams.append('adult_exclude', 'y');
+    }
+    if (mergedQuery.isSerial) {
+      searchParams.append('serial', 'y');
+    }
     return searchParams.toString();
   }, [query]);
   const updateQuery = React.useCallback((newQuery: Partial<Query>) => {
