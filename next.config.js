@@ -15,8 +15,8 @@ const nextSourceMaps = require('@zeit/next-source-maps')({
 });
 const SentryCliPlugin = require('@sentry/webpack-plugin');
 
-require('dotenv').config(process.env.STAGE === 'production' ? {
-  path: path.resolve(process.cwd(), '.env.production'),
+require('dotenv').config(['production', 'staging'].includes(process.env.STAGE) ? {
+  path: path.resolve(process.cwd(), `.env.${process.env.STAGE}`),
 } : {});
 
 const nextConfig = {
