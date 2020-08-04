@@ -271,6 +271,24 @@ workflows:
                 color: '#805b24'
                 channel: deploy-books-dev
                 rollback: true
+  deploy-staging:
+    jobs:
+      - build:
+          name: build-staging
+          filters:
+            branches:
+              only: master
+          stage: staging
+          assetPrefix: https://books-staging.ridibooks.com
+      - deploy-s3:
+          name: deploy-staging/s3
+          requires:
+            - build-staging
+      - deploy:
+          name: deploy-staging
+          requires:
+            - build-staging
+          stage: staging
   deploy-prerelease:
     jobs:
       - build:
