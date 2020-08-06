@@ -379,7 +379,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
             />
             <TabItem activePath={/^\/comics\/?$/} label="만화" href="/comics" />
             <TabItem
-              activePath={/^\/bl(-serial|-comics|-webtoon-serial|-novel-serial)?\/?$/}
+              activePath={/^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/}
               label="BL"
               href={subServices['bl-novel'] || '/bl-novel'}
             />
