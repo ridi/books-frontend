@@ -208,7 +208,6 @@ function SearchPage({ forceAdultExclude }: Props) {
     page,
     categoryId: currentCategoryId,
     order,
-    isSerial,
   } = query;
   const [authors, setAuthors] = React.useState<SearchTypes.AuthorResult>();
   const [books, setBooks] = React.useState<SearchTypes.BookResult>();
@@ -219,7 +218,7 @@ function SearchPage({ forceAdultExclude }: Props) {
     (async () => {
       const result = await runSearch({
         ...query,
-        isAdultExclude: forceAdultExclude || query.isAdultExclude,
+        isAdultExclude: forceAdultExclude || isAdultExclude,
       });
       setAuthors((orig) => orig || result.author);
       setBooks((orig) => orig || result.book);
@@ -321,7 +320,7 @@ function SearchPage({ forceAdultExclude }: Props) {
         <SearchBookList>
           {books?.books.map((item, index) => (
             <SearchBookItem key={item.b_id}>
-              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} useDeeplink={isSerial} />
+              <SearchLandscapeBook item={item} title={item.title} q={q || ''} index={index} />
             </SearchBookItem>
           )) || [0.8, 0.5, 0.3].map((opacity) => (
             <SearchBookItem key={opacity}>

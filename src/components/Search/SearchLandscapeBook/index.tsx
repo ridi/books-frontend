@@ -165,7 +165,6 @@ interface SearchLandscapeBookProps {
   q: string;
   item: SearchTypes.SearchBookDetail;
   title: string;
-  useDeeplink: boolean;
 }
 
 type CategoryNames = Pick<
@@ -223,7 +222,7 @@ function RenderAuthors(props: { authors: AuthorsInfo[]; fallback: string }) {
 
 export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const {
-    item, title, q, index, useDeeplink,
+    item, title, q, index,
   } = props;
   const router = useRouter();
   const isInApp = router.pathname === '/inapp/search';
@@ -268,9 +267,11 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
     }
   };
 
-  const path = `/books/${item.b_id}${isInApp ? '/in-app-search' : ''}?${searchParam.toString()}`;
-  const deeplink = `https://ridi.page.link/?link=https://deeplink.ridibooks.com${path}&apn=com.initialcoms.ridi`;
-  const anchor = useDeeplink ? deeplink : path;
+  let anchor = `/books/${item.b_id}?${searchParam.toString()}`;
+  if (isInApp) {
+    searchParam.append('book_title', item.title);
+    anchor = `/books/${item.b_id}/in-app-search?${searchParam.toString()}`;
+  }
   // 인앱에서는 북컴포넌트 전체를 링크로 사용
   const WrapperWithAnchor = isInApp ? Wrapper.withComponent('a') : Wrapper;
 
