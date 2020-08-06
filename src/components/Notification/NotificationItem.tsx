@@ -125,7 +125,6 @@ const arrowStyle = css`
 
 interface NotificationItemProps {
   item: NotificationItemScheme;
-  landingUrl: NotificationItemScheme['landingUrl'];
   createdAtTimeAgo: string;
   dot?: boolean;
   slug: string;
@@ -134,7 +133,7 @@ interface NotificationItemProps {
 
 const NotificationItem: React.FunctionComponent<NotificationItemProps> = (props) => {
   const {
-    item, landingUrl, createdAtTimeAgo, dot = false, slug, order,
+    item, createdAtTimeAgo, dot = false, slug, order,
   } = props;
 
   const handleVisibleRef = React.useRef<boolean>(false);
@@ -152,7 +151,7 @@ const NotificationItem: React.FunctionComponent<NotificationItemProps> = (props)
       <NotiItemWrapper
         // eslint-disable-next-line react/jsx-no-bind
         onClick={tracker.sendClickEvent.bind(null, item, slug, order)}
-        href={landingUrl}
+        href={item.landingUrl}
       >
         <ImageWrapper
           className={slug}
