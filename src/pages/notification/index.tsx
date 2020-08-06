@@ -59,14 +59,10 @@ const NoEmptyNotificationText = styled.span`
 
 interface NotificationPageProps {
   isTitleHidden?: boolean;
-  useDeeplinkUrl?: boolean;
 }
 
 const NotificationPage: React.FC<NotificationPageProps> = (props) => {
-  const {
-    isTitleHidden = false,
-    useDeeplinkUrl = false,
-  } = props;
+  const { isTitleHidden = false } = props;
   const { unreadCount, items, requestFetchNotifications } = useNotification();
   const loggedUser = useAccount();
   const slug = 'notification-item';
@@ -109,7 +105,6 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
                   key={item.id}
                   createdAtTimeAgo={timeAgo(item.createdAt)}
                   item={item}
-                  landingUrl={useDeeplinkUrl && item.deeplinkUrl ? item.deeplinkUrl : item.landingUrl}
                   dot={index < unreadCount}
                   slug={slug}
                   order={index}
