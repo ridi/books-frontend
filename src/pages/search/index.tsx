@@ -153,7 +153,7 @@ function AuthorResults(props: { authors?: SearchTypes.AuthorResult; q: string}) 
     authors = {} as SearchTypes.AuthorResult,
     q,
   } = props;
-  if (authors?.total > 0) {
+  if (authors.total > 0) {
     return (
       <>
         <SearchTitle>
@@ -165,6 +165,9 @@ function AuthorResults(props: { authors?: SearchTypes.AuthorResult; q: string}) 
         <Authors author={authors} q={q || ''} />
       </>
     );
+  }
+  if (authors.total === 0) {
+    return null;
   }
   return (
     <>
