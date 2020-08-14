@@ -287,11 +287,10 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
   const { isPartials } = props;
 
   const initialLoginPath = `${process.env.NEXT_STATIC_ACCOUNT_HOST}/account/login`;
-  const initialSignupPath = `${process.env.NEXT_STATIC_ACCOUNT_HOST}/account/signup`;
+  const signUpPath = 'https://account.ridibooks.com/accounts/sign-up/app/select-type';
   const cashOrderPath = `${process.env.NEXT_STATIC_ACCOUNT_HOST}/order/checkout/cash`;
 
   const [loginPath, setLoginPath] = useState(initialLoginPath);
-  const [signUpPath, setSignUpPath] = useState(initialSignupPath);
 
   const [origin, setOrigin] = useState('');
 
