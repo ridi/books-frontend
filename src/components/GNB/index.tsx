@@ -299,7 +299,6 @@ export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
     params.append('return_url', new URL(route.asPath, location.href).toString() || location.href);
 
     setLoginPath(`${initialLoginPath}?${params.toString()}`);
-    setSignUpPath(`${initialSignupPath}?${params.toString()}`);
 
     if (isPartials) {
       setOrigin(Array.isArray(route.query.origin) ? route.query.origin[0] : route.query.origin || '');
