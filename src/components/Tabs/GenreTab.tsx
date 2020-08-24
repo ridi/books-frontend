@@ -147,7 +147,6 @@ const SubServicesList = styled.ul`
         position: relative;
         content: '|';
         font-size: 13px;
-        top: -3px;
         margin: 0 16px;
         color: ${slateGray20};
         ${orBelow(330, 'margin: 0 12px;')}
