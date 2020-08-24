@@ -126,6 +126,7 @@ const SubServicesList = styled.ul`
   li {
     height: 100%;
     line-height: 50px;
+    ${orBelow(BreakPoint.LG, 'line-height: 44px;')}
     button {
       font-size: 16px;
       ${clearOutline};
