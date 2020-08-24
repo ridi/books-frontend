@@ -297,7 +297,7 @@ interface GenreTabProps {
 
 interface SavedSubServices {
   romance: string;
-  'bl-novel': string;
+  bl: string;
   fantasy: string;
 }
 
@@ -309,14 +309,14 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const [subServices, setSubServices] = useState<SavedSubServices>({
     romance: '/romance',
     fantasy: '/fantasy',
-    'bl-novel': '/bl-novel',
+    bl: '/bl-novel',
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
   const subServicesValidator = (saved: SavedSubServices) => ({
     romance: ['/romance', '/romance-serial'].includes(saved.romance) ? saved.romance : '/romance',
     fantasy: ['/fantasy', '/fantasy-serial'].includes(saved.fantasy) ? saved.fantasy : '/fantasy',
-    'bl-novel': ['/bl-novel', '/bl-webnovel', '/bl-comics', '/bl-webtoon'].includes(saved['bl-novel']) ? saved['bl-novel'] : '/bl-novel',
+    bl: ['/bl-novel', '/bl-webnovel', '/bl-comics', '/bl-webtoon'].includes(saved.bl) ? saved.bl : '/bl-novel',
   });
 
   useEffect(() => {
@@ -381,7 +381,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
             <TabItem
               activePath={/^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/}
               label="BL"
-              href={subServices['bl-novel'] || '/bl-novel'}
+              href={subServices.bl || '/bl-novel'}
             />
           </GenreList>
         </li>
