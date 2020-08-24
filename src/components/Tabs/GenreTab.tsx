@@ -150,7 +150,7 @@ const SubServicesList = styled.ul`
         top: -3px;
         margin: 0 16px;
         color: ${slateGray20};
-        ${orBelow(BreakPoint.SM, 'margin: 0 12px;')}
+        ${orBelow(330, 'margin: 0 12px;')}
       }
     }
   }
