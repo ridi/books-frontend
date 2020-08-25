@@ -200,12 +200,6 @@ const popularKeywords: StaticKeywords = {
     {
       genre: 'bl',
       set_id: 17,
-      tag_id: 2474,
-      name: '단행본완결',
-    },
-    {
-      genre: 'bl',
-      set_id: 17,
       tag_id: 2464,
       name: '달달BL',
     },
