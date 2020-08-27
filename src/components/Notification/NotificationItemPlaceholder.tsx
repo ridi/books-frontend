@@ -1,10 +1,13 @@
 import * as React from 'react';
 import styled from '@emotion/styled';
-import { RIDITheme } from 'src/styles';
+import { defaultTheme, darkTheme } from 'src/styles/themes';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
+import { NotificationPageProps } from 'src/pages/notification';
+import { mq } from 'src/styles/inapp';
 
+type COLOR_SCHEME = Pick<NotificationPageProps, 'useColorScheme'>
 
-const NotificationPlaceholderWrap = styled.div<{ opacity: number }, RIDITheme>`
+const NotificationPlaceholderWrap = styled.div<{ opacity: number }, COLOR_SCHEME>`
   position: relative;
   display: flex;
   margin: 0 auto;
@@ -19,17 +22,25 @@ const NotificationPlaceholderWrap = styled.div<{ opacity: number }, RIDITheme>`
     width: 100%;
     position: absolute;
     height: 1px;
-    background: ${(props) => props.theme.placeholderColor};
+    background: ${defaultTheme.placeholderColor};
     bottom: 0;
     left: 0;
   }
+  ${({ theme }) => theme.useColorScheme && mq({
+    '::after': {
+      background: [defaultTheme.placeholderColor, darkTheme.placeholderColor],
+    },
+  })}
 `;
 
-const NotificationThumbnail = styled.div<{}, RIDITheme>`
+const NotificationThumbnail = styled.div<{}, COLOR_SCHEME>`
   flex: none;
   width: 56px;
   height: 80px;
-  background: ${(props) => props.theme.placeholderThumbnail};
+  background: ${defaultTheme.placeholderThumbnail};
+  ${({ theme }) => theme.useColorScheme && mq({
+    background: [defaultTheme.placeholderThumbnail, darkTheme.placeholderThumbnail],
+  })}
 `;
 
 const NotificationMeta = styled.div`
@@ -38,17 +49,23 @@ const NotificationMeta = styled.div`
   flex: 1;
 `;
 
-const NotificationTitle = styled.div<{}, RIDITheme>`
+const NotificationTitle = styled.div<{}, COLOR_SCHEME>`
   width: 100%;
   height: 20px;
   margin-bottom: 7px;
-  background: ${(props) => props.theme.placeholderColor};
+  background: ${defaultTheme.placeholderColor};
+  ${({ theme }) => theme.useColorScheme && mq({
+    background: [defaultTheme.placeholderColor, darkTheme.placeholderColor],
+  })}
 `;
 
-const NotificationDate = styled.div<{}, RIDITheme>`
+const NotificationDate = styled.div<{}, COLOR_SCHEME>`
   width: 84px;
   height: 20px;
-  background: ${(props) => props.theme.placeholderColor};
+  background: ${defaultTheme.placeholderColor};
+  ${({ theme }) => theme.useColorScheme && mq({
+    background: [defaultTheme.placeholderColor, darkTheme.placeholderColor],
+  })}
 `;
 
 interface NotificationPlaceholderProps {

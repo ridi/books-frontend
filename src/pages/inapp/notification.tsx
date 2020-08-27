@@ -5,5 +5,6 @@ export default () => (
   <NotificationPage
     isTitleHidden
     useDeeplinkUrl
+    useColorScheme
   />
 );

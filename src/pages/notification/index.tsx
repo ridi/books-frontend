@@ -3,7 +3,10 @@ import Head from 'next/head';
 import PageTitle from 'src/components/PageTitle/PageTitle';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { RIDITheme } from 'src/styles';
+import { ThemeProvider } from 'emotion-theming';
+import { mq } from 'src/styles/inapp';
+
+import { defaultTheme, darkTheme } from 'src/styles/themes';
 import { timeAgo } from 'src/utils/common';
 import NotificationIcon from 'src/svgs/Notification_solid.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
@@ -14,11 +17,16 @@ import sentry from 'src/utils/sentry';
 import useAccount from 'src/hooks/useAccount';
 import useNotification from 'src/hooks/useNotification';
 
-const Section = styled.section<{}, RIDITheme>`
-  background-color: ${(props) => props.theme.backgroundColor};
+type COLOR_SCHEME = Pick<NotificationPageProps, 'useColorScheme'>
+
+const Section = styled.section<{}, COLOR_SCHEME>`
+  background-color: ${defaultTheme.backgroundColor};
   max-width: 952px;
   min-height: 620px;
   margin: 0 auto;
+  ${({ theme }) => theme.useColorScheme && mq({
+    backgroundColor: [defaultTheme.backgroundColor, darkTheme.backgroundColor],
+  })}
   ${orBelow(
     BreakPoint.LG,
     'padding: 0;',
@@ -57,15 +65,17 @@ const NoEmptyNotificationText = styled.span`
   font-weight: normal;
 `;
 
-interface NotificationPageProps {
+export interface NotificationPageProps {
   isTitleHidden?: boolean;
   useDeeplinkUrl?: boolean;
+  useColorScheme?: boolean;
 }
 
 const NotificationPage: React.FC<NotificationPageProps> = (props) => {
   const {
     isTitleHidden = false,
     useDeeplinkUrl = false,
+    useColorScheme = false,
   } = props;
   const { unreadCount, items, requestFetchNotifications } = useNotification();
   const loggedUser = useAccount();
@@ -88,7 +98,7 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
   }, [requestFetchNotifications]);
 
   return (
-    <>
+    <ThemeProvider theme={{ useColorScheme }}>
       <Head>
         <title>리디북스 - 알림</title>
       </Head>
@@ -121,7 +131,7 @@ const NotificationPage: React.FC<NotificationPageProps> = (props) => {
           <NotificationPlaceholder num={5} />
         )}
       </Section>
-    </>
+    </ThemeProvider>
   );
 };
 

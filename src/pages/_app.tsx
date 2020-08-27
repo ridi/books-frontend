@@ -8,7 +8,6 @@ import Head from 'next/head';
 import { END } from 'redux-saga';
 import React, { ErrorInfo } from 'react';
 import { UAParser } from 'ua-parser-js';
-import Cookies from 'universal-cookie';
 
 import GlobalNavigationBar from 'src/components/GNB';
 import { defaultTheme, partialResetStyles, resetStyles } from 'src/styles';
@@ -17,9 +16,9 @@ import { PartialSeparator } from 'src/components/Misc';
 import wrapper from 'src/store/config';
 import { ViewportIntersectionProvider } from 'src/hooks/useViewportIntersection';
 import Meta from 'src/components/Meta';
-import DisallowedHostsFilter, { getStage } from 'src/components/Misc/DisallowedHostsFilter';
+import DisallowedHostsFilter from 'src/components/Misc/DisallowedHostsFilter';
 import sentry from 'src/utils/sentry';
-import InAppThemeProvider, { getAppTheme, Theme } from 'src/components/Misc/InAppThemeProvider';
+import InAppThemeProvider from 'src/components/Misc/InAppThemeProvider';
 import { AccountProvider } from 'src/hooks/useAccount';
 import { NotificationProvider } from 'src/hooks/useNotification';
 import { initialize as initializeEventTracker } from 'src/utils/event-tracker';
@@ -29,8 +28,6 @@ interface StoreAppProps {
   pageProps: any;
   // tslint:disable-next-line
   query: any;
-  theme?: Theme;
-  stage: string;
   nonce?: string;
   hasError: boolean;
   sentryErrorEventId?: string;
@@ -43,9 +40,6 @@ const Contents = styled.main`
 
 class StoreApp extends App<StoreAppProps> {
   public static async getInitialProps({ ctx, Component }: AppContext) {
-    const cookies = new Cookies(ctx.req?.headers?.cookie ?? {});
-    const theme = getAppTheme(cookies);
-    const stage = getStage(cookies);
     const pageProps = Component.getInitialProps
       ? await Component.getInitialProps(ctx)
       : {};
@@ -56,8 +50,6 @@ class StoreApp extends App<StoreAppProps> {
 
     return {
       pageProps,
-      theme,
-      stage,
       query: {
         ...ctx.query,
         is_login: ctx?.query?.is_login === 'true' ? 'true' : 'false',
@@ -95,8 +87,6 @@ class StoreApp extends App<StoreAppProps> {
     const {
       Component,
       query,
-      theme,
-      stage,
       pageProps,
       nonce,
     } = this.props;
@@ -138,12 +128,12 @@ class StoreApp extends App<StoreAppProps> {
       return (
         <>
           <Meta />
-          <DisallowedHostsFilter stage={stage} />
+          <DisallowedHostsFilter />
           <CacheProvider value={createCache({ ...cache, nonce })}>
             <Global styles={resetStyles} />
             <AccountProvider>
               <NotificationProvider>
-                <InAppThemeProvider theme={theme ?? ''}>
+                <InAppThemeProvider>
                   <ViewportIntersectionProvider>
                     <Contents>
                       <Component {...pageProps} />
@@ -161,7 +151,7 @@ class StoreApp extends App<StoreAppProps> {
       // CacheProvider 올바르게 동작하는지 확인하기
       <>
         <Meta />
-        <DisallowedHostsFilter stage={stage} />
+        <DisallowedHostsFilter />
         <CacheProvider value={createCache({ ...cache, nonce })}>
           <Global styles={resetStyles} />
           <AccountProvider>

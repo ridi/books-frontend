@@ -1,14 +1,19 @@
 import React from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
-import { flexColumnStart, RIDITheme } from 'src/styles';
+import { flexColumnStart } from 'src/styles';
+import { defaultTheme, darkTheme } from 'src/styles/themes';
 import ArrowLeft from 'src/svgs/ChevronRight.svg';
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import { Notification as NotificationItemScheme } from 'src/types/notification';
 import * as tracker from 'src/utils/event-tracker';
 import { useViewportIntersection } from 'src/hooks/useViewportIntersection';
+import { NotificationPageProps } from 'src/pages/notification';
+import { mq } from 'src/styles/inapp';
 
-const NotiItemWrapper = styled.a<{}, RIDITheme>`
+type COLOR_SCHEME = Pick<NotificationPageProps, 'useColorScheme'>
+
+const NotiItemWrapper = styled.a<{}, COLOR_SCHEME>`
   position: relative;
   display: flex;
   justify-content: flex-start;
@@ -24,11 +29,17 @@ const NotiItemWrapper = styled.a<{}, RIDITheme>`
     width: 100%;
     position: absolute;
     height: 1px;
-    background: ${(props) => props.theme.dividerColor};
-    opacity: ${(props) => props.theme.dividerOpacity};
+    background: ${defaultTheme.dividerColor};
+    opacity: ${defaultTheme.dividerOpacity};
     bottom: -14px;
     left: 0px;
   }
+  ${({ theme }) => theme.useColorScheme && mq({
+    '::after': {
+      background: [defaultTheme.dividerColor, darkTheme.dividerColor],
+      opacity: [defaultTheme.dividerColor, darkTheme.dividerOpacity],
+    },
+  })}
 `;
 
 const BookShadowStyle = css`
@@ -46,7 +57,7 @@ const BookShadowStyle = css`
   };
 `;
 
-const NotiListItem = styled.li<{}, RIDITheme>`
+const NotiListItem = styled.li<{}, COLOR_SCHEME>`
   margin: 0px;
   padding: 14px 0px;
   &:last-child {
@@ -54,8 +65,13 @@ const NotiListItem = styled.li<{}, RIDITheme>`
   }
 
   :hover {
-    background: ${(props) => props.theme.hoverBackground};
+    background: ${defaultTheme.hoverBackground};
   }
+  ${({ theme }) => theme.useColorScheme && mq({
+    ':hover': {
+      background: [defaultTheme.hoverBackground, darkTheme.hoverBackground],
+    },
+  })}
 
   ${orBelow(
     BreakPoint.LG,
@@ -76,7 +92,6 @@ const ImageWrapper = styled.div<{ imageType: string }>`
   ${(props) => props.imageType === 'book' && BookShadowStyle};
 `;
 
-
 const Dot = styled.div<{ imageType: string }>`
   position: absolute;
   width: 4px;
@@ -93,14 +108,17 @@ const NotificationMeta = styled.div`
   width: 100%;
 `;
 
-const NotificationTitle = styled.h3<{}, RIDITheme>`
+const NotificationTitle = styled.h3<{}, COLOR_SCHEME>`
   width: 100%;
   font-weight: normal;
   font-size: 14px;
-  color: ${(props) => props.theme.textColor};
+  color: ${defaultTheme.textColor};
   word-break: keep-all;
   margin-bottom: 3px;
   letter-spacing: -0.3px;
+  ${({ theme }) => theme.useColorScheme && mq({
+    color: [defaultTheme.textColor, darkTheme.textColor],
+  })}
   > p {
     line-height: 1.53em;
   }

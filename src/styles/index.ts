@@ -1,6 +1,7 @@
 import { css } from '@emotion/core';
 
 export * from './reset';
+export * from './inapp';
 export * from './themes';
 
 export enum ZIndexLayer {
