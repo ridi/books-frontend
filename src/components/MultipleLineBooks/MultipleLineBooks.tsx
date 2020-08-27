@@ -164,7 +164,6 @@ const MultipleLineBookItem: React.FC<MultipleLineBookItemProps> = React.memo((pr
       </ThumbnailWrapper>
       <BookMeta
         bId={item.b_id}
-        showTag={['bl', 'bl-serial'].includes(genre)}
         css={bookMetaWrapperStyle}
         isAIRecommendation={false}
       />

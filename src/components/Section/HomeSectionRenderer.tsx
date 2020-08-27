@@ -78,7 +78,7 @@ function HomeSectionRenderer(props: HomeSectionRendererProps) {
           items={section.items}
           type={section.type}
           genre={genre}
-          theme={['bl', 'romance', 'fantasy'].includes(genre) ? 'dark' : 'white'}
+          theme={['bl', 'bl-novel', 'bl-comics', 'romance', 'fantasy'].includes(genre) ? 'dark' : 'white'}
         />
       );
     }

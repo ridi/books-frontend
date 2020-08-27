@@ -41,7 +41,6 @@ const SelectionBookItem: React.FC<Props> = (props) => {
       className={className}
     >
       <BookMeta
-        showTag={['bl', 'bl-serial'].includes(genre)}
         bId={bId}
         ratingInfo={ratingInfo}
       />

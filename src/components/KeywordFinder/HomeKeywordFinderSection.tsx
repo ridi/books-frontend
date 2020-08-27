@@ -18,31 +18,7 @@ interface StaticKeywords {
 }
 
 const popularKeywords: StaticKeywords = {
-  'bl-serial': [
-    {
-      genre: 'bl',
-      set_id: 15,
-      tag_id: 3051,
-      name: '연재중',
-    },
-    {
-      genre: 'bl',
-      set_id: 15,
-      tag_id: 3052,
-      name: '연재완결',
-    },
-    {
-      genre: 'bl',
-      set_id: 15,
-      tag_id: 2391,
-      name: '시리어스물',
-    },
-    {
-      genre: 'bl',
-      set_id: 15,
-      tag_id: 2388,
-      name: '현대물',
-    },
+  'bl-novel': [
     {
       genre: 'bl',
       set_id: 15,
@@ -52,14 +28,32 @@ const popularKeywords: StaticKeywords = {
     {
       genre: 'bl',
       set_id: 15,
-      tag_id: 2425,
-      name: '연하공',
+      tag_id: 2400,
+      name: '후회공',
     },
     {
       genre: 'bl',
       set_id: 15,
-      tag_id: 2912,
-      name: '능력수',
+      tag_id: 2905,
+      name: '짝사랑수',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2802,
+      name: '오메가버스',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2818,
+      name: '연예계',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2826,
+      name: '게임물',
     },
     {
       genre: 'bl',
@@ -70,28 +64,52 @@ const popularKeywords: StaticKeywords = {
     {
       genre: 'bl',
       set_id: 15,
-      tag_id: 2825,
-      name: '정치/사회/재벌',
+      tag_id: 2414,
+      name: '동양풍',
     },
     {
       genre: 'bl',
       set_id: 15,
-      tag_id: 2874,
-      name: '존댓말공',
+      tag_id: 2806,
+      name: '차원이동/영혼바뀜',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2791,
+      name: '평점4점이상',
     },
   ],
-  bl: [
+  'bl-webnovel': [
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2806,
+      name: '차원이동/영혼바뀜',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2818,
+      name: '연예계',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2388,
+      name: '현대물',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2460,
+      name: '게임물',
+    },
     {
       genre: 'bl',
       set_id: 15,
       tag_id: 2402,
       name: '집착공',
-    },
-    {
-      genre: 'bl',
-      set_id: 17,
-      tag_id: 2462,
-      name: '하드BL',
     },
     {
       genre: 'bl',
@@ -101,15 +119,127 @@ const popularKeywords: StaticKeywords = {
     },
     {
       genre: 'bl',
-      set_id: 17,
-      tag_id: 2460,
-      name: '일본BL',
+      set_id: 15,
+      tag_id: 2912,
+      name: '능력수',
     },
     {
       genre: 'bl',
       set_id: 15,
       tag_id: 2403,
       name: '무심수',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 2413,
+      name: '다공일수',
+    },
+    {
+      genre: 'bl',
+      set_id: 15,
+      tag_id: 3051,
+      name: '연재중',
+    },
+  ],
+  'bl-comics': [
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2445,
+      name: '다정공',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2457,
+      name: '연하공',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2442,
+      name: '강공',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2455,
+      name: '츤데레수',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2476,
+      name: '순진수',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2439,
+      name: '친구관계',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 3207,
+      name: 'ㅇㅇ버스',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2432,
+      name: '오피스',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2474,
+      name: '단행본완결',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2464,
+      name: '달달BL',
+    },
+  ],
+  'bl-webtoon': [
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 3053,
+      name: '연재중',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 3054,
+      name: '연재완결',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2459,
+      name: '한국BL',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2462,
+      name: '하드BL',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2434,
+      name: '현대극',
+    },
+    {
+      genre: 'bl',
+      set_id: 17,
+      tag_id: 2432,
+      name: '오피스',
     },
     {
       genre: 'bl',
@@ -120,20 +250,20 @@ const popularKeywords: StaticKeywords = {
     {
       genre: 'bl',
       set_id: 17,
-      tag_id: 2459,
-      name: '한국BL',
+      tag_id: 2447,
+      name: '집착공',
     },
     {
       genre: 'bl',
-      set_id: 15,
-      tag_id: 2399,
-      name: '강공',
+      set_id: 17,
+      tag_id: 2522,
+      name: '떡대수',
     },
     {
       genre: 'bl',
-      set_id: 15,
-      tag_id: 2397,
-      name: '황제공',
+      set_id: 17,
+      tag_id: 2455,
+      name: '츤데레수',
     },
   ],
   comics: [
@@ -433,7 +563,7 @@ interface HomeKeywordFinderSectionProps {
 const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props) => {
   const { genre } = props;
   const genreKeywords = popularKeywords[genre];
-  const parentGenre = genre !== 'comics' ? genre.replace('-serial', '') : 'comic';
+  const parentGenre = genre === 'comics' ? 'comic' : genre.split('-')[0];
   const genreSearchParam = new URLSearchParams();
   if (['bl', 'fantasy', 'romance'].includes(parentGenre)) {
     genreSearchParam.append('from', genre);

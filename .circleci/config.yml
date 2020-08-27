@@ -218,6 +218,32 @@ jobs:
             yarn serverless rollback -t `cat .lastdeploytimestamp`
 workflows:
   version: 2
+  deploy-dev-stage:
+    jobs:
+      - build:
+          name: build-dev
+          filters:
+            branches:
+              only:
+                - /feature\/.+/
+          stage: development
+          assetPrefix: https://books.ridi.io
+      - deploy-s3:
+          name: deploy-dev/s3
+          requires:
+            - build-dev
+          aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+          aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+          s3-bucket: ridi-books-dev
+      - deploy:
+          name: deploy-stage
+          requires:
+            - build-dev
+          aws-access-key-id: DEV_AWS_ACCESS_KEY_ID
+          aws-secret-access-key: DEV_AWS_SECRET_ACCESS_KEY
+          s3-bucket: ridi-books-dev
+          stage: staging
+          assetPrefix: https://books.ridi.io
   deploy-dev:
     jobs:
       - build:

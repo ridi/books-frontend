@@ -4,7 +4,7 @@ import * as labels from 'src/labels/common.json';
 import GNBCategory from 'src/svgs/GNB_Category.svg';
 import { css } from '@emotion/core';
 import { clearOutline } from 'src/styles';
-import { orBelow } from 'src/utils/mediaQuery';
+import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import Router, { useRouter } from 'next/router';
 import cookieKeys from 'src/constants/cookies';
 import Cookies from 'universal-cookie';
@@ -46,8 +46,9 @@ const resetPadding = orBelow(
 const GenreList = styled.ul`
   display: flex;
   flex-direction: row;
-  height: 47px;
+  height: 48px;
   align-items: center;
+  ${orBelow(BreakPoint.LG, 'height: 44px;')}
   li {
     outline: none;
     a {
@@ -56,10 +57,11 @@ const GenreList = styled.ul`
       ${resetPadding};
       font-size: 16px;
       font-weight: 500;
-      line-height: 47px;
+      line-height: 48px;
       height: 100%;
       width: 100%;
       ${clearOutline};
+      ${orBelow(BreakPoint.LG, 'line-height: 44px;')}
       button {
         outline: none;
       }
@@ -117,18 +119,20 @@ const SubServicesList = styled.ul`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  height: 50px;
-  font-size: 17px;
+  height: 48px;
+  font-size: 16px;
   color: ${slateGray50};
+  ${orBelow(BreakPoint.LG, 'height: 44px;')}
   li {
     height: 100%;
     line-height: 50px;
+    ${orBelow(BreakPoint.LG, 'line-height: 44px;')}
     button {
-      font-size: 17px;
+      font-size: 16px;
       ${clearOutline};
     }
     a {
-      font-size: 17px;
+      font-size: 16px;
       ${clearOutline};
       display: inline-block;
       height: 100%;
@@ -143,9 +147,9 @@ const SubServicesList = styled.ul`
         position: relative;
         content: '|';
         font-size: 13px;
-        top: -3px;
         margin: 0 16px;
         color: ${slateGray20};
+        ${orBelow(330, 'margin: 0 12px;')}
       }
     }
   }
@@ -226,8 +230,10 @@ const subGenres: {
   [genre: string]: Array<{ name: string; path: string; activePaths: RegExp }>;
 } = {
   bl: [
-    { name: '단행본', path: '/bl', activePaths: /^\/bl\/?$/ },
-    { name: '연재', path: '/bl-serial', activePaths: /^\/bl-serial\/?$/ },
+    { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
+    { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
+    { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
+    { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
   ],
   fantasy: [
     { name: '단행본', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
@@ -303,14 +309,14 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const [subServices, setSubServices] = useState<SavedSubServices>({
     romance: '/romance',
     fantasy: '/fantasy',
-    bl: '/bl',
+    bl: '/bl-novel',
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
   const subServicesValidator = (saved: SavedSubServices) => ({
     romance: ['/romance', '/romance-serial'].includes(saved.romance) ? saved.romance : '/romance',
     fantasy: ['/fantasy', '/fantasy-serial'].includes(saved.fantasy) ? saved.fantasy : '/fantasy',
-    bl: ['/bl', '/bl-serial'].includes(saved.bl) ? saved.bl : '/bl',
+    bl: ['/bl-novel', '/bl-webnovel', '/bl-comics', '/bl-webtoon'].includes(saved.bl) ? saved.bl : '/bl-novel',
   });
 
   useEffect(() => {
@@ -373,9 +379,9 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
             />
             <TabItem activePath={/^\/comics\/?$/} label="만화" href="/comics" />
             <TabItem
-              activePath={/^\/bl(-serial)?\/?$/}
+              activePath={/^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/}
               label="BL"
-              href={subServices.bl || '/bl'}
+              href={subServices.bl || '/bl-novel'}
             />
           </GenreList>
         </li>

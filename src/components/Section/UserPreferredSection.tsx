@@ -54,8 +54,10 @@ const UserPreferredSection: React.FC<UserPreferredSectionProps> = (props) => {
     if (sections.length === 0 && loggedUser && genre) {
       if (
         [
-          'bl',
-          'bl-serial',
+          'bl-novel',
+          'bl-webnovel',
+          'bl-comics',
+          'bl-webtoon',
           'fantasy',
           'fantasy-serial',
           'comics',

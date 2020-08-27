@@ -33,8 +33,8 @@ describe('test keyword finder section', () => {
     expect(itemNode).not.toBe(null);
   });
   it('should be render bl keyword', () => {
-    const { container } = renderComponent('bl');
-    const itemNode = getByText(container, '무심수');
+    const { container } = renderComponent('bl-novel');
+    const itemNode = getByText(container, '동양풍');
     expect(itemNode).not.toBe(null);
   });
 });
