@@ -133,7 +133,7 @@ interface NotificationItemProps {
 
 const NotificationItem: React.FunctionComponent<NotificationItemProps> = (props) => {
   const {
-    item, landingUrl, createdAtTimeAgo, dot = false, slug, order,
+    item, createdAtTimeAgo, dot = false, slug, order,
   } = props;
 
   const handleVisibleRef = React.useRef<boolean>(false);
