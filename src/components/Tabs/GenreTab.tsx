@@ -324,16 +324,16 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
       localStorage.getItem('latest_sub_service'),
       subServices,
     );
-    setSubServices(subServicesValidator(latestSubService));
-
     const genre = /romance|fantasy|bl/.exec(router.query.genre?.toString())?.[0];
     if (router.pathname === '/[genre]' && genre) {
       const updatedSubService = {
         ...latestSubService,
         [genre]: router.asPath,
       };
-      setSubServices(updatedSubService);
+      setSubServices(subServicesValidator(updatedSubService));
       localStorage.setItem('latest_sub_service', JSON.stringify(updatedSubService));
+    } else {
+      setSubServices(subServicesValidator(latestSubService));
     }
   }, [router.asPath]);
 
