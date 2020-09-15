@@ -344,11 +344,11 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
-  const subServicesValidator = (saved: typeof subServices) => Object.keys(subServices).reduce((acc, cur) => {
-    const genre = cur as keyof typeof subServices;
-    acc[genre] = genres[genre]?.activePaths.test(saved[genre]) ? saved[genre] : genres[genre]?.path;
-    return acc;
-  }, {} as typeof subServices);
+  const subServicesValidator = (saved: typeof subServices) => (Object.keys(subServices) as Array<keyof typeof subServices>)
+    .reduce((acc, genre) => {
+      acc[genre] = genres[genre]?.activePaths.test(saved[genre]) ? saved[genre] : genres[genre]?.path;
+      return acc;
+    }, {} as typeof subServices);
 
   useEffect(() => {
     const latestSubService = safeJSONParse(
