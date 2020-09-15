@@ -231,7 +231,7 @@ const genres: Record<Genres, {
   name: string;
   path: string;
   activePaths: RegExp;
-  subGenreKey?: 'romance' | 'fantasy' | 'bl';
+  subGenreKey?: Exclude<Genres, 'general' | 'comics'>;
 }> = {
   general: {
     name: '일반',
