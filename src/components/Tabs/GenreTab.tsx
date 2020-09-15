@@ -403,9 +403,9 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
               genres.fantasy,
               genres.comics,
               genres.bl,
-            ].map((genre, index) => (
+            ].map((genre) => (
               <TabItem
-                key={index}
+                key={genre.path}
                 href={genre.subGenreKey ? subServices[genre.subGenreKey] : genre.path}
                 activePath={genre.activePaths}
                 label={genre.name}
@@ -419,9 +419,9 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
         {subGenreData ? (
           <li>
             <SubServicesList>
-              {subGenreData.map((service, index) => (
+              {subGenreData.map((service) => (
                 <TabItem
-                  key={index}
+                  key={service.path}
                   href={service.path}
                   activePath={service.activePaths}
                   label={service.name}
