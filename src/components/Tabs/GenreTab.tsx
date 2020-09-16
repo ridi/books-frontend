@@ -226,6 +226,43 @@ interface TabItemProps {
   href: string;
 }
 
+type Genres = 'general' | 'romance' | 'fantasy' | 'comics' | 'bl';
+const genres: Record<Genres, {
+  name: string;
+  path: string;
+  activePaths: RegExp;
+  subGenreKey?: Exclude<Genres, 'general' | 'comics'>;
+}> = {
+  general: {
+    name: '일반',
+    path: '/',
+    activePaths: /^\/?$/,
+  },
+  romance: {
+    name: '로맨스',
+    path: '/romance',
+    activePaths: /^\/romance(-serial)?\/?$/,
+    subGenreKey: 'romance',
+  },
+  fantasy: {
+    name: '판타지',
+    path: '/fantasy',
+    activePaths: /^\/fantasy(-serial)?\/?$/,
+    subGenreKey: 'fantasy',
+  },
+  comics: {
+    name: '만화',
+    path: '/comics',
+    activePaths: /^\/comics\/?$/,
+  },
+  bl: {
+    name: 'BL',
+    path: '/bl-novel',
+    activePaths: /^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/,
+    subGenreKey: 'bl',
+  },
+};
+
 const subGenres: {
   [genre: string]: Array<{ name: string; path: string; activePaths: RegExp }>;
 } = {
@@ -295,45 +332,39 @@ interface GenreTabProps {
   bookPath?: string;
 }
 
-interface SavedSubServices {
-  romance: string;
-  bl: string;
-  fantasy: string;
-}
-
 const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const { currentGenre } = props;
   const subGenreData = subGenres[currentGenre.split('-')[0]];
 
   const router = useRouter();
-  const [subServices, setSubServices] = useState<SavedSubServices>({
+  const [subServices, setSubServices] = useState({
     romance: '/romance',
     fantasy: '/fantasy',
     bl: '/bl-novel',
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
 
-  const subServicesValidator = (saved: SavedSubServices) => ({
-    romance: ['/romance', '/romance-serial'].includes(saved.romance) ? saved.romance : '/romance',
-    fantasy: ['/fantasy', '/fantasy-serial'].includes(saved.fantasy) ? saved.fantasy : '/fantasy',
-    bl: ['/bl-novel', '/bl-webnovel', '/bl-comics', '/bl-webtoon'].includes(saved.bl) ? saved.bl : '/bl-novel',
-  });
+  const subServicesValidator = (saved: typeof subServices) => (Object.keys(subServices) as Array<keyof typeof subServices>)
+    .reduce((acc, genre) => {
+      acc[genre] = genres[genre]?.activePaths.test(saved[genre]) ? saved[genre] : genres[genre]?.path;
+      return acc;
+    }, {} as typeof subServices);
 
   useEffect(() => {
     const latestSubService = safeJSONParse(
       localStorage.getItem('latest_sub_service'),
       subServices,
     );
-    setSubServices(subServicesValidator(latestSubService));
-
     const genre = /romance|fantasy|bl/.exec(router.query.genre?.toString())?.[0];
     if (router.pathname === '/[genre]' && genre) {
       const updatedSubService = {
         ...latestSubService,
         [genre]: router.asPath,
       };
-      setSubServices(updatedSubService);
+      setSubServices(subServicesValidator(updatedSubService));
       localStorage.setItem('latest_sub_service', JSON.stringify(updatedSubService));
+    } else {
+      setSubServices(subServicesValidator(latestSubService));
     }
   }, [router.asPath]);
 
@@ -366,23 +397,20 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
                 <span className="a11y">{labels.category}</span>
               </a>
             </GenreListItem>
-            <TabItem activePath={/^\/?$/} label="일반" href="/" />
-            <TabItem
-              activePath={/^\/romance(-serial)?\/?$/}
-              label="로맨스"
-              href={subServices.romance || '/romance'}
-            />
-            <TabItem
-              activePath={/^\/fantasy(-serial)?\/?$/}
-              label="판타지"
-              href={subServices.fantasy || '/fantasy'}
-            />
-            <TabItem activePath={/^\/comics\/?$/} label="만화" href="/comics" />
-            <TabItem
-              activePath={/^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/}
-              label="BL"
-              href={subServices.bl || '/bl-novel'}
-            />
+            {[
+              genres.general,
+              genres.romance,
+              genres.fantasy,
+              genres.comics,
+              genres.bl,
+            ].map((genre) => (
+              <TabItem
+                key={genre.path}
+                href={genre.subGenreKey ? subServices[genre.subGenreKey] : genre.path}
+                activePath={genre.activePaths}
+                label={genre.name}
+              />
+            ))}
           </GenreList>
         </li>
         <li>
@@ -391,9 +419,9 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
         {subGenreData ? (
           <li>
             <SubServicesList>
-              {subGenreData.map((service, index) => (
+              {subGenreData.map((service) => (
                 <TabItem
-                  key={index}
+                  key={service.path}
                   href={service.path}
                   activePath={service.activePaths}
                   label={service.name}
