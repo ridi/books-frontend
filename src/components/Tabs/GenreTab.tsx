@@ -273,12 +273,12 @@ const subGenres: {
     { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
   ],
   fantasy: [
-    { name: '단행본', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
-    { name: '연재', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
+    { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
+    { name: '웹소설', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
   ],
   romance: [
-    { name: '단행본', path: '/romance', activePaths: /^\/romance\/?$/ },
-    { name: '연재', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
+    { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
+    { name: '웹소설', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
   ],
 };
 
