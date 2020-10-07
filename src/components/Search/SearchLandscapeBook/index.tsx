@@ -11,6 +11,7 @@ import {
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSearchQueries } from 'src/hooks/useSearchQueries';
 
 import { getEscapedNode } from 'src/utils/highlight';
 import { constructSearchDesc } from 'src/utils/books';
@@ -200,9 +201,13 @@ function computeCategoryNames(categoryNames: CategoryNames) {
 function RenderAuthors(props: { authors: AuthorsInfo[]; fallback: string }) {
   const { authors, fallback } = props;
   const router = useRouter();
-  if (authors.length === 0) {
+  const { calculateUpdateQuery } = useSearchQueries();
+  const isInApp = router.pathname === '/inapp/search';
+
+  if (authors.length === 0 || isInApp) {
+    const anchor = isInApp ? `${router.pathname}?${calculateUpdateQuery({ q: fallback })}` : `${router.pathname}?q=${fallback}`;
     return (
-      <a href={`${router.pathname}?q=${fallback}`}>{fallback}</a>
+      <a href={anchor}>{fallback}</a>
     );
   }
   if (authors.length === 1) {

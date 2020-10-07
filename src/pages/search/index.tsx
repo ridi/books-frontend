@@ -250,6 +250,7 @@ function SearchPage({ forceAdultExclude }: Props) {
   const router = useRouter();
   const loggedUser = useAccount();
   const isTablet = useIsTablet();
+  const isInApp = router.pathname === '/inapp/search';
   const setPageView = useCallback(() => {
     try {
       tracker.sendPageView(window.location.href, document.referrer);
@@ -291,7 +292,7 @@ function SearchPage({ forceAdultExclude }: Props) {
           검색 결과 - 리디북스
         </title>
       </Head>
-      <AuthorResults authors={authors} q={q} />
+      {!isInApp && <AuthorResults authors={authors} q={q} />}
       {keywordPending ? (
         <SkeletonH2Bar />
       ) : (
