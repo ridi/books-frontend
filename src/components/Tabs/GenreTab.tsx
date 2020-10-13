@@ -231,7 +231,7 @@ const genres: Record<Genres, {
   name: string;
   path: string;
   activePaths: RegExp;
-  subGenreKey?: Exclude<Genres, 'general' | 'comics'>;
+  subGenreKey?: Exclude<Genres, 'general'>;
 }> = {
   general: {
     name: '일반',
@@ -253,7 +253,8 @@ const genres: Record<Genres, {
   comics: {
     name: '만화',
     path: '/comics',
-    activePaths: /^\/comics\/?$/,
+    activePaths: /^\/comics|webtoon\/?$/,
+    subGenreKey: 'comics',
   },
   bl: {
     name: 'BL',
@@ -271,6 +272,10 @@ const subGenres: {
     { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
     { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
     { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
+  ],
+  comics: [
+    { name: '만화', path: '/comics', activePaths: /^\/comics\/?$/ },
+    { name: '웹툰', path: '/webtoon', activePaths: /^\/webtoon\/?$/ },
   ],
   fantasy: [
     { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
@@ -334,12 +339,15 @@ interface GenreTabProps {
 
 const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const { currentGenre } = props;
-  const subGenreData = subGenres[currentGenre.split('-')[0]];
+  const subGenreData = currentGenre !== 'comics' && currentGenre !== 'webtoon'
+    ? subGenres[currentGenre.split('-')[0]]
+    : subGenres.comics;
 
   const router = useRouter();
   const [subServices, setSubServices] = useState({
     romance: '/romance',
     fantasy: '/fantasy',
+    comics: '/comics',
     bl: '/bl-novel',
   });
   const isCategoryList = router.asPath.startsWith('/category/list');
@@ -355,7 +363,10 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
       localStorage.getItem('latest_sub_service'),
       subServices,
     );
-    const genre = /romance|fantasy|bl/.exec(router.query.genre?.toString())?.[0];
+    let genre = /romance|fantasy|comics|webtoon|bl/.exec(router.query.genre?.toString())?.[0];
+    if (genre === 'webtoon') {
+      genre = 'comics';
+    }
     if (router.pathname === '/[genre]' && genre) {
       const updatedSubService = {
         ...latestSubService,
