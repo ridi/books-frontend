@@ -274,7 +274,7 @@ const subGenres: {
     { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
   ],
   comics: [
-    { name: '만화', path: '/comics', activePaths: /^\/comics\/?$/ },
+    { name: '만화 e북', path: '/comics', activePaths: /^\/comics\/?$/ },
     { name: '웹툰', path: '/webtoon', activePaths: /^\/webtoon\/?$/ },
   ],
   fantasy: [
