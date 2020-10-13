@@ -253,7 +253,7 @@ const genres: Record<Genres, {
   comics: {
     name: '만화',
     path: '/comics',
-    activePaths: /^\/comics|webtoon\/?$/,
+    activePaths: /^\/(comics|webtoon)\/?$/,
     subGenreKey: 'comics',
   },
   bl: {
