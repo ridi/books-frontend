@@ -4,7 +4,7 @@ import React, {
 import Head from 'next/head';
 import { ConnectedInitializeProps } from 'src/types/common';
 import { GenreTab } from 'src/components/Tabs';
-import titleGenerator from 'src/utils/titleGenerator';
+import titleGenerator, { genreKeys } from 'src/utils/titleGenerator';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 
@@ -148,7 +148,7 @@ Home.getInitialProps = async (ctx: ConnectedInitializeProps) => {
   const isServer = Boolean(ctx.req);
 
   const genre = (query.genre || 'general').toString();
-  if (!['bl-novel', 'bl-webnovel', 'bl-comics', 'bl-webtoon', 'general', 'romance', 'romance-serial', 'fantasy', 'fantasy-serial', 'comics'].includes(genre)) {
+  if (!genreKeys.includes(genre)) {
     throw new NotFoundError(genre);
   }
 
