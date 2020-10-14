@@ -41,7 +41,7 @@ commands:
         default: good
       channel:
         type: string
-        default: deploy-books
+        default: deploy
       prefix:
         type: string
         default: ''
