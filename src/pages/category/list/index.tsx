@@ -21,7 +21,7 @@ function CategoryListPage() {
       <Head>
         <title>카테고리 - 리디북스</title>
       </Head>
-      <GenreTab currentGenre="general" />
+      <GenreTab currentGenre="category" />
       <section css={sectionCSS}>
         <PageTitle title="카테고리" mobileHidden />
         {/*  Todo new Category */}
