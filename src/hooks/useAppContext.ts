@@ -1,7 +1,6 @@
 import React from 'react';
 
 const initialValues = {
-  isPartials: false,
   isInApp: false,
 };
 
