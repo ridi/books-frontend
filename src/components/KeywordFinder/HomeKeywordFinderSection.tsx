@@ -76,7 +76,7 @@ const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props
     genreSearchParam.append('from', genre);
   }
 
-  return keywords ? (
+  return keywords && keywords.length ? (
     <Section>
       <SectionTitle aria-label="키워드 파인더로 이동">
         <a
