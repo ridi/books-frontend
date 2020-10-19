@@ -259,7 +259,7 @@ const genres: Map<Genres, {
     path: '/comics',
     activePaths: /^\/(comics|webtoon)\/?$/,
     subGenres: [
-      { name: '만화 e북', path: '/comics', activePaths: /^\/comics\/?$/ },
+      { name: 'e북', path: '/comics', activePaths: /^\/comics\/?$/ },
       { name: '웹툰', path: '/webtoon', activePaths: /^\/webtoon\/?$/ },
     ],
   }],
