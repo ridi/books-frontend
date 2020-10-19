@@ -11,6 +11,7 @@ import {
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useSearchQueries } from 'src/hooks/useSearchQueries';
 
 import { getEscapedNode } from 'src/utils/highlight';
 import { constructSearchDesc } from 'src/utils/books';
@@ -21,6 +22,7 @@ import { AuthorsInfo } from 'src/types/searchResults';
 import Star from 'src/svgs/Star.svg';
 import ThumbnailWithBadge from 'src/components/Book/ThumbnailWithBadge';
 import { lineClamp } from 'src/styles';
+import useAppContext from 'src/hooks/useAppContext';
 import { useBookSelector, useBookDescription } from 'src/hooks/useBookDetailSelector';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
@@ -200,9 +202,13 @@ function computeCategoryNames(categoryNames: CategoryNames) {
 function RenderAuthors(props: { authors: AuthorsInfo[]; fallback: string }) {
   const { authors, fallback } = props;
   const router = useRouter();
-  if (authors.length === 0) {
+  const { calculateUpdateQuery } = useSearchQueries();
+  const { isInApp } = useAppContext();
+
+  if (authors.length === 0 || isInApp) {
+    const anchor = isInApp ? `${router.pathname}?${calculateUpdateQuery({ q: fallback })}` : `${router.pathname}?q=${fallback}`;
     return (
-      <a href={`${router.pathname}?q=${fallback}`}>{fallback}</a>
+      <a href={anchor}>{fallback}</a>
     );
   }
   if (authors.length === 1) {
@@ -225,7 +231,7 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
     item, title, q, index,
   } = props;
   const router = useRouter();
-  const isInApp = router.pathname === '/inapp/search';
+  const { isInApp } = useAppContext();
 
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);

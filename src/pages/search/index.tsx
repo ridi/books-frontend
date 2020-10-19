@@ -34,6 +34,7 @@ import SkeletonBar from 'src/components/Search/Skeleton/Bar';
 import SkeletonCategoryTab from 'src/components/Search/Skeleton/CategoryTab';
 import Skeleton from 'src/components/Search/Skeleton/SearchLandscapeBook';
 import Authors, { MAXIMUM_AUTHOR } from 'src/components/Search/Authors';
+import useAppContext from 'src/hooks/useAppContext';
 import useAccount from 'src/hooks/useAccount';
 
 const SearchResultSection = styled.section`
@@ -250,6 +251,7 @@ function SearchPage({ forceAdultExclude }: Props) {
   const router = useRouter();
   const loggedUser = useAccount();
   const isTablet = useIsTablet();
+  const { isInApp } = useAppContext();
   const setPageView = useCallback(() => {
     try {
       tracker.sendPageView(window.location.href, document.referrer);
@@ -291,7 +293,7 @@ function SearchPage({ forceAdultExclude }: Props) {
           검색 결과 - 리디북스
         </title>
       </Head>
-      <AuthorResults authors={authors} q={q} />
+      {!isInApp && <AuthorResults authors={authors} q={q} />}
       {keywordPending ? (
         <SkeletonH2Bar />
       ) : (

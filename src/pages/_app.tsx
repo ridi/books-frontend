@@ -20,6 +20,7 @@ import Meta from 'src/components/Meta';
 import DisallowedHostsFilter, { getStage } from 'src/components/Misc/DisallowedHostsFilter';
 import sentry from 'src/utils/sentry';
 import InAppThemeProvider, { getAppTheme, Theme } from 'src/components/Misc/InAppThemeProvider';
+import { AppContextProvider } from 'src/hooks/useAppContext';
 import { AccountProvider } from 'src/hooks/useAccount';
 import { NotificationProvider } from 'src/hooks/useNotification';
 import { initialize as initializeEventTracker } from 'src/utils/event-tracker';
@@ -141,17 +142,19 @@ class StoreApp extends App<StoreAppProps> {
           <DisallowedHostsFilter stage={stage} />
           <CacheProvider value={createCache({ ...cache, nonce })}>
             <Global styles={resetStyles} />
-            <AccountProvider>
-              <NotificationProvider>
-                <InAppThemeProvider theme={theme ?? ''}>
-                  <ViewportIntersectionProvider>
-                    <Contents>
-                      <Component {...pageProps} />
-                    </Contents>
-                  </ViewportIntersectionProvider>
-                </InAppThemeProvider>
-              </NotificationProvider>
-            </AccountProvider>
+            <AppContextProvider isInApp>
+              <AccountProvider>
+                <NotificationProvider>
+                  <InAppThemeProvider theme={theme ?? ''}>
+                    <ViewportIntersectionProvider>
+                      <Contents>
+                        <Component {...pageProps} />
+                      </Contents>
+                    </ViewportIntersectionProvider>
+                  </InAppThemeProvider>
+                </NotificationProvider>
+              </AccountProvider>
+            </AppContextProvider>
           </CacheProvider>
         </>
       );
@@ -164,23 +167,25 @@ class StoreApp extends App<StoreAppProps> {
         <DisallowedHostsFilter stage={stage} />
         <CacheProvider value={createCache({ ...cache, nonce })}>
           <Global styles={resetStyles} />
-          <AccountProvider>
-            <NotificationProvider>
-              <ThemeProvider theme={defaultTheme}>
-                <ViewportIntersectionProvider rootMargin="100px">
-                  <GlobalNavigationBar
-                    searchKeyword={query.search || query.q}
-                    isPartials={false}
-                    isLoginForPartials={query.is_login}
-                  />
-                  <Contents>
-                    <Component {...pageProps} />
-                  </Contents>
-                  <Footer />
-                </ViewportIntersectionProvider>
-              </ThemeProvider>
-            </NotificationProvider>
-          </AccountProvider>
+          <AppContextProvider>
+            <AccountProvider>
+              <NotificationProvider>
+                <ThemeProvider theme={defaultTheme}>
+                  <ViewportIntersectionProvider rootMargin="100px">
+                    <GlobalNavigationBar
+                      searchKeyword={query.search || query.q}
+                      isPartials={false}
+                      isLoginForPartials={query.is_login}
+                    />
+                    <Contents>
+                      <Component {...pageProps} />
+                    </Contents>
+                    <Footer />
+                  </ViewportIntersectionProvider>
+                </ThemeProvider>
+              </NotificationProvider>
+            </AccountProvider>
+          </AppContextProvider>
         </CacheProvider>
       </>
     );
