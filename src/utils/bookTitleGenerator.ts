@@ -12,9 +12,6 @@ export function computeBookTitle(book: BookApi.Book | null): string {
   }
   try {
     if (book.series) {
-      if (book.title.prefix) {
-        return `${book.title.prefix} ${book.series.property.title}`;
-      }
       return book.series.property.title || book.title.main;
     }
     if (book.title) {
