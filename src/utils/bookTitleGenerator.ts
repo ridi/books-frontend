@@ -14,11 +14,6 @@ export function computeBookTitle(book: BookApi.Book | null): string {
     if (book.series) {
       return book.series.property.title || book.title.main;
     }
-    if (book.title) {
-      if (book.title.prefix) {
-        return `${book.title.prefix} ${book.title.main}`;
-      }
-    }
     return book.title.main;
   } catch (error) {
     sentry.captureException(error);
