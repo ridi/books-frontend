@@ -22,5 +22,5 @@ export function computeBookTitle(book: BookApi.Book | null): string {
 }
 
 export function computeSearchBookTitle(book: SearchApi.SearchBookDetail) {
-  return book.highlight.web_title_title ? book.highlight.web_title_title : book.title;
+  return book.highlight.web_title_title ? book.highlight.web_title_title : book.web_title_title;
 }
