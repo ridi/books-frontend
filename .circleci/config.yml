@@ -304,6 +304,7 @@ workflows:
           filters:
             branches:
               only: master
+          stage: prerelease
       - deploy-s3:
           name: deploy-prod/s3
           requires:
