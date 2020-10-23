@@ -98,7 +98,6 @@ const GenreList = styled.ul`
 
 const GenreListItem = styled.li<{ isCategory: boolean }>`
   :hover {
-    opacity: 1;
     ${(props) => props.isCategory
       && css`
         opacity: 0.7;
@@ -106,12 +105,16 @@ const GenreListItem = styled.li<{ isCategory: boolean }>`
   }
 `;
 
-const iconCSS = css`
+const GNBCategoryIcon = styled(GNBCategory)<{ isCategory: boolean }>`
   position: relative;
   top: 2px;
   width: 24px;
   height: 24px;
   fill: ${slateGray60};
+  ${(props) => props.isCategory
+    && css`
+      fill: ${dodgerBlue60};
+    `};
 `;
 
 const SubServicesList = styled.ul`
@@ -220,72 +223,67 @@ const routeChangeCompleteHandler = () => {
   }
 };
 
-interface TabItemProps {
-  label: string;
-  activePath: RegExp;
-  href: string;
-}
-
 type Genres = 'general' | 'romance' | 'fantasy' | 'comics' | 'bl';
-const genres: Record<Genres, {
+const genres: Map<Genres, {
   name: string;
   path: string;
   activePaths: RegExp;
-  subGenreKey?: Exclude<Genres, 'general' | 'comics'>;
-}> = {
-  general: {
+  subGenres?: Array<{ name: string; path: string; activePaths: RegExp }>;
+}> = new Map([
+  ['general', {
     name: '일반',
     path: '/',
-    activePaths: /^\/?$/,
-  },
-  romance: {
+    activePaths: /^(\/general)?\/?$/,
+  }],
+  ['romance', {
     name: '로맨스',
     path: '/romance',
     activePaths: /^\/romance(-serial)?\/?$/,
     subGenreKey: 'romance',
-  },
-  fantasy: {
+    subGenres: [
+      { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
+      { name: '웹소설', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
+    ],
+  }],
+  ['fantasy', {
     name: '판타지',
     path: '/fantasy',
     activePaths: /^\/fantasy(-serial)?\/?$/,
-    subGenreKey: 'fantasy',
-  },
-  comics: {
+    subGenres: [
+      { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
+      { name: '웹소설', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
+    ],
+  }],
+  ['comics', {
     name: '만화',
     path: '/comics',
-    activePaths: /^\/comics\/?$/,
-  },
-  bl: {
+    activePaths: /^\/(comics|webtoon)\/?$/,
+    subGenres: [
+      { name: 'e북', path: '/comics', activePaths: /^\/comics\/?$/ },
+      { name: '웹툰', path: '/webtoon', activePaths: /^\/webtoon\/?$/ },
+    ],
+  }],
+  ['bl', {
     name: 'BL',
     path: '/bl-novel',
     activePaths: /^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/,
-    subGenreKey: 'bl',
-  },
-};
+    subGenres: [
+      { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
+      { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
+      { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
+      { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
+    ],
+  }],
+]);
 
-const subGenres: {
-  [genre: string]: Array<{ name: string; path: string; activePaths: RegExp }>;
-} = {
-  bl: [
-    { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
-    { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
-    { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
-    { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
-  ],
-  fantasy: [
-    { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
-    { name: '웹소설', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
-  ],
-  romance: [
-    { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
-    { name: '웹소설', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
-  ],
-};
+interface TabItemProps {
+  label: string;
+  href: string;
+  isActive: boolean;
+}
 
 const TabItem: React.FC<TabItemProps> = (props) => {
-  const router = useRouter();
-  const { href, activePath, label } = props;
-  const [isActivePath, setIsActivePath] = useState(false);
+  const { href, isActive, label } = props;
   const cookies = new Cookies();
   const handleAnchorClick = () => {
     if (href === '/') {
@@ -293,19 +291,15 @@ const TabItem: React.FC<TabItemProps> = (props) => {
     }
   };
 
-  useEffect(() => {
-    setIsActivePath(activePath.test(router.asPath));
-  }, [activePath, router.asPath]);
-
   return (
-    <li css={isActivePath ? activeLabelCSS : genreLabelCSS}>
+    <li css={isActive ? activeLabelCSS : genreLabelCSS}>
       {!process.env.USE_CSR ? (
         <a
           aria-label={label}
           href={href}
           onClick={handleAnchorClick}
         >
-          {isActivePath ? <ActiveText>{label}</ActiveText> : <span>{label}</span>}
+          {isActive ? <ActiveText>{label}</ActiveText> : <span>{label}</span>}
         </a>
       ) : (
         <Link
@@ -317,7 +311,7 @@ const TabItem: React.FC<TabItemProps> = (props) => {
             aria-label={label}
             onClick={handleAnchorClick}
           >
-            {isActivePath ? <ActiveText>{label}</ActiveText> : <span>{label}</span>}
+            {isActive ? <ActiveText>{label}</ActiveText> : <span>{label}</span>}
           </a>
         </Link>
       )}
@@ -334,32 +328,32 @@ interface GenreTabProps {
 
 const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
   const { currentGenre } = props;
-  const subGenreData = subGenres[currentGenre.split('-')[0]];
+  const currentGenreKey = currentGenre !== 'webtoon' ? currentGenre.split('-')[0] as Genres : 'comics';
+  const subGenreData = genres.get(currentGenreKey)?.subGenres;
 
   const router = useRouter();
   const [subServices, setSubServices] = useState({
     romance: '/romance',
     fantasy: '/fantasy',
+    comics: '/comics',
     bl: '/bl-novel',
   });
-  const isCategoryList = router.asPath.startsWith('/category/list');
 
   const subServicesValidator = (saved: typeof subServices) => (Object.keys(subServices) as Array<keyof typeof subServices>)
-    .reduce((acc, genre) => {
-      acc[genre] = genres[genre]?.activePaths.test(saved[genre]) ? saved[genre] : genres[genre]?.path;
-      return acc;
-    }, {} as typeof subServices);
+    .reduce((acc, genre) => ({
+      [genre]: genres.get(genre)?.activePaths.test(saved[genre]) ? saved[genre] : genres.get(genre)?.path,
+      ...acc,
+    }), {} as typeof subServices);
 
   useEffect(() => {
     const latestSubService = safeJSONParse(
       localStorage.getItem('latest_sub_service'),
       subServices,
     );
-    const genre = /romance|fantasy|bl/.exec(router.query.genre?.toString())?.[0];
-    if (router.pathname === '/[genre]' && genre) {
+    if (router.pathname === '/[genre]' && currentGenreKey !== 'general') {
       const updatedSubService = {
         ...latestSubService,
-        [genre]: router.asPath,
+        [currentGenreKey]: router.asPath,
       };
       setSubServices(subServicesValidator(updatedSubService));
       localStorage.setItem('latest_sub_service', JSON.stringify(updatedSubService));
@@ -383,31 +377,17 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
       <GenreTabWrapper>
         <li>
           <GenreList>
-            <GenreListItem isCategory={isCategoryList}>
+            <GenreListItem isCategory={currentGenre === 'category'}>
               <a href="/category/list" aria-label="카테고리 목록">
-                <GNBCategory
-                  css={css`
-                    ${iconCSS};
-                    ${isCategoryList
-                      && css`
-                        fill: ${dodgerBlue60};
-                      `};
-                  `}
-                />
+                <GNBCategoryIcon isCategory={currentGenre === 'category'} />
                 <span className="a11y">{labels.category}</span>
               </a>
             </GenreListItem>
-            {[
-              genres.general,
-              genres.romance,
-              genres.fantasy,
-              genres.comics,
-              genres.bl,
-            ].map((genre) => (
+            {Array.from(genres.entries()).map(([key, genre]) => (
               <TabItem
                 key={genre.path}
-                href={genre.subGenreKey ? subServices[genre.subGenreKey] : genre.path}
-                activePath={genre.activePaths}
+                href={genre.subGenres ? subServices[key as Exclude<Genres, 'general'>] : genre.path}
+                isActive={genre.activePaths.test(`/${currentGenre}`)}
                 label={genre.name}
               />
             ))}
@@ -423,7 +403,7 @@ const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
                 <TabItem
                   key={service.path}
                   href={service.path}
-                  activePath={service.activePaths}
+                  isActive={service.activePaths.test(`/${currentGenre}`)}
                   label={service.name}
                 />
               ))}

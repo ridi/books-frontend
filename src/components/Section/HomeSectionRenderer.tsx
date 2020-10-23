@@ -150,7 +150,12 @@ function HomeSectionRenderer(props: HomeSectionRendererProps) {
       );
     }
     case 'KeywordFinder': {
-      return <HomeKeywordFinderSection genre={genre} />;
+      return (
+        <HomeKeywordFinderSection
+          genre={genre}
+          items={section.items}
+        />
+      );
     }
     case 'RecommendedBook': {
       return (
