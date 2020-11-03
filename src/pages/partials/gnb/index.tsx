@@ -69,16 +69,16 @@ export default class PartialGNB extends React.Component<GNBProps, GNBState> {
             <GenreTab isPartials currentGenre="category" />
           )}
 
-          {['/v2/Detail'].includes(pathname ?? '') && (
-            <GenreTab isPartials currentGenre="" />
+          {pathname?.startsWith('/books') && (
+            <GenreTab isPartials currentGenre="books" />
           )}
 
-          {pathname?.startsWith('/books') && (
-            <GenreTab isPartials currentGenre="" />
+          {pathname?.startsWith('/v2/Detail') && (
+            <GenreTab isPartials currentGenre="books" />
           )}
 
           {pathname?.startsWith('/event') && (
-            <GenreTab isPartials currentGenre="" />
+            <GenreTab isPartials currentGenre="event" />
           )}
         </PartialSeparator>
       </ThemeProvider>
