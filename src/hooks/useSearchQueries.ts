@@ -9,6 +9,8 @@ export interface Query {
   categoryId: string;
   order: string;
   isSerial: boolean;
+  isRental: boolean;
+  isRidiselect: boolean;
 }
 
 interface SearchQueriesHook {
@@ -27,6 +29,8 @@ function extractQuery(query: Record<string, string | string[]>): Query {
     category_id = '0',
     order = 'score',
     serial = 'n',
+    rental = 'n',
+    ridi_select = 'n',
   } = query;
   return {
     q: String(q),
@@ -35,6 +39,8 @@ function extractQuery(query: Record<string, string | string[]>): Query {
     categoryId: String(category_id),
     order: String(order),
     isSerial: serial === 'y',
+    isRental: rental === 'y',
+    isRidiselect: ridi_select === 'y',
   };
 }
 
@@ -56,6 +62,12 @@ export function useSearchQueries(): SearchQueriesHook {
     }
     if (mergedQuery.isSerial) {
       searchParams.append('serial', 'y');
+    }
+    if (mergedQuery.isRental) {
+      searchParams.append('rental', 'y');
+    }
+    if (mergedQuery.isRidiselect) {
+      searchParams.append('ridi_select', 'y');
     }
     return searchParams.toString();
   }, [query]);

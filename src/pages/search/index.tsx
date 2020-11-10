@@ -24,6 +24,7 @@ import { Pagination } from 'src/components/Pagination/Pagination';
 import SearchLandscapeBook from 'src/components/Search/SearchLandscapeBook';
 import useIsTablet from 'src/hooks/useIsTablet';
 import { AdultExcludeToggle, FilterSelector } from 'src/components/Search';
+import { Checkbox } from 'src/components/Search/Checkbox';
 import { useRouter } from 'next/router';
 import { useSearchQueries } from 'src/hooks/useSearchQueries';
 import { booksActions } from 'src/services/books';
@@ -43,6 +44,17 @@ const SearchResultSection = styled.section`
   margin: 0 auto;
   padding-top: 8px;
   ${orBelow(BreakPoint.LG, 'max-width: 100%;')}
+`;
+
+const SearchTitleWrapper = styled.div`
+  position: relative;
+
+  h2 + * {
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    transform: translateY(-50%);
+  }
 `;
 
 const SearchTitle = styled.h2`
@@ -75,10 +87,16 @@ const SearchBookItem = styled.li`
 
 const Filters = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-top: 12px;
   ${orBelow(BreakPoint.LG, 'margin-left: 16px; margin-right: 16px;')}
+  & > :first-child {
+    margin-right: auto;
+  }
+  & > :not(:first-child) {
+    margin-left: 5px;
+  }
 `;
 
 const EmptyBlock = styled.div`
@@ -212,6 +230,8 @@ function SearchPage({ forceAdultExclude }: Props) {
     page,
     categoryId: currentCategoryId,
     order,
+    isRental,
+    isRidiselect,
   } = query;
   const [authors, setAuthors] = React.useState<SearchTypes.AuthorResult>();
   const [books, setBooks] = React.useState<SearchTypes.BookResult>();
@@ -223,6 +243,8 @@ function SearchPage({ forceAdultExclude }: Props) {
       const result = await runSearch({
         ...query,
         isAdultExclude: forceAdultExclude || isAdultExclude,
+        isRental,
+        isRidiselect,
       });
       setAuthors((orig) => orig || result.author);
       setBooks((orig) => orig || result.book);
@@ -297,22 +319,35 @@ function SearchPage({ forceAdultExclude }: Props) {
       {keywordPending ? (
         <SkeletonH2Bar />
       ) : (
-        <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
+        <SearchTitleWrapper>
+          <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
+          {!forceAdultExclude ? (
+            <AdultExcludeToggle adultExclude={isAdultExclude} />
+          ) : (
+            <RestrictionMessage />
+          )}
+        </SearchTitleWrapper>
       )}
       <Categories categories={categories} currentId={currentCategoryId} />
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
           <SkeletonFilterBar type="short" />
+          <SkeletonFilterBar type="short" />
         </Filters>
       ) : (
         <Filters>
           <FilterSelector />
-          {!forceAdultExclude ? (
-            <AdultExcludeToggle adultExclude={isAdultExclude} />
-          ) : (
-            <RestrictionMessage />
-          )}
+          <Checkbox
+            name="isRental"
+            label="대여"
+            isChecked={isRental}
+          />
+          <Checkbox
+            name="isRidiselect"
+            label="리디셀렉트"
+            isChecked={isRidiselect}
+          />
         </Filters>
       )}
       {books?.total === 0 ? (
