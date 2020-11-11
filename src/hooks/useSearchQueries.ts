@@ -59,6 +59,8 @@ export function useSearchQueries(): SearchQueriesHook {
     }
     if (mergedQuery.isAdultExclude) {
       searchParams.append('adult_exclude', 'y');
+    } else {
+      searchParams.append('adult_exclude', 'n');
     }
     if (mergedQuery.isSerial) {
       searchParams.append('serial', 'y');
