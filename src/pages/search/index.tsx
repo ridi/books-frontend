@@ -87,16 +87,10 @@ const SearchBookItem = styled.li`
 
 const Filters = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
   margin-top: 12px;
   ${orBelow(BreakPoint.LG, 'margin-left: 16px; margin-right: 16px;')}
-  & > :first-child {
-    margin-right: auto;
-  }
-  & > :not(:first-child) {
-    margin-left: 5px;
-  }
 `;
 
 const EmptyBlock = styled.div`
@@ -331,22 +325,26 @@ function SearchPage({ forceAdultExclude }: Props) {
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
-          <SkeletonFilterBar type="short" />
-          <SkeletonFilterBar type="short" />
+          <div>
+            <SkeletonFilterBar type="short" />
+            <SkeletonFilterBar type="short" />
+          </div>
         </Filters>
       ) : (
         <Filters>
           <FilterSelector />
-          <Checkbox
-            name="isRental"
-            label="대여"
-            isChecked={isRental}
-          />
-          <Checkbox
-            name="isRidiselect"
-            label="리디셀렉트"
-            isChecked={isRidiselect}
-          />
+          <div>
+            <Checkbox
+              name="isRental"
+              label="대여"
+              isChecked={isRental}
+            />
+            <Checkbox
+              name="isRidiselect"
+              label="리디셀렉트"
+              isChecked={isRidiselect}
+            />
+          </div>
         </Filters>
       )}
       {books?.total === 0 ? (

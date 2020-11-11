@@ -22,7 +22,7 @@ const Input = styled.input`
 `;
 
 const Label = styled.label`
-  display: flex;
+  display: inline-flex;
   align-items: center;
   padding: 6px 4px 6px 6px;
   border-radius: 4px;
