@@ -52,8 +52,9 @@ const SearchTitleWrapper = styled.div`
   h2 + * {
     position: absolute;
     top: 50%;
-    right: 16px;
+    right: 0;
     transform: translateY(-50%);
+    ${orBelow(BreakPoint.LG, 'right: 16px;')}
   }
 `;
 
