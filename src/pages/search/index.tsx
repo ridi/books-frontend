@@ -251,6 +251,10 @@ function SearchPage({ forceAdultExclude }: Props) {
         type: booksActions.insertBookIds.type,
         payload: { bIds, withDesc: true },
       });
+      dispatch({
+        type: booksActions.checkSelectBook.type,
+        payload: bIds,
+      });
     })();
   }, [query]);
 

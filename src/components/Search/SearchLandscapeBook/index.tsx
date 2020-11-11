@@ -23,7 +23,7 @@ import Star from 'src/svgs/Star.svg';
 import ThumbnailWithBadge from 'src/components/Book/ThumbnailWithBadge';
 import { lineClamp } from 'src/styles';
 import useAppContext from 'src/hooks/useAppContext';
-import { useBookSelector, useBookDescription } from 'src/hooks/useBookDetailSelector';
+import { useBookSelector, useBookDescription, useIsAvailableSelect } from 'src/hooks/useBookDetailSelector';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
 
@@ -242,6 +242,8 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const router = useRouter();
   const { isInApp } = useAppContext();
 
+  const isAvailableSelect = useIsAvailableSelect(item.b_id);
+
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);
   if (book === null) {
@@ -373,13 +375,15 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
             {clearDesc.length > 170 ? `${clearDesc.slice(0, 170)}...` : clearDesc}
           </BookDesc>
         </a>
-        <SearchBookMetaList>
-          <SearchBookMetaItem>
-            <SearchBookMetaField type="normal">
-              리디셀렉트
-            </SearchBookMetaField>
-          </SearchBookMetaItem>
-        </SearchBookMetaList>
+        {isAvailableSelect && (
+          <SearchBookMetaList>
+            <SearchBookMetaItem>
+              <SearchBookMetaField type="normal">
+                리디셀렉트
+              </SearchBookMetaField>
+            </SearchBookMetaItem>
+          </SearchBookMetaList>
+        )}
         <PriceInfo
           searchApiResult={item}
           bookApiResult={book}
