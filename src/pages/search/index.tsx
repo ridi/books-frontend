@@ -19,6 +19,7 @@ import { SearchCategoryTab } from 'src/components/Tabs';
 import { useCallback, useEffect } from 'react';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
+import { SendEventType } from 'src/constants/eventTracking';
 
 import { Pagination } from 'src/components/Pagination/Pagination';
 import SearchLandscapeBook from 'src/components/Search/SearchLandscapeBook';
@@ -316,7 +317,16 @@ function SearchPage({ forceAdultExclude }: Props) {
         <SearchTitleWrapper>
           <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
           {!forceAdultExclude ? (
-            <AdultExcludeToggle adultExclude={isAdultExclude} />
+            <AdultExcludeToggle
+              adultExclude={isAdultExclude}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultAdultExcludeOn
+                    : SendEventType.SearchResultAdultExcludeOff,
+                );
+              }}
+            />
           ) : (
             <RestrictionMessage />
           )}
@@ -339,11 +349,25 @@ function SearchPage({ forceAdultExclude }: Props) {
               name="isRental"
               label="대여"
               isChecked={isRental}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultRentOn
+                    : SendEventType.SearchResultRentOff,
+                );
+              }}
             />
             <Checkbox
               name="isRidiselect"
               label="리디셀렉트"
               isChecked={isRidiselect}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultSelectOn
+                    : SendEventType.SearchResultSelectOff,
+                );
+              }}
             />
           </div>
         </Filters>

@@ -25,8 +25,11 @@ const ScaledSmall = styled.div`
   transform: scale(0.85);
 `;
 
-export function AdultExcludeToggle(props: { adultExclude: boolean }) {
-  const { adultExclude } = props;
+export function AdultExcludeToggle(props: {
+  adultExclude: boolean;
+  toggleHandler?: (value: boolean) => void;
+}) {
+  const { adultExclude, toggleHandler } = props;
   const { updateQuery } = useSearchQueries();
   const toggle = React.useCallback((newValue: boolean) => {
     const cookieValue = newValue ? 'y' : 'n';
@@ -39,6 +42,7 @@ export function AdultExcludeToggle(props: { adultExclude: boolean }) {
         sameSite: 'lax',
       },
     );
+    toggleHandler?.(newValue);
     updateQuery({ isAdultExclude: newValue });
   }, [updateQuery]);
   return (

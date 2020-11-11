@@ -44,16 +44,18 @@ export function Checkbox(props: {
   isChecked: boolean;
   name: string;
   label: string;
+  toggleHandler?: (value: boolean) => void;
 }) {
   const {
-    isChecked, name, label,
+    isChecked, name, label, toggleHandler,
   } = props;
 
   const { updateQuery } = useSearchQueries();
 
   const clickHandler = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    updateQuery({ [name]: e.target.checked });
+    toggleHandler?.(e.target?.checked);
+    updateQuery({ [name]: e.target?.checked });
   }, [updateQuery]);
 
   return (
