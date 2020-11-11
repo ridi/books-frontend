@@ -60,9 +60,9 @@ const SearchBookMetaList = styled.ul`
   ${orBelow(BreakPoint.LG, 'flex-direction: column; margin-bottom: 4px;')};
 `;
 
-const SearchBookMetaHorizontalItemStyle = css`
+const SearchBookMetaHorizontalItemStyle = `
   margin-bottom: 0;
-  :not(:last-of-type)::after {
+  :not(:last-child)::after {
     content: '|';
     color: ${slateGray20};
     margin: 0 8px;
@@ -74,7 +74,7 @@ const SearchBookMetaItem = styled.li`
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
   ${greaterThanOrEqualTo(
     BreakPoint.LG + 1,
-    `${SearchBookMetaHorizontalItemStyle}`,
+    SearchBookMetaHorizontalItemStyle,
   )};
 `;
 
