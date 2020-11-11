@@ -145,6 +145,7 @@ const SkeletonH2Bar = styled(SkeletonBar)`
 const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   width: ${(props) => ({ short: 70, long: 92 }[props.type])}px;
   margin: 5px 0 17px;
+  display: inline-block;
 `;
 
 const RestrictionMessageWrapper = styled.a`
