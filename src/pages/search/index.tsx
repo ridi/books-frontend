@@ -243,8 +243,6 @@ function SearchPage({ forceAdultExclude }: Props) {
       const result = await runSearch({
         ...query,
         isAdultExclude: forceAdultExclude || isAdultExclude,
-        isRental,
-        isRidiselect,
       });
       setAuthors((orig) => orig || result.author);
       setBooks((orig) => orig || result.book);
@@ -265,7 +263,7 @@ function SearchPage({ forceAdultExclude }: Props) {
   }, [q]);
   React.useEffect(() => {
     setBooks(undefined);
-  }, [q, isAdultExclude, page, currentCategoryId, order]);
+  }, [q, isAdultExclude, page, currentCategoryId, order, isRental, isRidiselect]);
   React.useEffect(() => {
     setCategories(undefined);
   }, [q, isAdultExclude]);
