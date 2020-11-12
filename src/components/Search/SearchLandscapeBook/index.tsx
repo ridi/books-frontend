@@ -60,12 +60,16 @@ const SearchBookMetaList = styled.ul`
   ${orBelow(BreakPoint.LG, 'flex-direction: column; margin-bottom: 4px;')};
 `;
 
+const SearchBookMetaHorizontalItemBarStyle = `
+  content: '|';
+  color: ${slateGray20};
+  margin: 0 8px;
+`;
+
 const SearchBookMetaHorizontalItemStyle = `
   margin-bottom: 0;
   :not(:last-child)::after {
-    content: '|';
-    color: ${slateGray20};
-    margin: 0 8px;
+    ${SearchBookMetaHorizontalItemBarStyle}
   }
 `;
 
@@ -80,9 +84,20 @@ const SearchBookMetaItem = styled.li`
 
 const SearchBookMetaItemGroup = styled.div`
   display: inline-flex;
+  margin-bottom: 4px;
   ${SearchBookMetaItem} {
     ${SearchBookMetaHorizontalItemStyle}
   }
+  ${greaterThanOrEqualTo(
+    BreakPoint.LG + 1,
+    `
+      :not(:last-child) {
+        ${SearchBookMetaItem}:last-child::after {
+          ${SearchBookMetaHorizontalItemBarStyle}
+        }
+      }
+    `,
+  )};
 `;
 
 const SeriesCompleted = styled.span`
