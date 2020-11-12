@@ -74,7 +74,9 @@ const SearchBookMetaHorizontalItemStyle = `
 `;
 
 const SearchBookMetaItem = styled.li`
-  margin-bottom: 4px;
+  :not(:last-child) {
+    margin-bottom: 4px;
+  }
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
   ${greaterThanOrEqualTo(
     BreakPoint.LG + 1,
@@ -84,7 +86,9 @@ const SearchBookMetaItem = styled.li`
 
 const SearchBookMetaItemGroup = styled.div`
   display: inline-flex;
-  margin-bottom: 4px;
+  :not(:last-child) {
+    margin-bottom: 4px;
+  }
   ${SearchBookMetaItem} {
     ${SearchBookMetaHorizontalItemStyle}
   }
