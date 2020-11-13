@@ -47,18 +47,6 @@ const SearchResultSection = styled.section`
   ${orBelow(BreakPoint.LG, 'max-width: 100%;')}
 `;
 
-const SearchTitleWrapper = styled.div`
-  position: relative;
-
-  h2 + * {
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    ${orBelow(BreakPoint.LG, 'right: 16px;')}
-  }
-`;
-
 const SearchTitle = styled.h2`
   font-weight: bold;
   font-size: 18px;
@@ -68,6 +56,22 @@ const SearchTitle = styled.h2`
   align-items: center;
   margin: 10px 0;
   ${orBelow(BreakPoint.LG, 'margin: 10px 16px;')}
+`;
+
+const SearchTitleWrapper = styled.div`
+  position: relative;
+
+  ${SearchTitle}:not(:only-child) {
+    padding-right: 100px;
+  }
+
+  ${SearchTitle} + * {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    ${orBelow(BreakPoint.LG, 'right: 16px;')}
+  }
 `;
 
 const TotalAuthor = styled.span`
