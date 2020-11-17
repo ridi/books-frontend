@@ -245,9 +245,9 @@ function SearchPage({ forceAdultExclude }: Props) {
         ...query,
         isAdultExclude: forceAdultExclude || isAdultExclude,
       });
-      setAuthors((orig) => orig || result.author);
-      setBooks((orig) => orig || result.book);
-      setCategories((orig) => orig || result.book.aggregations);
+      setAuthors((orig) => result.author || orig);
+      setBooks((orig) => result.book || orig);
+      setCategories((orig) => result.book?.aggregations || orig);
       setKeywordPending(false);
 
       const bIds = result.book.books.map((book) => book.b_id);
