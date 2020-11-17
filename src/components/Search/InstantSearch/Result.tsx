@@ -1,6 +1,9 @@
 import React from 'react';
 import { css } from '@emotion/core';
 import styled from '@emotion/styled';
+import * as tracker from 'src/utils/event-tracker';
+import { SendEventType } from 'src/constants/eventTracking';
+
 import { gray100, slateGray50, slateGray60 } from '@ridi/colors';
 
 import Switch from 'src/components/Switch';
@@ -235,7 +238,17 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
           <InstantSearchDivider />
           <AdultExcludeButton>
             성인 제외
-            <Switch checked={adultExclude} onChange={onAdultExcludeChange} />
+            <Switch
+              checked={adultExclude}
+              onChange={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.InstantSearchAdultExcludeOn
+                    : SendEventType.InstantSearchAdultExcludeOff,
+                );
+              onAdultExcludeChange?.(value);
+              }}
+            />
           </AdultExcludeButton>
         </>
       )}

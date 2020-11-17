@@ -18,6 +18,8 @@ export async function runSearch(query: Query) {
     categoryId,
     order,
     isSerial,
+    isRental,
+    isRidiselect,
   } = query;
   const searchUrl = new URL('/search', process.env.NEXT_STATIC_SEARCH_API);
 
@@ -28,6 +30,8 @@ export async function runSearch(query: Query) {
     searchUrl.searchParams.set('order', order);
   }
   searchUrl.searchParams.set('serial', isSerial ? 'y' : 'n');
+  searchUrl.searchParams.set('rent', isRental ? 'y' : 'n');
+  searchUrl.searchParams.set('select', isRidiselect ? 'y' : 'n');
 
   if (/^\d+$/.test(categoryId)) {
     searchUrl.searchParams.set('category_id', categoryId);

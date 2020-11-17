@@ -19,11 +19,13 @@ import { SearchCategoryTab } from 'src/components/Tabs';
 import { useCallback, useEffect } from 'react';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
+import { SendEventType } from 'src/constants/eventTracking';
 
 import { Pagination } from 'src/components/Pagination/Pagination';
 import SearchLandscapeBook from 'src/components/Search/SearchLandscapeBook';
 import useIsTablet from 'src/hooks/useIsTablet';
 import { AdultExcludeToggle, FilterSelector } from 'src/components/Search';
+import { Checkbox } from 'src/components/Search/Checkbox';
 import { useRouter } from 'next/router';
 import { useSearchQueries } from 'src/hooks/useSearchQueries';
 import { booksActions } from 'src/services/books';
@@ -54,6 +56,22 @@ const SearchTitle = styled.h2`
   align-items: center;
   margin: 10px 0;
   ${orBelow(BreakPoint.LG, 'margin: 10px 16px;')}
+`;
+
+const SearchTitleWrapper = styled.div`
+  position: relative;
+
+  ${SearchTitle}:not(:only-child) {
+    padding-right: 100px;
+  }
+
+  ${SearchTitle} + * {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    ${orBelow(BreakPoint.LG, 'right: 16px;')}
+  }
 `;
 
 const TotalAuthor = styled.span`
@@ -127,6 +145,7 @@ const SkeletonH2Bar = styled(SkeletonBar)`
 const SkeletonFilterBar = styled(SkeletonBar)<{ type: 'short' | 'long' }>`
   width: ${(props) => ({ short: 70, long: 92 }[props.type])}px;
   margin: 5px 0 17px;
+  display: inline-block;
 `;
 
 const RestrictionMessageWrapper = styled.a`
@@ -212,6 +231,8 @@ function SearchPage({ forceAdultExclude }: Props) {
     page,
     categoryId: currentCategoryId,
     order,
+    isRental,
+    isRidiselect,
   } = query;
   const [authors, setAuthors] = React.useState<SearchTypes.AuthorResult>();
   const [books, setBooks] = React.useState<SearchTypes.BookResult>();
@@ -224,15 +245,19 @@ function SearchPage({ forceAdultExclude }: Props) {
         ...query,
         isAdultExclude: forceAdultExclude || isAdultExclude,
       });
-      setAuthors((orig) => orig || result.author);
-      setBooks((orig) => orig || result.book);
-      setCategories((orig) => orig || result.book.aggregations);
+      setAuthors((orig) => result.author || orig);
+      setBooks((orig) => result.book || orig);
+      setCategories((orig) => result.book?.aggregations || orig);
       setKeywordPending(false);
 
       const bIds = result.book.books.map((book) => book.b_id);
       dispatch({
         type: booksActions.insertBookIds.type,
         payload: { bIds, withDesc: true },
+      });
+      dispatch({
+        type: booksActions.checkSelectBook.type,
+        payload: bIds,
       });
     })();
   }, [query]);
@@ -243,7 +268,7 @@ function SearchPage({ forceAdultExclude }: Props) {
   }, [q]);
   React.useEffect(() => {
     setBooks(undefined);
-  }, [q, isAdultExclude, page, currentCategoryId, order]);
+  }, [q, isAdultExclude, page, currentCategoryId, order, isRental, isRidiselect]);
   React.useEffect(() => {
     setCategories(undefined);
   }, [q, isAdultExclude]);
@@ -297,22 +322,62 @@ function SearchPage({ forceAdultExclude }: Props) {
       {keywordPending ? (
         <SkeletonH2Bar />
       ) : (
-        <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
+        <SearchTitleWrapper>
+          <SearchTitle>{`‘${q}’ 도서 검색 결과`}</SearchTitle>
+          {!forceAdultExclude ? (
+            <AdultExcludeToggle
+              adultExclude={isAdultExclude}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultAdultExcludeOn
+                    : SendEventType.SearchResultAdultExcludeOff,
+                );
+              }}
+            />
+          ) : (
+            <RestrictionMessage />
+          )}
+        </SearchTitleWrapper>
       )}
       <Categories categories={categories} currentId={currentCategoryId} />
       {keywordPending ? (
         <Filters>
           <SkeletonFilterBar type="long" />
-          <SkeletonFilterBar type="short" />
+          <div>
+            <SkeletonFilterBar type="short" />
+            {/* <SkeletonFilterBar type="short" /> */}
+          </div>
         </Filters>
       ) : (
         <Filters>
           <FilterSelector />
-          {!forceAdultExclude ? (
-            <AdultExcludeToggle adultExclude={isAdultExclude} />
-          ) : (
-            <RestrictionMessage />
-          )}
+          <div>
+            <Checkbox
+              name="isRental"
+              label="대여"
+              isChecked={isRental}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultRentOn
+                    : SendEventType.SearchResultRentOff,
+                );
+              }}
+            />
+            {/* <Checkbox
+              name="isRidiselect"
+              label="리디셀렉트"
+              isChecked={isRidiselect}
+              toggleHandler={(value) => {
+                tracker.sendEvent(
+                  value
+                    ? SendEventType.SearchResultSelectOn
+                    : SendEventType.SearchResultSelectOff,
+                );
+              }}
+            /> */}
+          </div>
         </Filters>
       )}
       {books?.total === 0 ? (

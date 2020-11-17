@@ -23,7 +23,7 @@ import Star from 'src/svgs/Star.svg';
 import ThumbnailWithBadge from 'src/components/Book/ThumbnailWithBadge';
 import { lineClamp } from 'src/styles';
 import useAppContext from 'src/hooks/useAppContext';
-import { useBookSelector, useBookDescription } from 'src/hooks/useBookDetailSelector';
+import { useBookSelector, useBookDescription, useIsAvailableSelect } from 'src/hooks/useBookDetailSelector';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
 
@@ -60,17 +60,45 @@ const SearchBookMetaList = styled.ul`
   ${orBelow(BreakPoint.LG, 'flex-direction: column; margin-bottom: 4px;')};
 `;
 
+const SearchBookMetaHorizontalItemBarStyle = `
+  content: '|';
+  color: ${slateGray20};
+  margin: 0 8px;
+`;
+
+const SearchBookMetaHorizontalItemStyle = `
+  margin-bottom: 0;
+  :not(:last-child)::after {
+    ${SearchBookMetaHorizontalItemBarStyle}
+  }
+`;
+
 const SearchBookMetaItem = styled.li`
-  margin-bottom: 4px;
+  :not(:last-child) {
+    margin-bottom: 4px;
+  }
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
   ${greaterThanOrEqualTo(
     BreakPoint.LG + 1,
+    SearchBookMetaHorizontalItemStyle,
+  )};
+`;
+
+const SearchBookMetaItemGroup = styled.div`
+  display: inline-flex;
+  :not(:last-child) {
+    margin-bottom: 4px;
+  }
+  ${SearchBookMetaItem} {
+    ${SearchBookMetaHorizontalItemStyle}
+  }
+  ${greaterThanOrEqualTo(
+    BreakPoint.LG + 1,
     `
-      margin-bottom: 0;
-      :not(:last-of-type)::after {
-        content: '|';
-        color: ${slateGray20};
-        margin: 0 8px;
+      :not(:last-child) {
+        ${SearchBookMetaItem}:last-child::after {
+          ${SearchBookMetaHorizontalItemBarStyle}
+        }
       }
     `,
   )};
@@ -233,6 +261,9 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const router = useRouter();
   const { isInApp } = useAppContext();
 
+  // const isAvailableSelect = useIsAvailableSelect(item.b_id);
+  const isAvailableSelect = false;
+
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);
   if (book === null) {
@@ -330,22 +361,24 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
             )}
             <StarCount count={item.buyer_rating_count} />
           </SearchBookMetaItem>
-          <SearchBookMetaItem>
-            <SearchBookMetaField type="normal">
-              <Link href={`${router.pathname}?q=${encodeURIComponent(`출판사:${item.publisher}`)}`} passHref>
-                <a>
-                  {item.highlight.publisher
-                    ? getEscapedNode(item.highlight.publisher)
-                    : item.publisher}
-                </a>
-              </Link>
-            </SearchBookMetaField>
-          </SearchBookMetaItem>
-          <SearchBookMetaItem>
-            <SearchBookMetaField type="normal">
-              {computeCategoryNames(categoryInfo)}
-            </SearchBookMetaField>
-          </SearchBookMetaItem>
+          <SearchBookMetaItemGroup>
+            <SearchBookMetaItem>
+              <SearchBookMetaField type="normal">
+                <Link href={`${router.pathname}?q=${encodeURIComponent(`출판사:${item.publisher}`)}`} passHref>
+                  <a>
+                    {item.highlight.publisher
+                      ? getEscapedNode(item.highlight.publisher)
+                      : item.publisher}
+                  </a>
+                </Link>
+              </SearchBookMetaField>
+            </SearchBookMetaItem>
+            <SearchBookMetaItem>
+              <SearchBookMetaField type="normal">
+                {computeCategoryNames(categoryInfo)}
+              </SearchBookMetaField>
+            </SearchBookMetaItem>
+          </SearchBookMetaItemGroup>
           {item.book_count > 1 && book.categories[0].is_series_category && (
             <SearchBookMetaItem>
               <SearchBookMetaField type="normal">
@@ -362,6 +395,15 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
             {clearDesc.length > 170 ? `${clearDesc.slice(0, 170)}...` : clearDesc}
           </BookDesc>
         </a>
+        {isAvailableSelect && (
+          <SearchBookMetaList>
+            <SearchBookMetaItem>
+              <SearchBookMetaField type="normal">
+                리디셀렉트
+              </SearchBookMetaField>
+            </SearchBookMetaItem>
+          </SearchBookMetaList>
+        )}
         <PriceInfo
           searchApiResult={item}
           bookApiResult={book}

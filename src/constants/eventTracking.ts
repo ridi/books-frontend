@@ -7,4 +7,12 @@ export enum SendEventType {
   QuickMenu = 'QuickMenu',
   Click = 'click',
   Display = 'display',
+  InstantSearchAdultExcludeOn = 'books.search-instant.adult-exclude.on',
+  InstantSearchAdultExcludeOff = 'books.search-instant.adult-exclude.off',
+  SearchResultAdultExcludeOn = 'books.search-result.adult-exclude.on',
+  SearchResultAdultExcludeOff = 'books.search-result.adult-exclude.off',
+  SearchResultRentOn = 'books.search-result.rent.on',
+  SearchResultRentOff = 'books.search-result.rent.off',
+  SearchResultSelectOn = 'books.search-result.select.on',
+  SearchResultSelectOff = 'books.search-result.select.off',
 }
