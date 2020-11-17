@@ -69,7 +69,7 @@ export function useSearchQueries(): SearchQueriesHook {
       searchParams.append('rental', 'y');
     }
     if (mergedQuery.isRidiselect) {
-      searchParams.append('ridi_select', 'y');
+      // searchParams.append('ridi_select', 'y');
     }
     return searchParams.toString();
   }, [query]);

@@ -346,7 +346,7 @@ function SearchPage({ forceAdultExclude }: Props) {
           <SkeletonFilterBar type="long" />
           <div>
             <SkeletonFilterBar type="short" />
-            <SkeletonFilterBar type="short" />
+            {/* <SkeletonFilterBar type="short" /> */}
           </div>
         </Filters>
       ) : (
@@ -365,7 +365,7 @@ function SearchPage({ forceAdultExclude }: Props) {
                 );
               }}
             />
-            <Checkbox
+            {/* <Checkbox
               name="isRidiselect"
               label="리디셀렉트"
               isChecked={isRidiselect}
@@ -376,7 +376,7 @@ function SearchPage({ forceAdultExclude }: Props) {
                     : SendEventType.SearchResultSelectOff,
                 );
               }}
-            />
+            /> */}
           </div>
         </Filters>
       )}

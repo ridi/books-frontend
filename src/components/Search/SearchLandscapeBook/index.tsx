@@ -261,7 +261,8 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   const router = useRouter();
   const { isInApp } = useAppContext();
 
-  const isAvailableSelect = useIsAvailableSelect(item.b_id);
+  // const isAvailableSelect = useIsAvailableSelect(item.b_id);
+  const isAvailableSelect = false;
 
   const book = useBookSelector(item.b_id);
   const rawDesc = useBookDescription(item.b_id);
