@@ -303,7 +303,7 @@ const Footer: React.FC<{}> = () => (
               </li>
               <li>
                 <StyledAnchor
-                  href="https://help.ridibooks.com/hc/ko/articles/360026484174"
+                  href="https://help.ridibooks.com/hc/ko/articles/360058140713-RIDI-Biz-%ED%98%91%EC%97%85-%EB%AC%B8%EC%9D%98"
                   target="_blank"
                   rel="noopener"
                 >
@@ -492,7 +492,7 @@ const Footer: React.FC<{}> = () => (
                   </li>
                   <li>
                     <a
-                      href="https://help.ridibooks.com/hc/ko/articles/360026484174"
+                      href="https://help.ridibooks.com/hc/ko/articles/360058140713-RIDI-Biz-%ED%98%91%EC%97%85-%EB%AC%B8%EC%9D%98"
                       target="_blank"
                       rel="noopener"
                     >
