@@ -36,7 +36,7 @@ export const getStage = (cookies: Cookies): string => {
   }
 };
 
-const DisallowedHostsFilter: React.FC<{ stage: string }> = ({ stage }) => {
+const DisallowedHostsFilter: React.FunctionComponent<{ stage: string }> = ({ stage }) => {
   useEffect(() => {
     const bypass = JSON.parse(localStorage.getItem('disallowed-hosts-filter/bypass') || 'false');
     if (!stage && location.host === 'books.ridibooks.com' && !bypass) {

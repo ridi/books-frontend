@@ -61,7 +61,7 @@ interface NotificationPageProps {
   isTitleHidden?: boolean;
 }
 
-const NotificationPage: React.FC<NotificationPageProps> = (props) => {
+const NotificationPage: React.FunctionComponent<NotificationPageProps> = (props) => {
   const { isTitleHidden = false } = props;
   const { unreadCount, items, requestFetchNotifications } = useNotification();
   const loggedUser = useAccount();

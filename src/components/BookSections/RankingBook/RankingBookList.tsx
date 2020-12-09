@@ -181,7 +181,7 @@ function RankingBook({
   );
 }
 
-const ItemList: React.FC<ItemListProps> = (props) => {
+const ItemList: React.FunctionComponent<ItemListProps> = (props) => {
   const {
     books, slug, type, genre, showSomeDeal,
   } = props;
@@ -207,7 +207,7 @@ const ItemList: React.FC<ItemListProps> = (props) => {
   );
 };
 
-const RankingBookList: React.FC<RankingBookListProps> = (props) => {
+const RankingBookList: React.FunctionComponent<RankingBookListProps> = (props) => {
   const {
     genre, type, showTimer, extra, title, showSomeDeal, slug, items: books,
   } = props;

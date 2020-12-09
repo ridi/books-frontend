@@ -217,7 +217,7 @@ interface TabItemProps {
 // Anchor, StyledAnchor ->
 // GNB/Footer 캐싱 때문에 생긴 파편화.
 // 반응형 레거시 코드 작업이 종료되면 이 부분 개선 해야 함.
-const TabItem: React.FC<TabItemProps> = (props) => {
+const TabItem: React.FunctionComponent<TabItemProps> = (props) => {
   const {
     path,
     pathRegexp,

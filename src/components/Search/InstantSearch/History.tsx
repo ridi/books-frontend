@@ -129,7 +129,7 @@ interface InstantSearchHistoryProps {
   className?: string;
 }
 
-const InstantSearchHistory: React.FC<InstantSearchHistoryProps> = (props) => {
+const InstantSearchHistory: React.FunctionComponent<InstantSearchHistoryProps> = (props) => {
   const {
     searchHistory,
     focusedPosition,

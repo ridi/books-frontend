@@ -25,7 +25,7 @@ const FreeBookBadge = styled.span`
   line-height: 12px;
 `;
 
-const FreeBookRenderer: React.FC<FreeBookRendererProps> = (props) => {
+const FreeBookRenderer: React.FunctionComponent<FreeBookRendererProps> = (props) => {
   const { freeBookCount, unit } = props;
   if (freeBookCount && freeBookCount > 0) {
     return (

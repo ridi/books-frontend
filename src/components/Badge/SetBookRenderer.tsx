@@ -45,7 +45,7 @@ const SetLabel = styled.span`
   flex-grow: 0;
 `;
 
-const SetBookRenderer: React.FC<SetBookRendererProps> = (props) => {
+const SetBookRenderer: React.FunctionComponent<SetBookRendererProps> = (props) => {
   const { setBookCount } = props;
   if (!setBookCount) {
     return null;

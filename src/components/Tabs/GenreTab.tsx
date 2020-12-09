@@ -282,7 +282,7 @@ interface TabItemProps {
   isActive: boolean;
 }
 
-const TabItem: React.FC<TabItemProps> = (props) => {
+const TabItem: React.FunctionComponent<TabItemProps> = (props) => {
   const { href, isActive, label } = props;
   const cookies = new Cookies();
   const handleAnchorClick = () => {
@@ -326,7 +326,7 @@ interface GenreTabProps {
   bookPath?: string;
 }
 
-const GenreTab: React.FC<GenreTabProps> = React.memo((props) => {
+const GenreTab: React.FunctionComponent<GenreTabProps> = React.memo((props) => {
   const { currentGenre } = props;
   const currentGenreKey = currentGenre !== 'webtoon' ? currentGenre.split('-')[0] as Genres : 'comics';
   const subGenreData = genres.get(currentGenreKey)?.subGenres;

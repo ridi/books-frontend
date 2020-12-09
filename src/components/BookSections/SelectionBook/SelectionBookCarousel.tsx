@@ -22,7 +22,7 @@ const CarouselWrapper = styled.div`
   height: 100%;
 `;
 
-const SelectionBookCarousel: React.FC<SelectionBookListProps> = (props) => {
+const SelectionBookCarousel: React.FunctionComponent<SelectionBookListProps> = (props) => {
   const { genre, type, slug } = props;
 
   const { items } = props;

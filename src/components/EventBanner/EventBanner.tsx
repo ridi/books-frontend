@@ -21,7 +21,7 @@ interface EventBannerProps {
   slug: string;
 }
 
-const EventBanner: React.FC<EventBannerProps> = (props) => (
+const EventBanner: React.FunctionComponent<EventBannerProps> = (props) => (
   <Section>
     <EventBannerList {...props} />
   </Section>
