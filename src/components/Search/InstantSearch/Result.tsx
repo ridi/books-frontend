@@ -141,7 +141,7 @@ interface InstantSearchResultProps {
 }
 
 // Todo 사용 컴포넌트마다 다른 options 사용해서 보여주기
-const AuthorLabel: React.FC<{ author: string; authors: SearchTypes.AuthorsInfo[] }> = ({ authors, author }) => {
+const AuthorLabel: React.FunctionComponent<{ author: string; authors: SearchTypes.AuthorsInfo[] }> = ({ authors, author }) => {
   const viewedAuthors = authors
     && authors
       .filter(({ role }) => role !== 'translator')

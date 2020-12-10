@@ -43,7 +43,7 @@ const arrowVerticalStyle = css`
   ${orBelow(BreakPoint.LG, 'padding-top: 69px;')}
 `;
 
-const SelectionBookList: React.FC<SelectionBookListProps> = React.memo((props) => {
+const SelectionBookList: React.FunctionComponent<SelectionBookListProps> = React.memo((props) => {
   const { genre, type, slug } = props;
   return (
     <StyledScrollContainer arrowStyle={arrowVerticalStyle}>

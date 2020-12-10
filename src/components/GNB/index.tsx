@@ -145,7 +145,7 @@ interface GNBButtonsProps {
   signUpPath: string;
   cashOrderPath: string;
 }
-const GNBButtons: React.FC<GNBButtonsProps> = (props) => {
+const GNBButtons: React.FunctionComponent<GNBButtonsProps> = (props) => {
   const {
     loggedUser,
     isPartialsLogin,
@@ -281,7 +281,7 @@ export const GNBContext = React.createContext<{
   origin?: string;
 }>({});
 
-export const GNB: React.FC<GNBProps> = React.memo((props: GNBProps) => {
+export const GNB: React.FunctionComponent<GNBProps> = React.memo((props: GNBProps) => {
   const loggedUser = useAccount();
   const route = useRouter();
   const { isPartials } = props;

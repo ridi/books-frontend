@@ -11,6 +11,6 @@ const Badge = styled.img`
   height: 20px !important;
 `;
 
-export const AdultBadge: React.FC = () => (
+export const AdultBadge: React.FunctionComponent = () => (
   <Badge src={ADULT_BADGE_URL} alt="성인 전용 도서" />
 );

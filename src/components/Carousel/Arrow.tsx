@@ -41,7 +41,7 @@ export const arrowTransition = css`
   pointer-events: none;
 `;
 
-const Arrow: React.FC<ArrowProps> = (props) => {
+const Arrow: React.FunctionComponent<ArrowProps> = (props) => {
   const {
     color, side, wrapperStyle, onClickHandler, arrowType, className, label,
   } = props;

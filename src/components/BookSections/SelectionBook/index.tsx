@@ -30,7 +30,7 @@ interface SelectionBookOwnProps {
 
 type SelectionBookProps = SelectionBookOwnProps & SelectionBookListProps;
 
-const SelectionBook: React.FC<SelectionBookProps> = (props) => {
+const SelectionBook: React.FunctionComponent<SelectionBookProps> = (props) => {
   const {
     genre, type, items, slug, title, extra, selectionId, categoryId,
   } = props;

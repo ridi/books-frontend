@@ -18,7 +18,7 @@ export const legacyCookieMap: {[index: string]: string} = {
   bl_serial: 'bl-serial',
 };
 
-const HomeLink: React.FC<Props> = (props) => {
+const HomeLink: React.FunctionComponent<Props> = (props) => {
   const {
     passHref = false,
     children,

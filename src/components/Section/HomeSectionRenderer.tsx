@@ -172,7 +172,7 @@ function HomeSectionRenderer(props: HomeSectionRendererProps) {
   }
 }
 
-export const MemoHomeSectionRenderer: React.FC<HomeSectionRendererProps> = React.memo(
+export const MemoHomeSectionRenderer: React.FunctionComponent<HomeSectionRendererProps> = React.memo(
   HomeSectionRenderer,
 );
 

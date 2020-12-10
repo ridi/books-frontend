@@ -18,7 +18,7 @@ interface AiRecommendationSectionProps {
   slug: string;
 }
 
-const AiRecommendationSection: React.FC<AiRecommendationSectionProps> = (props) => {
+const AiRecommendationSection: React.FunctionComponent<AiRecommendationSectionProps> = (props) => {
   const loggedUser = useAccount();
   const dispatch = useDispatch();
   const {

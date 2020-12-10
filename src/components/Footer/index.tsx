@@ -220,7 +220,7 @@ const paperIcon = css`
   fill: white;
 `;
 
-const Footer: React.FC<{}> = () => (
+const Footer: React.FunctionComponent<{}> = () => (
   <section id="new_footer" css={sectionStyle}>
     <FooterWrapper>
       <FlexBox

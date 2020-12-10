@@ -68,7 +68,7 @@ interface HomeKeywordFinderSectionProps {
   items: Keyword[];
 }
 
-const HomeKeywordFinderSection: React.FC<HomeKeywordFinderSectionProps> = (props) => {
+const HomeKeywordFinderSection: React.FunctionComponent<HomeKeywordFinderSectionProps> = (props) => {
   const { genre, items: keywords } = props;
   const parentGenre = ['comics', 'webtoon'].includes(genre) ? 'comic' : genre.split('-')[0];
   const genreSearchParam = new URLSearchParams();
