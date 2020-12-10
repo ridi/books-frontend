@@ -70,11 +70,11 @@ function RankingBook({
         msGridColumn: Math.floor(index / 3) * 2 + 1,
         msGridRow: (index % 3) + 1,
       }}
+      onClick={handleBannerClick}
     >
       <Styled.ThumbnailAnchor
         type={type}
         href={`/books/${bId}`}
-        onClick={handleBannerClick}
       >
         <Styled.StyledThumbnailWithBadge
           bId={bId}
