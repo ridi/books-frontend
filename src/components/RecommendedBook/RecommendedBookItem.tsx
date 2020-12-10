@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from '@emotion/styled';
 
 import PortraitBook from 'src/components/Book/PortraitBook';
 import { HotRelease, TodayRecommendation } from 'src/types/sections';
+import * as tracker from 'src/utils/event-tracker';
 import { newlineToReactNode } from 'src/utils/highlight';
 import { BreakPoint } from 'src/utils/mediaQuery';
 
@@ -56,12 +57,16 @@ function RecommendedBookItem(props: Props) {
     className,
     book,
   } = props;
+  const handleClick = useCallback(() => {
+    tracker.sendClickEvent(book, slug, index);
+  }, [book, slug, index]);
   return (
     <PortraitBook
       bId={book.b_id}
       index={index}
       genre={genre}
       slug={slug}
+      onClick={handleClick}
       className={className}
     >
       {props.type === 'HotRelease' && <BookMeta bId={book.b_id} theme={theme} />}

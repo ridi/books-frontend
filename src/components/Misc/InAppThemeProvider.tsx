@@ -20,7 +20,7 @@ export const getAppTheme = (cookies: Cookies): Theme => {
   }
   return '';
 };
-const InAppThemeProvider: React.FC<{ theme: Theme }> = ({ children, theme }) => (
+const InAppThemeProvider: React.FunctionComponent<{ theme: Theme }> = ({ children, theme }) => (
   <ThemeProvider theme={theme === 'dark' ? darkTheme : defaultTheme}>
     <Global styles={InAppStyle} />
     {children}

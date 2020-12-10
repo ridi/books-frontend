@@ -19,7 +19,7 @@ interface UserPreferredSectionProps {
 }
 
 // 이 영역은 사용자 정보를 바탕으로 제공되는데 사용자 정보가 늦게 로드되므로 Fetch 를 따로한다.
-const UserPreferredSection: React.FC<UserPreferredSectionProps> = (props) => {
+const UserPreferredSection: React.FunctionComponent<UserPreferredSectionProps> = (props) => {
   const loggedUser = useAccount();
   const categoryState = useSelector((store: RootState) => store.categories);
 

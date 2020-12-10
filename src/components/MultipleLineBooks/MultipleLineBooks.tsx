@@ -135,7 +135,7 @@ const bookMetaWrapperStyle = css`
   )}
 `;
 
-const MultipleLineBookItem: React.FC<MultipleLineBookItemProps> = React.memo((props) => {
+const MultipleLineBookItem: React.FunctionComponent<MultipleLineBookItemProps> = React.memo((props) => {
   const {
     item, genre, slug, order,
   } = props;
@@ -202,7 +202,7 @@ const List = styled.ul`
   margin-bottom: -24px;
 `;
 
-const ItemList: React.FC<{ slug: string; genre: string; books: BookItem[] }> = (props) => {
+const ItemList: React.FunctionComponent<{ slug: string; genre: string; books: BookItem[] }> = (props) => {
   const { slug, genre, books } = props;
   const [, setMounted] = useState(false);
   useEffect(() => {
@@ -239,7 +239,7 @@ const Title = styled.h2`
   )}
 `;
 
-export const MultipleLineBooks: React.FC<MultipleLineBooks> = (props) => {
+export const MultipleLineBooks: React.FunctionComponent<MultipleLineBooks> = (props) => {
   const {
     title, items, genre, slug,
   } = props;

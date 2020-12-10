@@ -92,7 +92,7 @@ interface BookMetaBaseProps {
   children?: React.ReactNode;
 }
 
-const BookMetaBase: React.FC<BookMetaBaseProps> = (props) => {
+const BookMetaBase: React.FunctionComponent<BookMetaBaseProps> = (props) => {
   const {
     bId,
     titleLineClamp,

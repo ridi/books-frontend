@@ -60,7 +60,7 @@ const WaitFree = styled.img`
   height: 18px;
 `;
 
-const BookBadgeRenderer: React.FC<BookBadgeRendererProps> = (props) => {
+const BookBadgeRenderer: React.FunctionComponent<BookBadgeRendererProps> = (props) => {
   const { isWaitFree, discountPercentage, isRentable } = props;
   if (isRentable) {
     return (

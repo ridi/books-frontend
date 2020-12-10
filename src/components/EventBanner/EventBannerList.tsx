@@ -33,7 +33,7 @@ interface EventBannerListProps {
   slug: string;
 }
 
-const EventBannerList: React.FC<EventBannerListProps> = (props) => {
+const EventBannerList: React.FunctionComponent<EventBannerListProps> = (props) => {
   const { items, slug } = props;
   const [showImage, setShowImage] = React.useState(false);
   const sendDisplayEvent = React.useCallback(() => {

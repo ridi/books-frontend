@@ -14,7 +14,7 @@ interface Props {
   book: BookItem;
 }
 
-const SelectionBookItem: React.FC<Props> = (props) => {
+const SelectionBookItem: React.FunctionComponent<Props> = (props) => {
   const {
     book,
     genre,

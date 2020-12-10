@@ -101,7 +101,7 @@ const Thumbnail = styled.img<{ active?: boolean }>`
 `;
 const ThumbnailNoImg = Thumbnail.withComponent('div');
 
-const ThumbnailRenderer: React.FC<ThumbnailRendererProps> = React.memo((props) => {
+const ThumbnailRenderer: React.FunctionComponent<ThumbnailRendererProps> = React.memo((props) => {
   const {
     thumbnailId, imgSize, sizes, children, slug, order, isAdultOnly, title,
   } = props;

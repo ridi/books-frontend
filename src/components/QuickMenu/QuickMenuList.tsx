@@ -122,13 +122,13 @@ function Item({ menu }: { menu: QuickMenu }) {
     </MenuItem>
   );
 }
-const MemoizedQuickMenuItem: React.FC<{ menu: QuickMenu }> = React.memo(Item);
+const MemoizedQuickMenuItem: React.FunctionComponent<{ menu: QuickMenu }> = React.memo(Item);
 
 const Section = styled.section`
   position: relative;
 `;
 
-export const QuickMenuList: React.FC<QuickMenuListProps> = ({ items }) => (
+export const QuickMenuList: React.FunctionComponent<QuickMenuListProps> = ({ items }) => (
   <Section>
     <h2 className="a11y">퀵 메뉴</h2>
     <ScrollContainer
