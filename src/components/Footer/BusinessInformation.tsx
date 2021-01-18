@@ -6,7 +6,7 @@ import ArrowV from 'src/svgs/ArrowV.svg';
 import { BreakPoint, greaterThanOrEqualTo, orBelow } from 'src/utils/mediaQuery';
 
 export const InformationWrapper = styled.div`
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   ${orBelow(
     BreakPoint.LG,
     `
@@ -30,17 +30,11 @@ export const MiscMenuLabel = styled.span`
   font-stretch: normal;
   line-height: 1.82;
   color: #7e8992;
-`;
-
-export const MiscMenuNewLabel = styled(MiscMenuLabel)`
-  ${orBelow(
-    BreakPoint.LG,
-    'margin-bottom: 16px;',
-  )};
+  letter-spacing: initial;
 `;
 
 export const InformationMore = styled.div`
-  display: block;
+  display: flex;
   position: relative;
   height: 17px;
   font-weight: 500;
@@ -48,13 +42,16 @@ export const InformationMore = styled.div`
   font-stretch: normal;
   font-size: 12px;
   line-height: 20px;
-  color: #808991;
   margin-right: 24px;
-  margin-bottom: 10px;
-  ${orBelow(
-    BreakPoint.LG,
-    'margin-bottom: 16px;',
-  )};
+  margin-bottom: 8px;
+  align-items: center;
+  transition: opacity 0.3s ease-in-out;
+  color: #808991;
+  letter-spacing: -0.157143px;
+  cursor: pointer;
+  :hover {
+    opacity: 0.7;
+  }
 `;
 
 export const InfoItem = styled.div`
@@ -108,16 +105,6 @@ export const BusinessInformation = () => {
   return (
     <InformationWrapper>
       <InformationMore
-        css={css`
-        display: flex;
-        align-items: center;
-        position: relative;
-        transition: opacity 0.3s ease-in-out;
-        cursor: pointer;
-        :hover {
-          opacity: 0.7;
-        }
-      `}
         onClick={() => setOpen(!isOpen)}
       >
         리디(주) 사업자 정보
@@ -133,17 +120,17 @@ export const BusinessInformation = () => {
         <>
           <InfoList>
             <ListWrap>
-              <InfoItem><MiscMenuLabel>대표자 배기식</MiscMenuLabel></InfoItem>
-              <InfoItem><MiscMenuLabel>사업자 등록번호 120-87-27435</MiscMenuLabel></InfoItem>
+              <InfoItem><MiscMenuLabel>대표자&ensp;배기식</MiscMenuLabel></InfoItem>
+              <InfoItem><MiscMenuLabel>사업자 등록번호&ensp;120-87-27435</MiscMenuLabel></InfoItem>
             </ListWrap>
-            <InfoItem><MiscMenuNewLabel>통신판매업 신고번호 제 2009-서울강남 35-02139호</MiscMenuNewLabel></InfoItem>
+            <InfoItem><MiscMenuLabel>통신판매업 신고번호&ensp;제 2009-서울강남 35-02139호</MiscMenuLabel></InfoItem>
           </InfoList>
           <InfoList>
             <ListWrap>
-              <InfoItem><MiscMenuLabel>이메일 help@ridi.com</MiscMenuLabel></InfoItem>
-              <InfoItem><MiscMenuLabel>대표전화 1644-0331</MiscMenuLabel></InfoItem>
+              <InfoItem><MiscMenuLabel>이메일&ensp;help@ridi.com</MiscMenuLabel></InfoItem>
+              <InfoItem><MiscMenuLabel>대표전화&ensp;1644-0331</MiscMenuLabel></InfoItem>
             </ListWrap>
-            <InfoItem><MiscMenuNewLabel>주소 서울시 강남구 역삼동 702-28 어반벤치빌딩 10층(테헤란로 325)</MiscMenuNewLabel></InfoItem>
+            <InfoItem><MiscMenuLabel>주소&ensp;서울시 강남구 역삼동 702-28 어반벤치빌딩 10층(테헤란로 325)</MiscMenuLabel></InfoItem>
           </InfoList>
         </>
       )}
