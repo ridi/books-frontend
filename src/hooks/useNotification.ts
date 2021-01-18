@@ -49,7 +49,7 @@ async function requestNotificationAuth() {
 
 async function requestNotification(limit: number, token: string) {
   const { data } = await axios.get<NotificationResponse>(
-    `${process.env.NEXT_STATIC_NOTIFICATION_API}/notification`,
+    `${process.env.NEXT_STATIC_STORE_API}/notification`,
     {
       params: { limit },
       headers: {
@@ -63,7 +63,7 @@ async function requestNotification(limit: number, token: string) {
 
 async function requestNotificationRead(token: string) {
   await axios.put(
-    `${process.env.NEXT_STATIC_NOTIFICATION_API}/notification`,
+    `${process.env.NEXT_STATIC_STORE_API}/notification`,
     null,
     {
       headers: {
@@ -75,7 +75,7 @@ async function requestNotificationRead(token: string) {
 
 async function requestUnreadCount(token: string) {
   const { data } = await axios.get<NotificationUnreadCountResponse>(
-    `${process.env.NEXT_STATIC_NOTIFICATION_API}/notification/unread_count`,
+    `${process.env.NEXT_STATIC_STORE_API}/notification/unread_count`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
