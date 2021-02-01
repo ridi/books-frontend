@@ -87,6 +87,9 @@ export const REventBannerItem = R.Record({
   url: R.String,
 });
 export const REventBanner = makeSectionData('HomeEventBanner', REventBannerItem);
+export const REventBannerTop = makeSectionData('HomeEventBannerTop', REventBannerItem);
+export const REventBannerMiddle = makeSectionData('HomeEventBannerMiddle', REventBannerItem);
+export const REventBannerBottom = makeSectionData('HomeEventBannerBottom', REventBannerItem);
 
 export const RMdSelectionItem = R.Record({
   id: R.Number,
