@@ -44,6 +44,9 @@ function HomeSectionRenderer(props: HomeSectionRendererProps) {
     case 'HomeCarouselBanner':
       return <TopBannerCarousel banners={section.items} slug={slug} />;
     case 'HomeEventBanner':
+    case 'HomeEventBannerBottom':
+    case 'HomeEventBannerTop':
+    case 'HomeEventBannerMiddle':
       return <EventBanner items={section.items} genre={genre} slug={slug} />;
     case 'ReadingBooksRanking':
       return (
