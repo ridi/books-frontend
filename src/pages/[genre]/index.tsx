@@ -20,6 +20,7 @@ import { categoryActions } from 'src/services/category';
 import { NextPage } from 'next';
 import useAccount from 'src/hooks/useAccount';
 import * as tracker from 'src/utils/event-tracker';
+import * as braze from 'src/utils/event-tracker-braze';
 import { css } from '@emotion/core';
 
 import Cookies from 'universal-cookie';
@@ -112,6 +113,7 @@ export const Home: NextPage<HomeProps> = (props) => {
 
   useEffect(() => {
     setPageView();
+    braze.start(loggedUser?.id ?? null);
   }, [genre, loggedUser, setPageView]);
 
   useEffect(() => {

@@ -43,6 +43,7 @@
   },
   "files": [
     "src/types/svg.d.ts",
+    "src/types/files.d.ts",
     "src/types/global.d.ts"
   ],
   "include": [

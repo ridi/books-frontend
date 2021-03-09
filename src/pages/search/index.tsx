@@ -19,6 +19,7 @@ import { SearchCategoryTab } from 'src/components/Tabs';
 import { useCallback, useEffect } from 'react';
 import sentry from 'src/utils/sentry';
 import * as tracker from 'src/utils/event-tracker';
+import * as braze from 'src/utils/event-tracker-braze';
 import { SendEventType } from 'src/constants/eventTracking';
 
 import { Pagination } from 'src/components/Pagination/Pagination';
@@ -288,6 +289,7 @@ function SearchPage({ forceAdultExclude }: Props) {
 
   useEffect(() => {
     setPageView();
+    braze.start(loggedUser?.id ?? null);
   }, [loggedUser]);
   useEffect(() => {
     if (books == null) {
