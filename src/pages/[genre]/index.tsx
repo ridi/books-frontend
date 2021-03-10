@@ -113,8 +113,18 @@ export const Home: NextPage<HomeProps> = (props) => {
 
   useEffect(() => {
     setPageView();
-    braze.start(loggedUser?.id ?? null);
   }, [genre, loggedUser, setPageView]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      braze.initialize();
+      braze.start(loggedUser ? loggedUser.idx.toString() : null);
+
+      if (window.location.pathname.startsWith('/webtoon')) {
+        braze.sendPageView('open_genre_home_wt');
+      }
+    }, 200);
+  }, []);
 
   useEffect(() => {
     if (lazyLoadBIds) {

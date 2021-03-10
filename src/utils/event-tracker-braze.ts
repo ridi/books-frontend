@@ -30,6 +30,6 @@ export function start(userId: string | null) {
 
 export function sendPageView(eventName: string) {
   if (typeof window !== 'undefined' && window.appboy && appboyInitialized) {
-    window.appboy.logCustomEvent(eventName);
+    console.log('eventName', window.appboy.logCustomEvent(eventName));
   }
 }

@@ -24,7 +24,6 @@ import { AppContextProvider } from 'src/hooks/useAppContext';
 import { AccountProvider } from 'src/hooks/useAccount';
 import { NotificationProvider } from 'src/hooks/useNotification';
 import { initialize as initializeEventTracker } from 'src/utils/event-tracker';
-import { initialize as initializeBrazeEventTracker } from 'src/utils/event-tracker-braze';
 
 interface StoreAppProps {
   // tslint:disable-next-line
@@ -73,7 +72,6 @@ class StoreApp extends App<StoreAppProps> {
       .startsWith('/partials/');
     if (!isPartials) {
       window.requestIdleCallback(initializeEventTracker, { timeout: 500 });
-      window.requestIdleCallback(initializeBrazeEventTracker, { timeout: 500 });
     }
     // Windows에서만 웹폰트 로드
     if (

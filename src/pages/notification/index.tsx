@@ -10,7 +10,6 @@ import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
 import NotificationItem from 'src/components/Notification/NotificationItem';
 import NotificationPlaceholder from 'src/components/Notification/NotificationItemPlaceholder';
 import * as tracker from 'src/utils/event-tracker';
-import * as braze from 'src/utils/event-tracker-braze';
 import sentry from 'src/utils/sentry';
 import useAccount from 'src/hooks/useAccount';
 import useNotification from 'src/hooks/useNotification';
@@ -78,7 +77,6 @@ const NotificationPage: React.FunctionComponent<NotificationPageProps> = (props)
 
   useEffect(() => {
     setPageView();
-    braze.start(loggedUser?.id ?? null);
   }, [loggedUser]);
 
   useEffect(() => {
