@@ -20,6 +20,7 @@ import { categoryActions } from 'src/services/category';
 import { NextPage } from 'next';
 import useAccount from 'src/hooks/useAccount';
 import * as tracker from 'src/utils/event-tracker';
+import * as braze from 'src/utils/event-tracker-braze';
 import { css } from '@emotion/core';
 
 import Cookies from 'universal-cookie';
@@ -113,6 +114,17 @@ export const Home: NextPage<HomeProps> = (props) => {
   useEffect(() => {
     setPageView();
   }, [genre, loggedUser, setPageView]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      braze.initialize();
+      braze.start(loggedUser ? loggedUser.idx.toString() : null);
+
+      if (window.location.pathname.startsWith('/webtoon')) {
+        braze.sendPageView('open_genre_home_wt');
+      }
+    }, 200);
+  }, []);
 
   useEffect(() => {
     if (lazyLoadBIds) {

@@ -1,12 +1,11 @@
-declare module '*.woff2'
-declare module '*.woff'
-declare module '*.ttf'
-declare module '*.png'
-declare module '*.svg'
-declare module '*.ico'
+import type appboy from '@braze/web-sdk';
+type Appboy = typeof appboy;
 
-declare interface Window {
-  isPartials?: boolean;
-  isExternalLink?: (url: string) => boolean;
-  isLoginRequired?: (url: string) => boolean;
+declare global {
+  interface Window {
+    isPartials?: boolean;
+    isExternalLink?: (url: string) => boolean;
+    isLoginRequired?: (url: string) => boolean;
+    appboy?: Appboy;
+  }
 }

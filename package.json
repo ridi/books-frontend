@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
+    "@braze/web-sdk": "^3.2.0",
     "@emotion/core": "^10.0.22",
     "@emotion/styled": "^10.0.23",
     "@koa/router": "^8.0.8",
