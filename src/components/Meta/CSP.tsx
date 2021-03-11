@@ -14,6 +14,7 @@ const thirdPartyVendors = [
   'stats.g.doubleclick.net',
   'staticxx.facebook.com',
   'connect.facebook.net',
+  'sdk.iad-06.braze.com',
 ];
 
 const whiteList = [
@@ -22,6 +23,7 @@ const whiteList = [
   'https://ridibooks.com',
   'https://books.ridibooks.com',
   'https://*.ridicdn.net',
+  'https://js.appboycdn.com',
 ];
 
 export default () => {
