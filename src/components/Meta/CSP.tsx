@@ -22,6 +22,11 @@ const whiteList = [
   'https://ridibooks.com',
   'https://books.ridibooks.com',
   'https://*.ridicdn.net',
+<<<<<<< HEAD
+=======
+  'https://js.appboycdn.com',
+  'https://use.fontawesome.com',
+>>>>>>> 8a68f717... CSP whitelist 도메인 추가
 ];
 
 export default () => {
