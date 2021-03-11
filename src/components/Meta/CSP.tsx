@@ -24,6 +24,7 @@ const whiteList = [
   'https://books.ridibooks.com',
   'https://*.ridicdn.net',
   'https://js.appboycdn.com',
+  'https://use.fontawesome.com',
 ];
 
 export default () => {
