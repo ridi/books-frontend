@@ -6,6 +6,7 @@ export function initialize() {
     appboyInitialized = window.appboy.initialize(BRAZE_API_KEY, {
       baseUrl: BRAZE_API_ENDPOINT,
       safariWebsitePushId: BRAZE_SAFARI_PUSH_ID,
+      enableHtmlInAppMessages: true,
     });
 
     window.appboy.display.automaticallyShowNewInAppMessages();
