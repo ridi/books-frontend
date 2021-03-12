@@ -123,7 +123,7 @@ export const Home: NextPage<HomeProps> = (props) => {
       if (window.location.pathname.startsWith('/webtoon')) {
         braze.sendPageView('open_genre_home_wt');
       }
-    }, 200);
+    }, 500);
   }, []);
 
   useEffect(() => {
