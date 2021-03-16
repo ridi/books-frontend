@@ -25,6 +25,7 @@ const whiteList = [
   'https://*.ridicdn.net',
   'https://js.appboycdn.com',
   'https://use.fontawesome.com',
+  'https://appboy-images.com',
 ];
 
 export default () => {
