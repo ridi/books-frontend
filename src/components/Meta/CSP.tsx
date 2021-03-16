@@ -43,10 +43,11 @@ export default () => {
 
   if (!process.env.IS_PRODUCTION) {
     scriptSrc.push("'unsafe-eval'");
-    scriptSrc.push("'unsafe-inline'");
   } else {
     // styleSrc.push(nonce);
   }
+
+  scriptSrc.push("'unsafe-inline'");
 
   return (
     <meta
