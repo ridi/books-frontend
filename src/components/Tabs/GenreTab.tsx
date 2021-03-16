@@ -239,7 +239,6 @@ const genres: Map<Genres, {
     name: '로맨스',
     path: '/romance-serial',
     activePaths: /^\/romance(-serial)?\/?$/,
-    subGenreKey: 'romance-serial',
     subGenres: [
       { name: '웹소설', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
       { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
