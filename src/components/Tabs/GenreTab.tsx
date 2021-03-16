@@ -237,41 +237,41 @@ const genres: Map<Genres, {
   }],
   ['romance', {
     name: '로맨스',
-    path: '/romance',
+    path: '/romance-serial',
     activePaths: /^\/romance(-serial)?\/?$/,
-    subGenreKey: 'romance',
+    subGenreKey: 'romance-serial',
     subGenres: [
-      { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
       { name: '웹소설', path: '/romance-serial', activePaths: /^\/romance-serial\/?$/ },
+      { name: 'e북', path: '/romance', activePaths: /^\/romance\/?$/ },
     ],
   }],
   ['fantasy', {
     name: '판타지',
-    path: '/fantasy',
+    path: '/fantasy-serial',
     activePaths: /^\/fantasy(-serial)?\/?$/,
     subGenres: [
-      { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
       { name: '웹소설', path: '/fantasy-serial', activePaths: /^\/fantasy-serial\/?$/ },
+      { name: 'e북', path: '/fantasy', activePaths: /^\/fantasy\/?$/ },
     ],
   }],
   ['comics', {
     name: '만화',
-    path: '/comics',
+    path: '/webtoon',
     activePaths: /^\/(comics|webtoon)\/?$/,
     subGenres: [
-      { name: 'e북', path: '/comics', activePaths: /^\/comics\/?$/ },
       { name: '웹툰', path: '/webtoon', activePaths: /^\/webtoon\/?$/ },
+      { name: 'e북', path: '/comics', activePaths: /^\/comics\/?$/ },
     ],
   }],
   ['bl', {
     name: 'BL',
-    path: '/bl-novel',
+    path: '/bl-webnovel',
     activePaths: /^\/bl(-webtoon|-novel|-webnovel|-serial|-comics)?\/?$/,
     subGenres: [
-      { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
       { name: '웹소설', path: '/bl-webnovel', activePaths: /^\/bl-webnovel\/?$/ },
-      { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
+      { name: '소설 e북', path: '/bl-novel', activePaths: /^\/bl-novel\/?$/ },
       { name: '웹툰', path: '/bl-webtoon', activePaths: /^\/bl-webtoon\/?$/ },
+      { name: '만화 e북', path: '/bl-comics', activePaths: /^\/bl-comics\/?$/ },
     ],
   }],
 ]);
@@ -333,10 +333,10 @@ const GenreTab: React.FunctionComponent<GenreTabProps> = React.memo((props) => {
 
   const router = useRouter();
   const [subServices, setSubServices] = useState({
-    romance: '/romance',
-    fantasy: '/fantasy',
-    comics: '/comics',
-    bl: '/bl-novel',
+    romance: '/romance-serial',
+    fantasy: '/fantasy-serial',
+    comics: '/webtoon',
+    bl: '/bl-webnovel',
   });
 
   const subServicesValidator = (saved: typeof subServices) => (Object.keys(subServices) as Array<keyof typeof subServices>)
