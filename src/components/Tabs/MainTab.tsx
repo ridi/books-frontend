@@ -325,7 +325,7 @@ export default function MainTab(props: MainTabProps) {
           normalIcon={<Home css={iconStyle} />}
           label={labels.mainTab.home}
           path="/"
-          pathRegexp={/^\/(romance|romance-serial|fantasy|fantasy-serial|bl-novel|bl-webnovel|bl-comics|bl-webtoon|comics)?\/?$/}
+          pathRegexp={/^\/(romance|romance-serial|fantasy|fantasy-serial|bl-novel|bl-webnovel|bl-comics|bl-webtoon|comics|webtoon)?\/?$/}
         />
         <TabItem
           activeIcon={<NotificationSolid css={iconStyle} />}
