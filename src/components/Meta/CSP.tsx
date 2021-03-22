@@ -26,6 +26,7 @@ const whiteList = [
   'https://js.appboycdn.com',
   'https://use.fontawesome.com',
   'https://appboy-images.com',
+  'https://unpkg.com',
 ];
 
 export default () => {
