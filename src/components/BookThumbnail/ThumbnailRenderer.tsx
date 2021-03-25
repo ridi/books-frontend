@@ -52,7 +52,7 @@ const computeThumbnailUrl = (
   }
   const baseCoverUrl = new URL(`/cover/${bId}/`, IMG_RIDI_CDN_URL);
   const src = new URL(
-    imageSize ? `${imageSize}?dpi=xhdpi` : 'large?dpi=xhdpi',
+    imageSize ? `${imageSize}#1?dpi=xhdpi` : 'large#1?dpi=xhdpi',
     baseCoverUrl,
   ).toString();
   const srcset = SIZE_PARAMS.map(({ width, path }) => (
