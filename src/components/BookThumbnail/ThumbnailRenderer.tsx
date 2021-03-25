@@ -22,19 +22,19 @@ interface ThumbnailRendererProps {
 }
 
 const SIZE_PARAMS = [
-  { width: 50, path: 'small' },
-  { width: 90, path: 'small' },
-  { width: 120, path: 'small?dpi=xhdpi' },
-  { width: 165, path: 'large' },
-  { width: 180, path: 'small?dpi=xxhdpi' },
-  { width: 220, path: 'large?dpi=xhdpi' },
-  { width: 225, path: 'xlarge' },
-  { width: 300, path: 'xlarge?dpi=xhdpi' },
-  { width: 330, path: 'large?dpi=xxhdpi' },
-  { width: 450, path: 'xlarge?dpi=xxhdpi' },
-  { width: 480, path: 'xxlarge' },
-  { width: 640, path: 'xxlarge?dpi=xhdpi' },
-  { width: 960, path: 'xxlarge?dpi=xxhdpi' },
+  { width: 50, path: 'small#1' },
+  { width: 90, path: 'small#1' },
+  { width: 120, path: 'small#1?dpi=xhdpi' },
+  { width: 165, path: 'large#1' },
+  { width: 180, path: 'small#1?dpi=xxhdpi' },
+  { width: 220, path: 'large#1?dpi=xhdpi' },
+  { width: 225, path: 'xlarge#1' },
+  { width: 300, path: 'xlarge#1?dpi=xhdpi' },
+  { width: 330, path: 'large#1?dpi=xxhdpi' },
+  { width: 450, path: 'xlarge#1?dpi=xxhdpi' },
+  { width: 480, path: 'xxlarge#1' },
+  { width: 640, path: 'xxlarge#1?dpi=xhdpi' },
+  { width: 960, path: 'xxlarge#1?dpi=xxhdpi' },
 ];
 
 const computeThumbnailUrl = (
@@ -52,7 +52,7 @@ const computeThumbnailUrl = (
   }
   const baseCoverUrl = new URL(`/cover/${bId}/`, IMG_RIDI_CDN_URL);
   const src = new URL(
-    imageSize ? `${imageSize}?dpi=xhdpi` : 'large?dpi=xhdpi',
+    imageSize ? `${imageSize}#1?dpi=xhdpi` : 'large#1?dpi=xhdpi',
     baseCoverUrl,
   ).toString();
   const srcset = SIZE_PARAMS.map(({ width, path }) => (
