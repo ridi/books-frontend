@@ -1,4 +1,8 @@
-import { BRAZE_API_ENDPOINT, BRAZE_API_KEY, BRAZE_SAFARI_PUSH_ID } from 'src/constants/eventTracking';
+import {
+  BRAZE_API_ENDPOINT,
+  BRAZE_API_KEY,
+  BRAZE_SAFARI_PUSH_ID,
+} from 'src/constants/eventTracking';
 
 let appboyInitialized = false;
 export function initialize() {
