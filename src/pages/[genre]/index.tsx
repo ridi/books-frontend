@@ -111,27 +111,30 @@ export const Home: NextPage<HomeProps> = (props) => {
     }
   }, []);
 
-  useEffect(() => {
-    setPageView();
+  const setBrazePageView = useCallback(() => {
+    braze.sendPageView('open_genre_home_wt');
+  }, []);
 
+  const setBrazeUserId = useCallback(() => {
     if (loggedUser) {
       braze.setUserId(loggedUser.idx.toString());
     }
-  }, [genre, loggedUser, setPageView]);
+  }, [loggedUser]);
 
   useEffect(() => {
     braze.initialize();
 
-    setTimeout(() => {
-      if (loggedUser) {
-        braze.start(loggedUser.idx.toString());
-      }
+    setBrazeUserId();
 
-      if (window.location.pathname.startsWith('/webtoon')) {
-        braze.sendPageView('open_genre_home_wt');
-      }
-    }, 500);
-  }, []);
+    if (window.location.pathname.startsWith('/webtoon')) {
+      setBrazePageView();
+    }
+  }, [setBrazePageView, setBrazeUserId]);
+
+  useEffect(() => {
+    setPageView();
+  }, [genre, loggedUser, setPageView]);
+
 
   useEffect(() => {
     if (lazyLoadBIds) {
