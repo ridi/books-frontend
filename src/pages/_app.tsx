@@ -92,6 +92,23 @@ class StoreApp extends App<StoreAppProps> {
     super.componentDidCatch(error, errorInfo);
   }
 
+  private renderHotjarScript() {
+    const { query: { hjid } = {} } = this.props;
+    if (!hjid) {
+      return null;
+    }
+    return (
+      <script
+        id="hotjar-init"
+        data-hjid={hjid}
+
+        async
+        nonce={this.props.nonce}
+        src="/hotjar-init.js"
+      />
+    );
+  }
+
   public render() {
     const {
       Component,
@@ -121,6 +138,7 @@ class StoreApp extends App<StoreAppProps> {
           <Head>
             <meta name="viewport" />
             {typeof document !== 'undefined' && <title>{document.title ?? ''}</title>}
+            {this.renderHotjarScript()}
           </Head>
           <PartialSeparator name="GLOBAL_STYLE_RESET" wrapped>
             <Global styles={partialResetStyles} />
@@ -170,6 +188,7 @@ class StoreApp extends App<StoreAppProps> {
             type="text/javascript"
             src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
           />
+          {this.renderHotjarScript()}
           {/* eslint-enable no-useless-escape */}
         </Head>
         <Meta />

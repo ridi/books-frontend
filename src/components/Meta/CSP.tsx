@@ -27,6 +27,8 @@ const whiteList = [
   'https://use.fontawesome.com',
   'https://appboy-images.com',
   'https://unpkg.com',
+  'https://*.hotjar.com',
+  'wss://*.hotjar.com',
 ];
 
 export default () => {
@@ -65,7 +67,7 @@ export default () => {
             ...thirdPartyVendors,
             ...whiteList,
           ],
-          frameSrc: ['staticxx.facebook.com', 'connect.facebook.net'],
+          frameSrc: ['staticxx.facebook.com', 'connect.facebook.net', 'vars.hotjar.com'],
           styleSrc,
           scriptSrc,
           connectSrc: [
