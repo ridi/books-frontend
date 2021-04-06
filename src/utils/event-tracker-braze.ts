@@ -18,7 +18,7 @@ export function initialize() {
 }
 
 export function setUserId(userId: string) {
-  if (typeof window !== 'undefined' && window.appboy) {
+  if (typeof window !== 'undefined' && window.appboy && appboyInitialized) {
     window.appboy.changeUser(userId);
   }
 }
