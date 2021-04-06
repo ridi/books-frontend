@@ -46,14 +46,45 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
     return { ...page, nonce };
   }
 
+  private renderHotjarScript() {
+    const hjid = '2334254';
+    return (
+      <script
+        async
+        nonce={this.props.nonce}
+
+        id="hotjar-init"
+        dangerouslySetInnerHTML={{
+          __html: `(function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:${hjid},hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+        }}
+      />
+    );
+  }
+
   public render() {
     const isPartials = !!this.props.__NEXT_DATA__.page.match(/^\/partials\//u);
+    const isPartialGNB = !!this.props.__NEXT_DATA__.page.match(/^\/partials\/gnb/u);
     const { nonce } = this.props;
     return (
       <html lang="ko">
         <PartialSeparator name="HEADER" wrapped={isPartials}>
           <Head nonce={nonce}>
             <style nonce={nonce} dangerouslySetInnerHTML={{ __html: this.props.css }} />
+            {/* eslint-disable no-useless-escape */}
+            <script
+              nonce={nonce}
+              type="text/javascript"
+              src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
+            />
+            {/* eslint-enable no-useless-escape */}
+            {(isPartialGNB || !isPartials) && this.renderHotjarScript()}
           </Head>
         </PartialSeparator>
         <body>

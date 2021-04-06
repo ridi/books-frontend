@@ -92,33 +92,6 @@ class StoreApp extends App<StoreAppProps> {
     super.componentDidCatch(error, errorInfo);
   }
 
-  private renderHotjarScript() {
-    const { query: { hjid } = {} } = this.props;
-    if (!hjid) {
-      return null;
-    }
-    return (
-      <script
-        async
-        nonce={this.props.nonce}
-
-        id="hotjar-init"
-        data-hjid={hjid}
-        dangerouslySetInnerHTML={{
-          __html: `(function(h,o,t,j,a,r){
-            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-            hjid=document.getElementById('hotjar-init') && document.getElementById('hotjar-init').getAttribute('data-hjid');
-            h._hjSettings={hjid:hjid,hjsv:6};
-            a=o.getElementsByTagName('head')[0];
-            r=o.createElement('script');r.async=1;
-            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-            a.appendChild(r);
-          })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
-        }}
-      />
-    );
-  }
-
   public render() {
     const {
       Component,
@@ -148,7 +121,6 @@ class StoreApp extends App<StoreAppProps> {
           <Head>
             <meta name="viewport" />
             {typeof document !== 'undefined' && <title>{document.title ?? ''}</title>}
-            {this.renderHotjarScript()}
           </Head>
           <PartialSeparator name="GLOBAL_STYLE_RESET" wrapped>
             <Global styles={partialResetStyles} />
@@ -191,16 +163,6 @@ class StoreApp extends App<StoreAppProps> {
     return (
       // CacheProvider 올바르게 동작하는지 확인하기
       <>
-        <Head>
-          {/* eslint-disable no-useless-escape */}
-          <script
-            nonce={nonce}
-            type="text/javascript"
-            src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
-          />
-          {this.renderHotjarScript()}
-          {/* eslint-enable no-useless-escape */}
-        </Head>
         <Meta />
         <DisallowedHostsFilter stage={stage} />
         <CacheProvider value={createCache({ ...cache, nonce })}>
