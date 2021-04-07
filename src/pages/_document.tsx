@@ -46,7 +46,7 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
     return { ...page, nonce };
   }
 
-  private renderHotjarScript() {
+  private insertHotjarScript() {
     const hjid = '2334254';
     return (
       <script
@@ -69,9 +69,14 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
   }
 
   public render() {
-    const isPartials = !!this.props.__NEXT_DATA__.page.match(/^\/partials\//u);
-    const isPartialGNB = !!this.props.__NEXT_DATA__.page.match(/^\/partials\/gnb/u);
-    const { nonce } = this.props;
+    const { nonce, __NEXT_DATA__: { page } } = this.props;
+
+    const isPartials = !!page.match(/^\/partials\//u);
+    const isPartialGNB = page.startsWith('/partials/gnb');
+    const isInApp = page.startsWith('/inapp/');
+
+    const isHotjarInsertable = (isPartialGNB || (!isPartials && !isInApp));
+
     return (
       <html lang="ko">
         <PartialSeparator name="HEADER" wrapped={isPartials}>
@@ -84,7 +89,7 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
               src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
             />
             {/* eslint-enable no-useless-escape */}
-            {(isPartialGNB || !isPartials) && this.renderHotjarScript()}
+            {isHotjarInsertable && this.insertHotjarScript()}
           </Head>
         </PartialSeparator>
         <body>
