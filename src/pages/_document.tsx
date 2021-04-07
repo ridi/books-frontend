@@ -68,6 +68,16 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
     );
   }
 
+  private insertBrazeScript() {
+    return (
+      <script
+        nonce={this.props.nonce}
+        type="text/javascript"
+        src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
+      />
+    );
+  }
+
   public render() {
     const { nonce, __NEXT_DATA__: { page } } = this.props;
 
@@ -76,19 +86,14 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
     const isInApp = page.startsWith('/inapp/');
 
     const isHotjarInsertable = (isPartialGNB || (!isPartials && !isInApp));
+    const isBrazeInsertable = !isPartials && !isInApp;
 
     return (
       <html lang="ko">
         <PartialSeparator name="HEADER" wrapped={isPartials}>
           <Head nonce={nonce}>
             <style nonce={nonce} dangerouslySetInnerHTML={{ __html: this.props.css }} />
-            {/* eslint-disable no-useless-escape */}
-            <script
-              nonce={nonce}
-              type="text/javascript"
-              src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
-            />
-            {/* eslint-enable no-useless-escape */}
+            {isBrazeInsertable && this.insertBrazeScript()}
             {isHotjarInsertable && this.insertHotjarScript()}
           </Head>
         </PartialSeparator>
