@@ -163,6 +163,15 @@ class StoreApp extends App<StoreAppProps> {
     return (
       // CacheProvider 올바르게 동작하는지 확인하기
       <>
+        <Head>
+          {/* eslint-disable no-useless-escape */}
+          <script
+            nonce={nonce}
+            type="text/javascript"
+            src="https://js.appboycdn.com/web-sdk/3.2/appboy.min.js"
+          />
+          {/* eslint-enable no-useless-escape */}
+        </Head>
         <Meta />
         <DisallowedHostsFilter stage={stage} />
         <CacheProvider value={createCache({ ...cache, nonce })}>
