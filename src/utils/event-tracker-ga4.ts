@@ -24,21 +24,21 @@ function loadTagManager(id: string) {
         j: any = d.createElement(s);
       j.async = true;
       j.src = `https://www.googletagmanager.com/gtag/js?id=${id}`;
-      f.parentNode && f.parentNode.insertBefore(j, f);
+      f && f.parentNode && f.parentNode.insertBefore(j, f);
       return j;
     }
   }(window, document, 'script'));
 }
 
-const isInitialized = false;
+let isInitialized = false;
 export function initialize(debug?: boolean) {
-  // if (!isInitialized && loadTagManager(GA4_KEY)) {
-  //   isInitialized = true;
+  if (!isInitialized && loadTagManager(GA4_KEY)) {
+    isInitialized = true;
 
-  //   if (debug) {
-  //     gtagConfig({ debug_mode: true });
-  //   }
-  // }
+    if (debug) {
+      gtagConfig({ debug_mode: true });
+    }
+  }
 }
 
 export function setUserId(userId: string | null) {
