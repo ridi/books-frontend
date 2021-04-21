@@ -30,15 +30,15 @@ function loadTagManager(id: string) {
   }(window, document, 'script'));
 }
 
-let isInitialized = false;
+const isInitialized = false;
 export function initialize(debug?: boolean) {
-  if (!isInitialized && loadTagManager(GA4_KEY)) {
-    isInitialized = true;
+  // if (!isInitialized && loadTagManager(GA4_KEY)) {
+  //   isInitialized = true;
 
-    if (debug) {
-      gtagConfig({ debug_mode: true });
-    }
-  }
+  //   if (debug) {
+  //     gtagConfig({ debug_mode: true });
+  //   }
+  // }
 }
 
 export function setUserId(userId: string | null) {
