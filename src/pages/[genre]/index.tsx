@@ -151,8 +151,6 @@ export const Home: NextPage<HomeProps> = (props) => {
     <>
       <Head>
         <title>{`${titleGenerator(genre)} - 리디북스`}</title>
-        <script>console.log(&quot;@debug&quot;);</script>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-YB9VX70336" />
       </Head>
       <GenreTab currentGenre={genre} />
       {branches && branches.map((section, index) => (

@@ -55,6 +55,8 @@ export default class StoreDocument extends Document<StoreDocumentProps> {
         <PartialSeparator name="HEADER" wrapped={isPartials}>
           <Head nonce={nonce}>
             <style nonce={nonce} dangerouslySetInnerHTML={{ __html: this.props.css }} />
+            <script>&quot;@debug&quot;</script>
+            <script>console.log(&quot;@debug&quot;);</script>
           </Head>
         </PartialSeparator>
         <body>
