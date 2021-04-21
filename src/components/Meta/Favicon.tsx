@@ -22,7 +22,7 @@ export default () => (
       name="msapplication-TileImage"
       content={faviconWin8}
     />
-    <meta name="msapplication-TileColor" content="#1f8ee6" />
+    <meta name="msapplication-TileColor" content="#ffffff" />
     <link
       rel="shortcut icon"
       href={favicon}
