@@ -4,6 +4,7 @@ import {
 } from 'src/constants/eventTracking';
 import { getDeviceType } from 'src/hooks/useDeviceType';
 import { localStorage } from 'src/utils/storages';
+import { setUserId as setGa4UserId } from 'src/utils/event-tracker-ga4';
 
 const deviceType = getDeviceType() === 'mobile' ? DeviceType.Mobile : DeviceType.PC;
 
@@ -46,6 +47,7 @@ export function initialize() {
 
 export function setUserId(userId: string | null) {
   tracker?.set({ userId: userId || undefined });
+  setGa4UserId(userId);
 }
 
 export function sendEvent(type: SendEventType, data?: any) {

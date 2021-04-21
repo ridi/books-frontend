@@ -21,6 +21,7 @@ import { NextPage } from 'next';
 import useAccount from 'src/hooks/useAccount';
 import * as tracker from 'src/utils/event-tracker';
 import * as braze from 'src/utils/event-tracker-braze';
+import * as ga4 from 'src/utils/event-tracker-ga4';
 import { css } from '@emotion/core';
 
 import Cookies from 'universal-cookie';
@@ -31,6 +32,7 @@ export interface HomeProps {
   branches: Section[];
   lazyLoadBIds?: string[];
   genre: string;
+  ga4debug?: string;
 }
 
 const fetchHomeSections = async (genre = 'general', params = {}, options = {}) => {
@@ -134,6 +136,10 @@ export const Home: NextPage<HomeProps> = (props) => {
   useEffect(() => {
     setPageView();
   }, [genre, loggedUser, setPageView]);
+
+  useEffect(() => {
+    ga4.initialize(JSON.parse(props.ga4debug || 'false'));
+  }, [genre, loggedUser]);
 
 
   useEffect(() => {
