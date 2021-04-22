@@ -142,7 +142,7 @@ export const Home: NextPage<HomeProps> = (props) => {
   }, [genre]);
 
   useEffect(() => {
-    ga4.setUserIdx(loggedUser ? loggedUser.idx : null);
+    ga4.setUserIdx(loggedUser ? loggedUser.idx.toString() : null);
   }, [loggedUser]);
 
 

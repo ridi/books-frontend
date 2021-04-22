@@ -38,6 +38,6 @@ export function initialize() {
   }
 }
 
-export function setUserIdx(userIdx: number | null) {
+export function setUserIdx(userIdx: string | null) {
   gtagConfig({ user_id: userIdx });
 }
