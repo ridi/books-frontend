@@ -6,7 +6,8 @@ import { GA4_KEY } from 'src/constants/eventTracking';
 function gtag(...args: any[]) {
   if (window) {
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(args);
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer.push(arguments);
   }
 }
 
