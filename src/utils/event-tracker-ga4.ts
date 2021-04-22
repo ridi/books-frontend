@@ -32,16 +32,12 @@ function loadTagManager(id: string) {
 }
 
 let isInitialized = false;
-export function initialize(debug?: boolean) {
+export function initialize() {
   if (!isInitialized && loadTagManager(GA4_KEY)) {
     isInitialized = true;
-
-    if (debug) {
-      gtagConfig({ debug_mode: true });
-    }
   }
 }
 
-export function setUserId(userId: string | null) {
-  gtagConfig({ user_id: userId });
+export function setUserIdx(userIdx: string | null) {
+  gtagConfig({ user_id: userIdx });
 }
