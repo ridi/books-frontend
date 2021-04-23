@@ -33,8 +33,12 @@ function loadTagManager(id: string) {
 function cleanPrevUser() {
   if (window && Array.isArray(window.dataLayer)) {
     window.dataLayer = window.dataLayer.filter((i: any) => {
-      if (i[0] === 'config' && i[1] === GA4_KEY) {
-        return false;
+      if (Array.isArray(i) && i[0] === 'config' && i[1] === GA4_KEY) {
+        if (i.length === 2) {
+          return false;
+        } if (i.length === 3 && typeof i[2] === 'object' && !!i[2].user_id) {
+          return false;
+        }
       }
       return true;
     });
