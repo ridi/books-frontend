@@ -138,11 +138,7 @@ export const Home: NextPage<HomeProps> = (props) => {
   }, [genre, loggedUser, setPageView]);
 
   useEffect(() => {
-    ga4.initialize();
-  }, [genre]);
-
-  useEffect(() => {
-    ga4.setUserIdx(loggedUser ? loggedUser.idx.toString() : null);
+    ga4.initialize(loggedUser ? loggedUser.idx.toString() : null);
   }, [loggedUser]);
 
 

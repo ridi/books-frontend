@@ -7,6 +7,7 @@ import { CancelledError, runWithExponentialBackoff } from 'src/utils/backoff';
 import * as tracker from 'src/utils/event-tracker';
 import Sentry from 'src/utils/sentry';
 import { LoggedUser } from 'src/types/account';
+import * as ga4Tracker from 'src/utils/event-tracker-ga4';
 
 export const AccountContext = React.createContext<LoggedUser | null>(null);
 
@@ -44,6 +45,7 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
           scope.setUser(data);
         });
         tracker.setUserId(data?.id ?? null);
+        ga4Tracker.setUserIdx(data?.idx?.toString() ?? null);
         setAccount(data);
       },
       (err) => {

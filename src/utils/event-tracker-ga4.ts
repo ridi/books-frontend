@@ -19,7 +19,6 @@ function loadTagManager(id: string) {
   return (function (w, d, s) {
     if (w) {
       gtag('js', new Date());
-      gtagConfig();
 
       const f = d.getElementsByTagName(s)[0]; const
         j: any = d.createElement(s);
@@ -31,13 +30,29 @@ function loadTagManager(id: string) {
   }(window, document, 'script'));
 }
 
-let isInitialized = false;
-export function initialize() {
-  if (!isInitialized && loadTagManager(GA4_KEY)) {
-    isInitialized = true;
+function cleanPrevUser(userIdx: string | null) {
+  if (window && Array.isArray(window.dataLayer)) {
+    window.dataLayer = window.dataLayer.filter((i: any) => {
+      if (i[1] === GA4_KEY && typeof i[2] === 'object') {
+        const prevUserIdx = i[2]?.user_id;
+        if (prevUserIdx !== userIdx) {
+          return false;
+        }
+      }
+      return true;
+    });
   }
 }
 
 export function setUserIdx(userIdx: string | null) {
+  cleanPrevUser(userIdx);
   gtagConfig({ user_id: userIdx });
+}
+
+let initialized = false;
+export function initialize(userIdx: string | null) {
+  if (!initialized && loadTagManager(GA4_KEY)) {
+    setUserIdx(userIdx);
+    initialized = true;
+  }
 }
