@@ -30,14 +30,11 @@ function loadTagManager(id: string) {
   }(window, document, 'script'));
 }
 
-function cleanPrevUser(userIdx: string | null) {
+function cleanPrevUser() {
   if (window && Array.isArray(window.dataLayer)) {
     window.dataLayer = window.dataLayer.filter((i: any) => {
-      if (i[1] === GA4_KEY && typeof i[2] === 'object') {
-        const prevUserIdx = i[2]?.user_id;
-        if (prevUserIdx !== userIdx) {
-          return false;
-        }
+      if (i[1] === GA4_KEY && i[2]?.user_id) {
+        return false;
       }
       return true;
     });
@@ -45,11 +42,12 @@ function cleanPrevUser(userIdx: string | null) {
 }
 
 export function setUserIdx(userIdx: string | null) {
-  cleanPrevUser(userIdx);
+  cleanPrevUser();
   gtagConfig({ user_id: userIdx });
 }
 
 export function initWithoutUser() {
+  cleanPrevUser();
   gtagConfig();
 }
 
