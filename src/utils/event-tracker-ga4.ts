@@ -33,7 +33,7 @@ function loadTagManager(id: string) {
 function cleanPrevUser(userIdx: string | null) {
   if (window && Array.isArray(window.dataLayer)) {
     window.dataLayer = window.dataLayer.filter((i: any) => {
-      if (typeof i[2] === 'object') {
+      if (i[1] === GA4_KEY && typeof i[2] === 'object') {
         const prevUserIdx = i[2]?.user_id;
         if (prevUserIdx !== userIdx) {
           return false;
