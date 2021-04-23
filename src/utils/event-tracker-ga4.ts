@@ -33,7 +33,7 @@ function loadTagManager(id: string) {
 function cleanPrevUser() {
   if (window && Array.isArray(window.dataLayer)) {
     window.dataLayer = window.dataLayer.filter((i: any) => {
-      if (i[1] === GA4_KEY && i[2]?.user_id) {
+      if (i[0] === 'config' && i[1] === GA4_KEY) {
         return false;
       }
       return true;
