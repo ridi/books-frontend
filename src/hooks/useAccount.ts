@@ -45,7 +45,13 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
           scope.setUser(data);
         });
         tracker.setUserId(data?.id ?? null);
-        ga4Tracker.setUserIdx(data?.idx?.toString() ?? null);
+
+        const userIdx = data?.idx;
+        if (userIdx) {
+          ga4Tracker.setUserIdx(userIdx.toString());
+        } else {
+          ga4Tracker.initWithoutUser();
+        }
         setAccount(data);
       },
       (err) => {
@@ -55,6 +61,7 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
           }
           return;
         }
+        ga4Tracker.initWithoutUser();
         Sentry.captureException(err);
       },
     );

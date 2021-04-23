@@ -49,10 +49,13 @@ export function setUserIdx(userIdx: string | null) {
   gtagConfig({ user_id: userIdx });
 }
 
+export function initWithoutUser() {
+  gtagConfig();
+}
+
 let initialized = false;
-export function initialize(userIdx: string | null) {
+export function initialize() {
   if (!initialized && loadTagManager(GA4_KEY)) {
-    setUserIdx(userIdx);
     initialized = true;
   }
 }
