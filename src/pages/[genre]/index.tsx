@@ -139,7 +139,7 @@ export const Home: NextPage<HomeProps> = (props) => {
 
   useEffect(() => {
     ga4.initialize();
-  }, []);
+  }, [genre]);
 
 
   useEffect(() => {

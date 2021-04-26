@@ -55,13 +55,13 @@ export function AccountProvider(props: { children?: React.ReactNode }) {
         setAccount(data);
       },
       (err) => {
+        ga4Tracker.initWithoutUser();
         if (err instanceof CancelledError) {
           if ((err.inner as AxiosError)?.response?.status === 401) {
             setAccount(null);
           }
           return;
         }
-        ga4Tracker.initWithoutUser();
         Sentry.captureException(err);
       },
     );
