@@ -30,12 +30,13 @@ function loadTagManager(id: string) {
   }(window, document, 'script'));
 }
 
-function cleanPrevUser(userIdx: string | null) {
+function cleanPrevUser() {
   if (window && Array.isArray(window.dataLayer)) {
     window.dataLayer = window.dataLayer.filter((i: any) => {
-      if (i[1] === GA4_KEY && typeof i[2] === 'object') {
-        const prevUserIdx = i[2]?.user_id;
-        if (prevUserIdx !== userIdx) {
+      if (Array.isArray(i) && i[0] === 'config' && i[1] === GA4_KEY) {
+        if (i.length === 2) {
+          return false;
+        } if (i.length === 3 && typeof i[2] === 'object' && !!i[2].user_id) {
           return false;
         }
       }
@@ -45,14 +46,18 @@ function cleanPrevUser(userIdx: string | null) {
 }
 
 export function setUserIdx(userIdx: string | null) {
-  cleanPrevUser(userIdx);
+  cleanPrevUser();
   gtagConfig({ user_id: userIdx });
 }
 
+export function initWithoutUser() {
+  cleanPrevUser();
+  gtagConfig();
+}
+
 let initialized = false;
-export function initialize(userIdx: string | null) {
+export function initialize() {
   if (!initialized && loadTagManager(GA4_KEY)) {
-    setUserIdx(userIdx);
     initialized = true;
   }
 }
