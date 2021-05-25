@@ -35,6 +35,30 @@ export interface HomeProps {
   ga4debug?: string;
 }
 
+const GENREHONE_CODE_PREFIX = 'open_genre_home';
+const GenreHomeCodeMap: Record<string, string> = {
+  webtoon: 'wt',
+  comics: 'ebk',
+  'romance-serial': 'rn',
+  romance: 'rn_ebk',
+  'fantasy-serial': 'fn',
+  fantasy: 'fn_ebk',
+  'bl-webnovel': 'bn',
+  'bl-novel': 'bn_ebk',
+  'bl-webtoon': 'bw',
+  'bl-comics': 'bw_ebk',
+  general: 'gnrl',
+};
+
+const getPageViewCode = (genre: string): string | null => {
+  const code = GenreHomeCodeMap[genre];
+  if (!code) {
+    return null;
+  }
+
+  return `${GENREHONE_CODE_PREFIX}_${code}`;
+};
+
 const fetchHomeSections = async (genre = 'general', params = {}, options = {}) => {
   const result = await pRetry(
     () => axios.get(`/pages/home-${genre}/`, {
@@ -114,8 +138,11 @@ export const Home: NextPage<HomeProps> = (props) => {
   }, []);
 
   const setBrazePageView = useCallback(() => {
-    braze.sendPageView('open_genre_home_wt');
-  }, []);
+    const pageViewCode = getPageViewCode(genre);
+    if (pageViewCode) {
+      braze.sendPageView(pageViewCode);
+    }
+  }, [genre]);
 
   const setBrazeUserId = useCallback(() => {
     if (loggedUser) {
@@ -127,10 +154,7 @@ export const Home: NextPage<HomeProps> = (props) => {
     braze.initialize();
 
     setBrazeUserId();
-
-    if (window.location.pathname.startsWith('/webtoon')) {
-      setBrazePageView();
-    }
+    setBrazePageView();
   }, [setBrazePageView, setBrazeUserId]);
 
   useEffect(() => {
