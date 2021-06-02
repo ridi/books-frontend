@@ -134,7 +134,7 @@ interface InstantSearchResultProps {
   result: SearchResult;
   adultExclude?: boolean;
   onAuthorClick?(id: number): void;
-  onBookClick?(id: string): void;
+  onBookClick?(id: string, index?: number): void;
   onAdultExcludeChange?(value: boolean): void;
   onItemHover?(index: number): void;
   className?: string;
@@ -174,9 +174,9 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
     const id = e.currentTarget.dataset.authorId;
     id && onAuthorClick?.(Number(id));
   }, [onAuthorClick]);
-  const handleBookClick = React.useCallback((e: React.MouseEvent<HTMLElement>) => {
+  const handleBookClick = React.useCallback((e: React.MouseEvent<HTMLElement>, index?: number) => {
     const id = e.currentTarget.dataset.bookId;
-    id && onBookClick?.(id);
+    id && onBookClick?.(id, index);
   }, [onBookClick]);
   const authorCount = authors.length;
 
@@ -217,7 +217,7 @@ export default function InstantSearchResult(props: InstantSearchResultProps) {
                   type="button"
                   data-book-id={book.b_id}
                   tabIndex={-1}
-                  onClick={handleBookClick}
+                  onClick={(e) => handleBookClick(e, index)}
                   onMouseEnter={() => onItemHover?.(authorCount + index)}
                 >
                   <BookTitle>

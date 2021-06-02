@@ -18,6 +18,7 @@ import { orBelow, BreakPoint } from 'src/utils/mediaQuery';
 import { runInstantSearch } from 'src/utils/search';
 import sentry from 'src/utils/sentry';
 import { localStorage } from 'src/utils/storages';
+import * as tracker from 'src/utils/event-tracker';
 
 import { SearchResult } from '../types';
 import InstantSearchHistory from './History';
@@ -297,13 +298,18 @@ export default function InstantSearch() {
     window.location.href = `/author/${id}?${params.toString()}`;
   }, [keyword]);
 
-  const handleBookClick = React.useCallback((id: string) => {
+  const handleBookClick = React.useCallback((id: string, index?: number) => {
     const params = new URLSearchParams({
       _s: 'instant',
       _q: keyword,
     });
     setFocused(false);
-    window.location.href = `/books/${id}?${params.toString()}`;
+    const href = tracker.getTrackingURI(`/books/${id}?${params.toString()}`, {
+      sectionId: 'search-instant',
+      sectionItemIdx: index,
+      sectionArg: keyword,
+    });
+    window.location.href = href;
   }, [keyword]);
 
   const handleArrowLeftClick = React.useCallback(() => {
@@ -344,7 +350,7 @@ export default function InstantSearch() {
           } else if (focusedPosition < authors.length) {
             handleAuthorClick(authors[focusedPosition].id);
           } else if (focusedPosition < itemCount) {
-            handleBookClick(books[focusedPosition - authors.length].b_id);
+            handleBookClick(books[focusedPosition - authors.length].b_id, newPosition);
           }
         } else if (keyword !== '') {
           // Fixme Chrome, FF 에서 input 검색에 엔터를 두 번 쳐야되는 문제가 있음
