@@ -90,6 +90,7 @@ interface BookMetaBaseProps {
   authorColor?: string;
   className?: string;
   children?: React.ReactNode;
+  href?: string;
 }
 
 const BookMetaBase: React.FunctionComponent<BookMetaBaseProps> = (props) => {
@@ -101,6 +102,7 @@ const BookMetaBase: React.FunctionComponent<BookMetaBaseProps> = (props) => {
     authorColor = slateGray60,
     className,
     children,
+    href,
   } = props;
 
   const book = useBookSelector(bId);
@@ -117,7 +119,7 @@ const BookMetaBase: React.FunctionComponent<BookMetaBaseProps> = (props) => {
       className={className}
       css={width && css`width: ${width};`}
     >
-      <a href={`/books/${bId}`}>
+      <a href={href || `/books/${bId}`}>
         <BookTitle
           css={[bookTitleStyle, lineClamp(titleLineClamp || 2)]}
         >

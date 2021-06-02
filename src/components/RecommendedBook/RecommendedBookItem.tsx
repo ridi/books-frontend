@@ -60,6 +60,10 @@ function RecommendedBookItem(props: Props) {
   const handleClick = useCallback(() => {
     tracker.sendClickEvent(book, slug, index);
   }, [book, slug, index]);
+  const href = tracker.getTrackingURI(`/books/${book.b_id}`, {
+    sectionId: slug,
+    sectionItemIdx: index,
+  });
   return (
     <PortraitBook
       bId={book.b_id}
@@ -68,8 +72,9 @@ function RecommendedBookItem(props: Props) {
       slug={slug}
       onClick={handleClick}
       className={className}
+      href={href}
     >
-      {props.type === 'HotRelease' && <BookMeta bId={book.b_id} theme={theme} />}
+      {props.type === 'HotRelease' && <BookMeta bId={book.b_id} theme={theme} href={href} />}
       {props.type === 'TodayRecommendation' && (
         <RecommendationText bg={theme}>
           {newlineToReactNode(props.book.sentence)}

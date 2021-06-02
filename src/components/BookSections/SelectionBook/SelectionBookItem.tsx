@@ -31,6 +31,11 @@ const SelectionBookItem: React.FunctionComponent<Props> = (props) => {
   const handleClick = useCallback(() => {
     tracker.sendClickEvent(book, slug, order);
   }, [book, slug, order]);
+  const href = tracker.getTrackingURI(`/books/${bId}`, {
+    sectionId: slug,
+    sectionItemIdx: order,
+  });
+
   return (
     <PortraitBook
       bId={bId}
@@ -39,10 +44,12 @@ const SelectionBookItem: React.FunctionComponent<Props> = (props) => {
       slug={slug}
       onClick={handleClick}
       className={className}
+      href={href}
     >
       <BookMeta
         bId={bId}
         ratingInfo={ratingInfo}
+        href={href}
       />
     </PortraitBook>
   );

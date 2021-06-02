@@ -2,6 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { BreakPoint, orBelow } from 'src/utils/mediaQuery';
+import * as tracker from 'src/utils/event-tracker';
 
 import { ThumbnailWrapper } from '../BookThumbnail/ThumbnailWrapper';
 import ThumbnailWithBadge from './ThumbnailWithBadge';
@@ -44,6 +45,7 @@ interface Props {
   onClick?(): void;
   className?: string;
   children?: React.ReactNode;
+  href?: string;
 }
 
 const StyledAnchor = styled.a`
@@ -60,11 +62,12 @@ export default function PortraitBook(props: Props) {
     onClick,
     className,
     children,
+    href,
   } = props;
-  const href = `/books/${bId}`;
+
   return (
     <PortraitBookWrapper className={className}>
-      <StyledAnchor href={href} onClick={onClick}>
+      <StyledAnchor href={href || `/books/${bId}`} onClick={onClick}>
         <StyledThumbnailWrapper disabled={disabled}>
           <StyledThumbnailWithBadge
             bId={bId}
