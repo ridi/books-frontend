@@ -14,7 +14,7 @@
     "@sentry/webpack-plugin": "^1.11.1",
     "@zeit/next-bundle-analyzer": "^0.1.2",
     "@zeit/next-source-maps": "^0.0.4-canary.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "axios-logger": "^2.3.1",
     "babel-loader": "^8.0.6",
     "content-security-policy-builder": "^2.1.0",
