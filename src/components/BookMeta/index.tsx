@@ -22,6 +22,7 @@ interface BookMetaProps {
   width?: string;
   className?: string;
   ratingInfo?: StarRatingType;
+  href?: string;
 }
 
 export default function BookMeta(props: BookMetaProps) {
@@ -33,6 +34,7 @@ export default function BookMeta(props: BookMetaProps) {
     titleLineClamp,
     className,
     width,
+    href,
   } = props;
 
   const book = useBookSelector(bId);
@@ -47,6 +49,7 @@ export default function BookMeta(props: BookMetaProps) {
       titleLineClamp={titleLineClamp}
       width={width}
       className={className}
+      href={href}
     >
       {ratingInfo && (
         <span>

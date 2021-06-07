@@ -60,6 +60,10 @@ function RankingBook({
   const handleBannerClick = React.useCallback(() => {
     tracker.sendClickEvent({ id: bId }, slug, index);
   }, [bId, slug, index]);
+  const href = tracker.getTrackingURI(`/books/${bId}`, {
+    sectionId: slug,
+    sectionItemIdx: index,
+  });
 
   return (
     // auto-flow 안 되는 IE11을 위한 땜빵
@@ -74,7 +78,7 @@ function RankingBook({
     >
       <Styled.ThumbnailAnchor
         type={type}
-        href={`/books/${bId}`}
+        href={href}
       >
         <Styled.StyledThumbnailWithBadge
           bId={bId}
@@ -96,6 +100,7 @@ function RankingBook({
           showTag={false}
           width={type === 'big' ? '177px' : undefined}
           ratingInfo={type === 'big' ? rating : undefined}
+          href={href}
         />
       </Styled.BookMetaBox>
     </Styled.RankingBookItem>

@@ -4,6 +4,7 @@ import {
 } from 'src/constants/eventTracking';
 import { getDeviceType } from 'src/hooks/useDeviceType';
 import { localStorage } from 'src/utils/storages';
+import { appendQueryString } from 'src/utils/queryString';
 
 const deviceType = getDeviceType() === 'mobile' ? DeviceType.Mobile : DeviceType.PC;
 
@@ -85,3 +86,21 @@ export const sendDisplayEvent = (options: {
 export function sendPageView(href: string, referrer?: string) {
   tracker?.sendPageView(href, referrer);
 }
+export interface TrackingURIParams {
+  sectionId: string;
+  sectionItemIdx: number | undefined;
+  sectionArg?: string;
+}
+export const getTrackingURI = (inputURI: string, params: TrackingURIParams) => {
+  const {
+    sectionId,
+    sectionItemIdx,
+    sectionArg,
+  } = params;
+
+  return appendQueryString(inputURI, {
+    _rdt_sid: sectionId,
+    _rdt_idx: sectionItemIdx,
+    _rdt_arg: sectionArg || undefined,
+  }, { overwrite: true });
+};

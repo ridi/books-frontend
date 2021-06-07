@@ -308,6 +308,11 @@ export default function SearchLandscapeBook(props: SearchLandscapeBookProps) {
   if (isInApp) {
     searchParam.append('book_title', item.title);
     anchor = `/books/${item.b_id}/in-app-search?${searchParam.toString()}`;
+  } else {
+    anchor = tracker.getTrackingURI(anchor, {
+      sectionId: 'search',
+      sectionItemIdx: index,
+    });
   }
   // 인앱에서는 북컴포넌트 전체를 링크로 사용
   const WrapperWithAnchor = isInApp ? Wrapper.withComponent('a') : Wrapper;

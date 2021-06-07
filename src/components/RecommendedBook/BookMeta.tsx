@@ -31,13 +31,14 @@ interface BookMetaProps {
   bId: string;
   showSelect?: boolean;
   theme: string;
+  href?: string;
 }
 
 function BookMeta(props: BookMetaProps) {
-  const { theme, bId } = props;
+  const { theme, bId, href } = props;
   const isAvailableSelect = useIsAvailableSelect(bId);
   return (
-    <BookMetaBase bId={bId} bookTitleStyle={bookTitleStyle} authorColor={theme === 'dark' ? slateGray40 : slateGray60}>
+    <BookMetaBase bId={bId} bookTitleStyle={bookTitleStyle} authorColor={theme === 'dark' ? slateGray40 : slateGray60} href={href}>
       {isAvailableSelect && (
         <AvailableOnSelectContainer
           role="img"

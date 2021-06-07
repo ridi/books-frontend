@@ -144,6 +144,11 @@ const MultipleLineBookItem: React.FunctionComponent<MultipleLineBookItemProps> =
     tracker.sendClickEvent(item, slug, order);
   }, [item, slug, order]);
 
+  const href = tracker.getTrackingURI(`/books/${item.b_id}`, {
+    sectionId: slug,
+    sectionItemIdx: order,
+  });
+
   if (book == null || book.isDeleted) {
     return null;
   }
@@ -151,7 +156,7 @@ const MultipleLineBookItem: React.FunctionComponent<MultipleLineBookItemProps> =
   return (
     <Item>
       <ThumbnailWrapper lgWidth={120} css={thumbnailOverrideStyle}>
-        <ItemAnchor onClick={trackerEvent} href={`/books/${item.b_id}`}>
+        <ItemAnchor onClick={trackerEvent} href={href}>
           <ThumbnailWithBadge
             bId={item.b_id}
             order={order}
@@ -166,6 +171,7 @@ const MultipleLineBookItem: React.FunctionComponent<MultipleLineBookItemProps> =
         bId={item.b_id}
         css={bookMetaWrapperStyle}
         isAIRecommendation={false}
+        href={href}
       />
     </Item>
   );
