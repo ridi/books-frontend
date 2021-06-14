@@ -15,6 +15,10 @@ function gtagConfig(...args: any[]) {
   gtag('config', GA4_KEY, ...args);
 }
 
+function gtagEvent(eventName: string, params: any) {
+  gtag('event', eventName, params);
+}
+
 function loadTagManager(id: string) {
   return (function (w, d, s) {
     if (w) {
@@ -43,4 +47,42 @@ export function initialize() {
   if (!initialized && loadTagManager(GA4_KEY)) {
     initialized = true;
   }
+}
+
+
+interface Item {
+  item_id: string;
+  item_name: string;
+  price?: string;
+  item_brand?: string;
+  item_category?: string;
+  item_category2?: string;
+  item_category3?: string;
+  item_category4?: string;
+  item_variant?: string;
+  item_list_name?: string;
+  item_list_id?: string;
+  index?: number;
+  quantity?: string;
+}
+function parseItem(bookLike: Record<string, unknown>): Item {
+  return {
+    item_id: bookLike.b_id as string,
+    item_name: bookLike.title as string,
+  };
+}
+
+interface SendViewItemListOptions {
+  item_list_id?: string;
+  item_list_name?: string;
+}
+export function sendViewItemList(books: Record<string, unknown>[], options: SendViewItemListOptions) {
+  const { item_list_id } = options || {};
+  const items = (books || []).map(parseItem).map((item, index) => ({
+    ...item,
+    item_list_id,
+    index,
+  }));
+
+  gtagEvent('view_item_list', { items });
 }
