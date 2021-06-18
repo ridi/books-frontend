@@ -7,6 +7,8 @@ import useIsTablet from 'src/hooks/useIsTablet';
 import { RootState } from 'src/store/config';
 import { SectionExtra } from 'src/types/sections';
 import { orBelow } from 'src/utils/mediaQuery';
+import { useViewportIntersectionOnce } from 'src/hooks/useViewportIntersection';
+import { sendViewItemList } from 'src/utils/event-tracker-ga4';
 
 import SelectionBookCarousel from './SelectionBookCarousel';
 import SelectionBookList from './SelectionBookList';
@@ -52,8 +54,13 @@ const SelectionBook: React.FunctionComponent<SelectionBookProps> = (props) => {
     sectionHref = `/selection/${selectionId}`;
   }
 
+  const ref = useViewportIntersectionOnce<HTMLUListElement>(() => {
+    sendViewItemList(items, {
+      item_list_id: slug,
+    });
+  });
   return (
-    <SectionWrapper>
+    <SectionWrapper ref={ref}>
       <SectionTitle>
         <SectionTitleLink title={`${isWebtoon ? '[웹툰] ' : ''}${title}`} href={sectionHref} />
       </SectionTitle>

@@ -8,6 +8,8 @@ import BookMeta from 'src/components/BookMeta';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useBookSelector } from 'src/hooks/useBookDetailSelector';
 import * as tracker from 'src/utils/event-tracker';
+import { useViewportIntersectionOnce } from 'src/hooks/useViewportIntersection';
+import { sendViewItemList } from 'src/utils/event-tracker-ga4';
 import styled from '@emotion/styled';
 import ThumbnailWithBadge from '../Book/ThumbnailWithBadge';
 
@@ -249,8 +251,13 @@ export const MultipleLineBooks: React.FunctionComponent<MultipleLineBooks> = (pr
   const {
     title, items, genre, slug,
   } = props;
+  const ref = useViewportIntersectionOnce<HTMLUListElement>(() => {
+    sendViewItemList(items, {
+      item_list_id: slug,
+    });
+  });
   return (
-    <Section>
+    <Section ref={ref}>
       <Title aria-label={title}>{title}</Title>
       <ItemList genre={genre} slug={slug} books={items} />
     </Section>

@@ -5,6 +5,8 @@ import useIsTablet from 'src/hooks/useIsTablet';
 import { BreakPoint } from 'src/utils/mediaQuery';
 
 import recommendedBookBackground from 'src/assets/image/recommended_book_background@desktop.png';
+import { useViewportIntersectionOnce } from 'src/hooks/useViewportIntersection';
+import { sendViewItemList } from 'src/utils/event-tracker-ga4';
 
 import RecommendedBookList from './RecommendedBookList';
 import RecommendedBookCarousel from './RecommendedBookCarousel';
@@ -57,10 +59,18 @@ export default function RecommendedBook(props: RecommendedBookProps) {
   const {
     theme,
     title,
+    items,
+    slug,
   } = props;
   const isTablet = useIsTablet();
+
+  const ref = useViewportIntersectionOnce<HTMLUListElement>(() => {
+    sendViewItemList(items, {
+      item_list_id: slug,
+    });
+  });
   return (
-    <RecommendedBookWrapper bg={theme}>
+    <RecommendedBookWrapper bg={theme} ref={ref}>
       <SectionTitle>{title}</SectionTitle>
       <div>
         {isTablet ? (

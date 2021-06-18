@@ -3,6 +3,8 @@ import BookMeta from 'src/components/BookMeta';
 import ScrollContainer from 'src/components/ScrollContainer';
 import { CLOCK_ICON_URL } from 'src/constants/icons';
 import { BookItem, Section, StarRating } from 'src/types/sections';
+import { useViewportIntersectionOnce } from 'src/hooks/useViewportIntersection';
+import { sendViewItemList } from 'src/utils/event-tracker-ga4';
 
 import { createTimeLabel } from 'src/utils/dateTime';
 import * as tracker from 'src/utils/event-tracker';
@@ -138,8 +140,14 @@ const RankingBookList: React.FunctionComponent<RankingBookListProps> = (props) =
     genre, type, showTimer, extra, title, showSomeDeal, slug, items: books,
   } = props;
 
+  const ref = useViewportIntersectionOnce<HTMLUListElement>(() => {
+    sendViewItemList(books, {
+      item_list_id: slug,
+    });
+  });
+
   return (
-    <Styled.SectionWrapper>
+    <Styled.SectionWrapper ref={ref}>
       {title && (
         <SectionTitle>
           {showTimer && <Timer />}
