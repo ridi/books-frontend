@@ -116,7 +116,12 @@ export const Home: NextPage<HomeProps> = (props) => {
   const [branches, setBranches] = useState(props.branches || []);
 
   const ua = new UAParser().getUA();
-  const isHotjarRenderable = !(window as any).ReactNativeWebView && ua.length && !ua.toLowerCase().includes('ridibooks');
+  const isHotjarRenderable = (
+    typeof window !== 'undefined'
+      && !(window as any).ReactNativeWebView
+      && ua.length
+      && !ua.toLowerCase().includes('ridibooks')
+  );
 
   useEffect(() => {
     const cookies = new Cookies();
