@@ -7,6 +7,7 @@ import { GenreTab } from 'src/components/Tabs';
 import titleGenerator, { genreKeys } from 'src/utils/titleGenerator';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import { UAParser } from 'ua-parser-js';
 
 import { checkPage, Section } from 'src/types/sections';
 import HomeSectionRenderer from 'src/components/Section/HomeSectionRenderer';
@@ -33,6 +34,7 @@ export interface HomeProps {
   lazyLoadBIds?: string[];
   genre: string;
   ga4debug?: string;
+  nonce?: string;
 }
 
 const GENREHONE_CODE_PREFIX = 'open_genre_home';
@@ -83,6 +85,27 @@ const usePrevious = <T extends {}>(value: T) => {
   return ref.current;
 };
 
+const renderHotjarScript = (nonce?: string) => (
+  <script
+    async
+    nonce={nonce}
+
+    id="hotjar-init"
+    data-hjid={2334254}
+    dangerouslySetInnerHTML={{
+      __html: `(function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        hjid=document.getElementById('hotjar-init') && document.getElementById('hotjar-init').getAttribute('data-hjid');
+        h._hjSettings={hjid:hjid,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+      })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');`,
+    }}
+  />
+);
+
 export const Home: NextPage<HomeProps> = (props) => {
   const loggedUser = useAccount();
   const dispatch = useDispatch();
@@ -91,6 +114,14 @@ export const Home: NextPage<HomeProps> = (props) => {
   const { lazyLoadBIds, genre = 'general' } = props;
   const previousGenre = usePrevious(genre);
   const [branches, setBranches] = useState(props.branches || []);
+
+  const ua = new UAParser().getUA();
+  const isHotjarRenderable = (
+    typeof window !== 'undefined'
+      && !(window as any).ReactNativeWebView
+      && ua.length
+      && !ua.toLowerCase().includes('ridibooks')
+  );
 
   useEffect(() => {
     const cookies = new Cookies();
@@ -175,6 +206,7 @@ export const Home: NextPage<HomeProps> = (props) => {
     <>
       <Head>
         <title>{`${titleGenerator(genre)} - 리디북스`}</title>
+        {isHotjarRenderable && renderHotjarScript(props.nonce)}
       </Head>
       <GenreTab currentGenre={genre} />
       {branches && branches.map((section, index) => (
