@@ -7,6 +7,7 @@ import sentry from 'src/utils/sentry';
 import { booksActions } from 'src/services/books';
 import { useRouter } from 'next/router';
 import useAccount from 'src/hooks/useAccount';
+import useOptimize from 'src/hooks/useOptimize';
 
 import * as BookApi from 'src/types/book';
 import { newGenreNameToOldGenreName } from 'src/utils/common';
@@ -26,6 +27,7 @@ const AiRecommendationSection: React.FunctionComponent<AiRecommendationSectionPr
   } = props;
   const [aiItems, setSections] = useState<AIRecommendationBook[] | null>(null);
   const [isRequestError, setIsRequestError] = useState(false);
+  const optimize = useOptimize();
 
   const router = useRouter();
   const genre = (router.query.genre as string) || 'general';
@@ -74,7 +76,11 @@ const AiRecommendationSection: React.FunctionComponent<AiRecommendationSectionPr
           'general',
         ].includes(genre)
       ) {
-        requestAiRecommendationItems();
+        const exp = optimize.experiments?.get('3J87Dg7ZRR-vCFaWWaFhEg2');
+        ([
+          requestAiRecommendationItems,
+          requestAiRecommendationItems, // A/A 테스트용 임시
+        ][exp?.variantIdx || 0]());
       }
     }
 
