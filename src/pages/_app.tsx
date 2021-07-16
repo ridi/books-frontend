@@ -24,6 +24,7 @@ import { AppContextProvider } from 'src/hooks/useAppContext';
 import { AccountProvider } from 'src/hooks/useAccount';
 import { NotificationProvider } from 'src/hooks/useNotification';
 import { initialize as initializeEventTracker } from 'src/utils/event-tracker';
+import { OptimizeProvider, getExperiments } from 'src/hooks/useOptimize';
 
 interface StoreAppProps {
   // tslint:disable-next-line
@@ -71,7 +72,15 @@ class StoreApp extends App<StoreAppProps> {
       .toLowerCase()
       .startsWith('/partials/');
     if (!isPartials) {
-      window.requestIdleCallback(initializeEventTracker, { timeout: 500 });
+      window.requestIdleCallback(() => {
+        initializeEventTracker();
+
+        if (window.ga) {
+          getExperiments().forEach(({ experimentKey }) => {
+            window.ga('set', 'exp', experimentKey);
+          });
+        }
+      }, { timeout: 500 });
     }
     // Windows에서만 웹폰트 로드
     if (
@@ -181,15 +190,17 @@ class StoreApp extends App<StoreAppProps> {
               <NotificationProvider>
                 <ThemeProvider theme={defaultTheme}>
                   <ViewportIntersectionProvider rootMargin="100px">
-                    <GlobalNavigationBar
-                      searchKeyword={query.search || query.q}
-                      isPartials={false}
-                      isLoginForPartials={query.is_login}
-                    />
-                    <Contents>
-                      <Component {...pageProps} />
-                    </Contents>
-                    <Footer />
+                    <OptimizeProvider>
+                      <GlobalNavigationBar
+                        searchKeyword={query.search || query.q}
+                        isPartials={false}
+                        isLoginForPartials={query.is_login}
+                      />
+                      <Contents>
+                        <Component {...pageProps} />
+                      </Contents>
+                      <Footer />
+                    </OptimizeProvider>
                   </ViewportIntersectionProvider>
                 </ThemeProvider>
               </NotificationProvider>
